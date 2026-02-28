@@ -1,0 +1,46 @@
+{
+  "id": "d848b3511cf247dc98f8ed72d4712dc4",
+  "title": "Cell Phones: Tools or Troublemakers?",
+  "level": 2,
+  "week": 1,
+  "introAnimation": "",
+  "slides": [
+    {
+      "sequenceNumber": 1,
+      "type": "highlight",
+      "background_image": "None/pearson-1.jpg",
+      "slide_title": "Are Cell Phones Toys or Necessities?",
+      "static_text": "",
+      "highlights": [
+        23,
+        27,
+        28
+      ],
+      "question": "<p>Why have some schools banned cell phones in class or altogether?</p> <p>Using the text you just read highlight four causes.</p>",
+      "static_text_sync_file": "",
+      "fail_again_text": "<p>Look carefully at the highlighted sentences. These are the four causes.</p> <p>Notice that each sentence points out a reason why cell phones would be banned:</p> <ul> <li>Ringing upsets lessons.</li> <li>Students send texts or play games instead of paying attention.</li> <li>Students use phones to cheat.</li> <li>Phones may cause crime to rise.</li> <li>The other sentences convey effects or pose questions.</li> </ul>",
+      "interactive_text_audio": "",
+      "interactive_text": "<p>Do they belong in school at all? Many schools have banned thier use in class. The ringing upsets lessons. And some students play games or send text messages when they are supposed to be paying attention.</p> <p>Maybe school leaders just need to communicate cell phone rules better and take phones from students who do not use then correctly–or maybe not. Some schools have had to ban cell phone technology altogether. Why? Students have used cell phones to cheat on tests. The phones can be easy to steal, so crime may rise when phones are allowed.</p>",
+      "interactive_text_sync_file": "",
+      "skill": 1,
+      "_id": "f6f9da122b77448e886e9438c855136b",
+      "pass_text": "<p><strong>Good Job</strong></p> <p>You identified all of the causes.</p>",
+      "static_text_audio": "",
+      "fail_text": "<p><strong>Try Again.</strong></p> <p><strong></strong>Remember an <strong>effect</strong> is what happened. A <strong>cause</strong> is why it happened. In these two paragraphs the effect or what happens is that schools ban cell phones.</p> <p>Reread the paragraphs. Which details point to reasons why cell phones would be banned? These details are the causes.</p> <p>Highlight the details that point to reasons why cell phones would be banned.</p>",
+      "highlightAnswers": [
+        {
+          "color": "y",
+          "text": "<p>The ringing upsets lessons.</p>"
+        },
+        {
+          "color": "y",
+          "text": "<p>The ringing upsets lessons.</p>"
+        },
+        {
+          "color": "y",
+          "text": "<p>And some students play games or send text messages when they are supposed to be paying attention.</p>"
+        }
+      ]
+    }
+  ]
+}

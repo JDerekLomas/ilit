@@ -1,0 +1,202 @@
+{
+  "id": "f225e8a5a04a4970a160cb019ac7c28c",
+  "title": "The Power to Move",
+  "level": 3,
+  "week": 1,
+  "introAnimation": "f225e8a5a04a4970a160cb019ac7c28c/AVA232205.mp4",
+  "slides": [
+    {
+      "sequenceNumber": 1,
+      "type": "highlight",
+      "background_image": "None/IMG220025_1.jpg",
+      "slide_title": "The Power To Move",
+      "static_text": "",
+      "highlights": [
+        6
+      ],
+      "question": "<p><strong>Make Predictions</strong></p> <p></p> <p>In the passage you have just read, Chris makes a decision that helps the reader predict that his life is about to change. Based on the title and what you have read, highlight the sentence.</p>",
+      "static_text_sync_file": "",
+      "fail_again_text": "<p>Look carefully at the highlighted sentence. Details in the title and text help you predict that, “He made a conscious choice to change.” is the sentence that best describes how someone can reach his or her goals. Take another look at these details:</p> <p>Title: The Power To Move</p> <p>Subhead: Change</p> <p>Glossary word: conscious</p>",
+      "interactive_text_audio": "",
+      "interactive_text": "<p><strong>Change</strong></p> <p>Chris Gardner knows where he was when his life changed. He was sitting on the floor of a public bathroom in a subway station. He was homeless and the single father of a young son. His job did not pay much. His son's mother had left them. Everything was against him. If you ask Gardner, though, he will tell you that this was the moment he started to become a success. He made a conscious choice to change.</p>",
+      "interactive_text_sync_file": "",
+      "skill": null,
+      "_id": "b3929e696e3342888438083d73bef26a",
+      "pass_text": "<p><strong>GREAT JOB!</strong></p> <p></p> <p>You predicted that Chris made a conscious choice to change.</p>",
+      "static_text_audio": "",
+      "fail_text": "<p><strong>Try Again</strong></p> <p></p> <p>Think about the title, “The Power to Move,” and then scan the text for a sentence that supports that idea.</p>",
+      "highlightAnswers": [
+        {
+          "color": "y",
+          "text": "<p>He made a conscious<strong> </strong>choice to change.</p>"
+        }
+      ]
+    },
+    {
+      "sequenceNumber": 2,
+      "type": "text-answer",
+      "background_image": "None/IMG220025_2.jpg",
+      "slide_title": "Set me!",
+      "static_text": "<p>It worked. Today, Chris Gardner is a wealthy business owner. His story was told in a movie, <em>The Pursuit of Happyness</em>, starring Will Smith. When people ask Gardner for the secret to his success, he tells them, \"The secret is there is no secret. It's the basics.\"</p>",
+      "question": "",
+      "static_text_sync_file": "",
+      "fail_again_text": "",
+      "rubric": null,
+      "skill": null,
+      "_id": "db0c2f561c194808a4b58b355d37e862",
+      "pass_text": "",
+      "static_text_audio": "",
+      "fail_text": ""
+    },
+    {
+      "sequenceNumber": 3,
+      "type": "text-answer",
+      "background_image": "5/IMG220026.jpg",
+      "slide_title": "Set me!",
+      "static_text": "<p></p> <p><strong>Moving Forward</strong></p> <p>Gardner never imagined he would end up on that bathroom floor. He had hard times growing up, but his mother had high expectations for him. She taught him to believe he could become anything he wanted to be.</p> <p></p> <p>For his son's sake, Gardner decided not to stay in that subway station. He looked inside himself and found the power to move forward.</p> <p></p> <p>But Gardner's story can be anybody's story. The key is finding out what motivates you, or gets you moving. Love for his son got Gardner moving off that subway floor and into a new life. Once he got a job as a stockbroker and worked hard to succeed in that job, he found that he loved his work, too. Love was Gardner's motivation.</p>",
+      "question": "",
+      "static_text_sync_file": "",
+      "fail_again_text": "",
+      "rubric": null,
+      "skill": null,
+      "_id": "da0e902bdff345d7a928da63fffa2f99",
+      "pass_text": "",
+      "static_text_audio": "",
+      "fail_text": ""
+    },
+    {
+      "sequenceNumber": 4,
+      "type": "highlight",
+      "background_image": "7/IMG220007.jpg",
+      "slide_title": "Set me!",
+      "static_text": "",
+      "highlights": [
+        7,
+        8
+      ],
+      "question": "<p><strong>Author’s Purpose </strong></p> <p></p> <p>The author gives clues that her purpose is to persuade readers that, like Chris Gardner, they can change. She gives these clues when she asks and answers a question that she thinks readers may be thinking. In the text, highlight the question in yellow and the answer in the red.</p>",
+      "static_text_sync_file": "",
+      "fail_again_text": "<p>Look carefully at the highlighted question. Then reread the text to find the answer to it.</p>",
+      "interactive_text_audio": "",
+      "interactive_text": "<p><strong>Choosing What You Love </strong></p> <p>Gardner believes success is built one choice at a time. He tells people to work hard and to start with baby steps. \"And more important than that, find something that you love,\" Gardner adds, \"Do something that gets you so excited you can't wait to get out of bed in the morning.\"</p> <p></p> <p>To some people, Gardner's advice is not realistic. Can people really overcome problems by acting consciously? Maybe Gardner’s story is one in a million. Not everyone will achieve the wealth that he did. But we all have the ability to be motivated.</p>",
+      "interactive_text_sync_file": "",
+      "skill": null,
+      "_id": "d7c419d4578e47c497378491e554aa93",
+      "pass_text": "<p><strong>AWESOME!</strong></p> <p></p> <p>You correctly highlighted the author’s question and answer.</p>",
+      "static_text_audio": "",
+      "fail_text": "<p><strong>Try Again</strong></p> <p></p> <p>When finding a question asked by the author, look for a question mark as a clue. Once you know the question, you can scan the text again for the answer.</p>",
+      "highlightAnswers": [
+        {
+          "color": "y",
+          "text": "<p>Can people really overcome problems by acting consciously?</p>"
+        },
+        {
+          "color": "r",
+          "text": "<p>But we all have the ability to be motivated.</p>"
+        }
+      ]
+    },
+    {
+      "sequenceNumber": 5,
+      "type": "highlight",
+      "background_image": "None/IMG220028.jpg",
+      "slide_title": "Set me!",
+      "static_text": "",
+      "highlights": [
+        9
+      ],
+      "question": "<p><strong>Author’s Purpose</strong></p> <p></p> <p>The author’s purpose is to persuade readers to be self-motivated. Highlight the sentence that gives an example of how being self-motivated might encourage a person to do their homework to achieve a life goal.</p>",
+      "static_text_sync_file": "",
+      "fail_again_text": "<p>Look at the highlighted sentence. The author’s purpose is to persuade readers to be self-motivated. She identifies a practical example of why you should do something you don’t want to do in order to succeed later in life.</p>",
+      "interactive_text_audio": "",
+      "interactive_text": "<p><strong>Motivating Yourself</strong></p> <p>Some people are motivated by outside forces. You might do your math homework because you are afraid of what your family will say if you get a bad grade. Other people get their motivation from within. That is called self-motivation. If you become self-motivated, you might do your math homework because you want to be a video game programmer. You act on the belief that learning math will help you reach your goal.</p>",
+      "interactive_text_sync_file": "",
+      "skill": null,
+      "_id": "d7845c847b3a4585bb15c72ccd6c0fe9",
+      "pass_text": "<p><strong>WELL DONE!</strong></p> <p></p> <p>You identified sentence that is trying to persuade the reader to be self-motivated.</p>",
+      "static_text_audio": "",
+      "fail_text": "<p><strong>Try again</strong></p> <p></p> <p>Reread the passage. Look for a sentence that describes doing homework to help reach a greater goal.</p>",
+      "highlightAnswers": [
+        {
+          "color": "y",
+          "text": "<p>If you become self-motivated, you might do your math homework because you want to be a video game programmer. </p>"
+        }
+      ]
+    },
+    {
+      "sequenceNumber": 6,
+      "type": "text-answer",
+      "background_image": "None/IMG220028_1.jpg",
+      "slide_title": "Set me!",
+      "static_text": "<p>Self-motivation is a mark of your individuality, or your personal likes and dislikes, talents, and interests. Self-motivated people start with what makes them who they are. They use those strengths to help them become who they want to be. </p>",
+      "question": "",
+      "static_text_sync_file": "",
+      "fail_again_text": "",
+      "rubric": null,
+      "skill": null,
+      "_id": "e4e30f6be0354d969b0df637e8c10ca8",
+      "pass_text": "",
+      "static_text_audio": "",
+      "fail_text": ""
+    },
+    {
+      "sequenceNumber": 7,
+      "type": "highlight",
+      "background_image": "None/IMG220029.jpg",
+      "slide_title": "Set me!",
+      "static_text": "",
+      "highlights": [
+        10
+      ],
+      "question": "<p></p> <p><strong>Author’s Purpose</strong></p> <p> </p> <p>What reasons does the author provide to persuade readers to try these steps? Highlight the sentence that tells readers how they can use these steps in their own lives. </p>",
+      "static_text_sync_file": "",
+      "fail_again_text": "<p>Look at the highlighted sentence. The author tells readers exact ways they can become who they want to be by studying harder, learning a new skill, or making plans for the future.</p>",
+      "interactive_text_audio": "",
+      "interactive_text": "<p><strong>Get Moving</strong></p> <p>Give self-motivation a try. You can use these steps to study harder, learn a new skill, or make plans for the future.</p> <p> </p> <p><em>Do what you love.</em> Find a connection between what you can do, what you need to do, and what you want to do.</p> <p> </p> <p><em>Set reasonable goals</em>. Do not take on so much that you get overwhelmed, or so little that you get bored.</p> <p> </p> <p><em>Start with baby-steps</em>. Break big tasks into smaller parts.</p>",
+      "interactive_text_sync_file": "",
+      "skill": null,
+      "_id": "b600e4c95d664e1397e335e014608c8e",
+      "pass_text": "<p><strong>You’re Amazing!</strong></p> <p><strong> </strong></p> <p>You correctly identified the sentence.</p>",
+      "static_text_audio": "",
+      "fail_text": "<p><strong>Try again</strong></p> <p> </p> <p>The author encourages readers to try these steps. Look at the sentence “Give self-motivation a try.” Then read on to learn the author’s suggestions of how to do so.</p>",
+      "highlightAnswers": [
+        {
+          "color": "y",
+          "text": "<p>You can use these steps to study harder, learn a new skill, or make plans for the future.</p>"
+        }
+      ]
+    },
+    {
+      "sequenceNumber": 8,
+      "type": "text-answer",
+      "background_image": "6/IMG220029.jpg",
+      "slide_title": "Set me!",
+      "static_text": "<p><em>Stay positive</em>. Do not put blocks in your own path. If you think \"I can't do this,\" you will keep yourself from even trying.</p> <p></p> <p><em>Give yourself permission to fail</em>. You will not always get everything right the first time. Do not give up. Learn from your mistakes.</p> <p></p> <p><em>Ask for help, and give it to others</em>. Family members, friends, and teachers can help you stay motivated. When you succeed, do what Chris Gardner does. Encourage others to achieve their goals.</p>",
+      "question": "",
+      "static_text_sync_file": "",
+      "fail_again_text": "",
+      "rubric": null,
+      "skill": null,
+      "_id": "ac413b750346482ebfbbfc790e657dc1",
+      "pass_text": "",
+      "static_text_audio": "",
+      "fail_text": ""
+    },
+    {
+      "sequenceNumber": 9,
+      "type": "text-answer",
+      "background_image": "None/IMG220030.jpg",
+      "slide_title": "Set me!",
+      "static_text": "",
+      "question": "<p><strong>Read Critically</strong></p> <p></p> <p>The author tries to persuade you to believe you have the power to change your life. Was he successful? <strong>Explain why or why not.</strong></p>",
+      "static_text_sync_file": "",
+      "fail_again_text": "",
+      "rubric": null,
+      "skill": null,
+      "_id": "ffd711cc6dfd4822a383b6a53eb95917",
+      "pass_text": "",
+      "static_text_audio": "",
+      "fail_text": ""
+    }
+  ]
+}

@@ -1,113 +1,195 @@
 # Content Guide: Original vs. Replica
 
-Where to find real content in the ClassView source, what we already have, and what's missing.
+Where to find real content in the ClassView source, what we've extracted, and what's still missing.
 
 ---
 
-## Original ClassView Content Sources
+## Extracted Content (ready to use)
 
-### Book Catalog (837 books)
+All extracted content lives in `content/` and is importable by the Next.js app.
 
-**File:** `docs/classview/Webclient/App/js/fetchbooklist.js` (15,187 lines)
-**Duplicate:** `docs/classview/Webclient/App/js/libraryjson.js` (15,109 lines — 832 books)
+### Book Catalog — `content/book-catalog.json` (833 books)
 
-**Format:** `var booklist = { "bookset": [{ ... }] }`
+Extracted from `fetchbooklist.js`. Full metadata for every book in the I-LIT library.
+
+| Stat | Value |
+|------|-------|
+| Total books | 833 |
+| Lexile range | 70–2020 |
+| Books with Lexile | 667 |
+| EPUBs | 503 |
+| PDFs | 330 |
+| Word count range | 108–655,500 |
 
 **Schema per book:**
-```javascript
+```json
 {
-  "book_id": "e656505b4ac54784a4c7a07125e553cd",     // UUID
-  "book_title": "I Died Here, BesTellers",
-  "author_name": "George Shea",
-  "book_image": "e656505b4ac54784a4c7a07125e553cd_cover_image.jpeg",
-  "book_genre": "Short Stories,Fantasy,Thriller",       // comma-separated
-  "book_path": "Content/library/",
-  "no_of_page": 410,
+  "book_id": "e656505b4ac54784a4c7a07125e553cd",
+  "title": "I Died Here, BesTellers",
+  "author": "George Shea",
+  "cover_image": "e656505b4ac54784a4c7a07125e553cd_cover_image.jpeg",
+  "genres": ["Short Stories", "Fantasy", "Thriller"],
   "lexile_level": 410,
-  "book_desc": "A BAD DREAM COMES TRUE...",
-  "category_id": "",
-  "category_name": "",
-  "book_type": "",
-  "file_type": "epub",                                  // "epub" or "pdf"
+  "description": "A BAD DREAM COMES TRUE...",
+  "file_type": "epub",
   "word_count": 14500
 }
 ```
 
-**Stats:**
-- 503 epub, 331 pdf
-- Lexile range: 100–1440 (167 books have null Lexile)
-- Top genres: Fiction (462), Adventure (287), Action (261), History (180), Mystery (165)
-- Series: BesTellers, Fastback, Double Fastback, Pacemaker Classic, Adapted Classic, Interface Anthology
+**Top genres:** Fiction (465), Adventure (287), Action (261), History (180), Mystery (165), Short Stories (153)
 
-**Cover images:** NOT in codebase. Loaded from CDN: `{mediaPath}{book_id}_cover_image.jpeg`
-**Page content:** 4 books embedded in `page_content.js`, rest via API (`GetBookPageContent()`)
+**Series:** Adapted Texts (124), Interface Anthology (115), Pacemaker Classic (68), Fastback (63), Double Fastback (55), BesTellers (37)
 
-### Lesson Content (1 example lesson)
+**Note:** Cover images and page content are NOT in the codebase (API/CDN only). Use this catalog for the library carousel metadata.
 
-**File:** `docs/classview/Webclient/App/js/lesson_json.js` (2,691 lines)
+### Genres — `content/genres.json` (444 unique tags)
 
-Contains a complete Grade 8 lesson: "Unit 1, Lesson 11"
+All genre/category tags from the book catalog with frequency counts, sorted by popularity.
 
-**Structure:**
-```javascript
-{
-  "lessionId": "b105b9e975e94772afbd370d8a2503bf",
-  "itemDisplayName": "Unit 1, Lesson 11",
-  "activities": {
-    "vocab": { slides... },         // Vocabulary introduction
-    "rata": { slides... },          // Read Aloud Think Aloud
-    "passages": { slides... },      // 14 RATA passage slides from "Among the Hidden"
-    "worktime": { slides... },      // Work Time activities
-    "conversation": { slides... },  // Discussion
-    "wrapup": { slides... }         // Wrap-up
-  }
-}
-```
+### Categories — `content/categories.json` (448 entries)
 
-**Vocab words taught:** "unfurling", "sarcastic" (with Knowledge Check questions, examples, synonyms)
-**RATA book:** "Among the Hidden" by Margaret Peterson Haddix (14 passage slides with audio files)
+Category list from the original source's `categorylist` array.
 
-### Assignment Categories
+### Embedded Books — `content/embedded-books/` (4 complete)
 
-**File:** `docs/classview/Webclient/App/js/assignment_category.js`
+Full page-by-page content extracted from `page_content.js`. These are the only books with actual readable text.
 
-9 categories with aliases. See `docs/interactive-elements.md` for full list.
+| Book | Pages | Book ID |
+|------|-------|---------|
+| Big Dog and Dan | 16 | `ee5a668f53b24935846c1ca70076e35f` |
+| Playground | 39 | `f7d64b7ac62b414abe192f7b60e384b8` |
+| Flygirl | 37 | `e136925e10a44ea685230c8608945a66` |
+| The Chronicles of Vladimir Tod: Ninth Grade Slays | 438 | `d6e4f8e92bd94fa79417a9ee734a3cb1` |
 
-### Reading Skills Taxonomy
+Each file has `pages[]` with `pageNumber`, `html` (original XHTML), and `textContent` (plain text).
 
-**File:** `docs/classview/Webclient/App/js/extraAssignments_info.js`
+### IWT Fixture Passages — `content/iwt-fixtures/` (4 passages)
 
-Grade 8 skill taxonomy:
-- **Comprehension:** Make Inferences, Draw Conclusions, Use Context Clues, Visualize, Ask Questions, Make Connections, Identify Main Idea, Compare/Contrast, Author's Purpose, Author's Viewpoint, Predict, Generalizations, Fluency, Summarize, Cause & Effect, Evaluate, Acquire Vocabulary
-- **Vocabulary:** Context Clues, Word Parts, Synonyms, Antonyms, Base Words, Word Associations, Shades of Meaning, Multiple-Meaning Words, Analogies, Suffixes, Prefixes, Affixes, Word Roots, Related Words
+Real Interactive Reading passages from the CMS Django fixtures, with slide content and checkpoint data.
 
-### Grade Assessment Score Tables
+| Passage | Level | Slides |
+|---------|-------|--------|
+| The Power to Move | 3 | 9 |
+| Mentors Make a Difference | 2 | 7 |
+| Having Friends, Making Choices | 1 | 9 |
+| Cell Phones: Tools or Troublemakers? | 2 | 1 |
 
-**Directory:** `docs/classview/Webclient/App/js/grade-assessment-score/` (10 files, grades 3–12)
+Slides include highlight checkpoints with correct answers, feedback text, and background image refs.
 
-Stanine score ranges for GRADE standardized assessment, by season (fall/spring/winter) and subtest.
+### Lesson — `content/lessons/g8-u1-l11.json`
 
-### Teacher/Conference Data
+Complete Grade 8, Unit 1, Lesson 11 with 8 activity types and 26 slides:
+- **vocab** (4 slides) — "unfurling" and "sarcastic" with Knowledge Check polls
+- **whole_group** (6 slides) — Related Words instruction
+- **RATA** (4 slides + 14 passage slides) — "Among the Hidden" chapters 17-18
+- **work_time** (7 slides) — Daily assignment, small group, conferencing
+- **wrap_up**, **time_to_read**, **dailyassignment**, **classroom_conversations**
 
-**File:** `docs/classview/Webclient/App/js/conference_info.js`
-- 10 preset conference notes ("Good progress", "Book too difficult", etc.)
-- 5 comprehension levels (Inappropriate → Good)
-- 15 guiding questions ("Why did you choose this book?", etc.)
+### Skills Taxonomy — `content/skills-taxonomy.json` (121 skills)
 
-**File:** `docs/classview/Webclient/App/js/buzz_info.js`
-- 16 teacher quick-comment presets for Connect tab
+6 skill groups:
+- **Reading Comprehension** (17): Make Inferences, Draw Conclusions, Use Context Clues, Visualize, etc.
+- **Vocabulary** (17): Context Clues, Word Parts, Synonyms, Antonyms, Analogies, Word Roots, etc.
+- **Writing** (4): Narrative, Explanatory/Informative, Argumentative, Opinion Pieces
+- **Spelling** (35): Vowel patterns, consonant patterns, plurals, homophones, etc.
+- **Grammar** (15): Nouns, Verbs, Sentence Structure, Punctuation, etc.
+- **Phonics** (33): Digraphs, blends, syllable patterns, inflected endings, etc.
 
-### Library Genres & Review Presets
+Includes color-coded score ranges (red 0-50, yellow 51-80, green 81-100).
 
-**In:** `docs/classview/Webclient/App/js/libraryview.js`
-- 22 genre categories for filtering
-- 26 preset book review comments ("I liked it", "It was exciting", "It was too hard to read", etc.)
+### Assignment Categories — `content/assignment-categories.json` (13 categories)
 
-### What's Only Available via API (not in codebase)
+All assignment types with names, aliases, and descriptions. Key categories:
+- Interactive Reading (`iwt`), Study Plan (`studyplan`), iPractice (`dailyassignment`)
+- Writing (`essay`/`paragraph`), Information (`nsa`), Sort (`interactive_sort`)
+- Unit Benchmark Assessment, Weekly Reading Check, GRADE assessment
+
+### Assessment Scores — `content/assessment-scores.json` (grades 3-12)
+
+Stanine score ranges for GRADE standardized assessment. Each grade has fall/spring/winter seasons with form-a/form-b, covering sentence-comprehension, passage-comprehension, and vocabulary subtests.
+
+### Teacher Presets — `content/teacher-presets.json`
+
+- **10 conference notes**: "Good progress", "On track", "Book too difficult", etc.
+- **5 comprehension levels**: Inappropriate (0) → Good (4)
+- **15 guiding questions**: "Why did you choose this book?", "Tell me what this book is about so far.", etc.
+- **12 speaking notes** + **11 listening notes** (for discussion rubrics)
+- **16 quick comments** (Connect tab): "Excellent progress", "Great job today", "Please stay on task", etc.
+
+### Review Presets — `content/review-presets.json` (26 presets)
+
+Book review comment options: "I liked it", "It was exciting", "I couldn't put it down", "It captured my imagination", "It was too hard to read", etc.
+
+### Interest Inventory — `content/interest-inventory.json`
+
+Student reading survey (Beginning of Year / Middle of Year / End of Year). Questions like "Do you enjoy reading?", "How many books have you read?", genre preferences.
+
+### Interest Areas — `content/interest-areas.json`
+
+Reading interest category definitions used for book recommendations.
+
+### Grade Band GLE — `content/grade-band-gle.json`
+
+Grade Level Equivalent bands for assessment scoring.
+
+---
+
+## Pre-Authored Replica Content
+
+### Books — `content/books/` (5 complete, 4 missing)
+
+| Book | Lexile | Genre | Status |
+|------|--------|-------|--------|
+| Dream of the Dead | 600 | Mystery | COMPLETE — 3 chapters, 15 pages |
+| Crash Dive | 550 | Action | COMPLETE — 3 chapters, 15 pages |
+| Jungle Jenny | 500 | Adventure | COMPLETE — 2+ chapters, 15+ pages |
+| Little Big Top | 550 | Fiction | COMPLETE — 2+ chapters, 20 pages |
+| The Prince and the Pauper | 650 | Classic | COMPLETE — 2+ chapters, 12 pages |
+| Storm Chasers | — | — | MISSING content JSON (cover exists) |
+| Robot Revolution | — | — | MISSING content JSON (cover exists) |
+| Lost City | — | — | MISSING content JSON (cover exists) |
+| Ocean Secrets | — | — | MISSING content JSON (cover exists) |
+
+### Interactive Reading Passages — `content/passages/` (3 complete)
+
+| Passage | Lexile | Slides | Checkpoints |
+|---------|--------|--------|-------------|
+| Bomb Dogs: Canine Heroes | 500 | 8 | highlight, drag-drop, summary |
+| Turn It Down! | 600 | 7 | drag-drop, highlight, summary |
+| Hidden Ads | 700 | 5+ | multiple-choice |
+
+### Vocabulary — `content/vocabulary/vocabulary.json` (15 words)
+
+5 words per passage (bomb-dogs, turn-it-down, hidden-ads). 5/15 have images.
+
+### Images — `public/images/` (46 files)
+
+Book covers (9), illustrations (15), passage backgrounds (13), vocabulary images (5), UI textures (4).
+
+---
+
+## Gap Analysis
+
+### What's still missing
+
+| Gap | Priority | Notes |
+|-----|----------|-------|
+| 4 books need content JSON | HIGH | storm-chasers, robot-revolution, lost-city, ocean-secrets |
+| Book cover images for catalog | HIGH | 833 books have metadata but no covers (CDN-only in original) |
+| Book page text | HIGH | Only 4 embedded + 5 authored = 9 readable books out of 833 |
+| Additional IR passages | MEDIUM | 3 authored + 4 from fixtures = 7 total. Original had many more. |
+| 10 vocabulary images | LOW | 5/15 words have images |
+| Study Plan assignments | LOW | Placeholder |
+| Word Study activities | LOW | Placeholder — word sort, word slam, phonics |
+| iPractice assignments | LOW | Placeholder |
+| Monitor Progress tests | LOW | Placeholder |
+| Resources data | LOW | Notebook resources tab is empty categories |
+
+### What's NOT extractable (API-only in original)
 
 | Content | API Method |
 |---------|-----------|
-| Book page text (833/837 books) | `GetBookPageContent(pageId, bookId)` |
+| Book page text (829 remaining books) | `GetBookPageContent(pageId, bookId)` |
 | Book cover images | CDN: `{mediaPath}{book_id}_cover_image.jpeg` |
 | Assignment slide data | `GetAssignmentSlidesInfo(itemId, itemType)` |
 | Lesson content (all but 1) | `GetAssignmentSlidesInfo()` |
@@ -116,167 +198,52 @@ Stanine score ranges for GRADE standardized assessment, by season (fall/spring/w
 
 ---
 
-## Our Replica Content Inventory
-
-### Books — `content/books/` (5 complete, 3 missing)
-
-| Book | File | Lexile | Genre | Status |
-|------|------|--------|-------|--------|
-| Dream of the Dead | `dream-dead.json` (19KB) | 600 | Mystery | COMPLETE — 3 chapters, 15 pages |
-| Crash Dive | `crash-dive.json` (18KB) | 550 | Action | COMPLETE — 3 chapters, 15 pages |
-| Jungle Jenny | `jungle-jenny.json` (20KB) | 500 | Adventure | COMPLETE — 2+ chapters, 15+ pages |
-| Little Big Top | `little-big-top.json` (23KB) | 550 | Fiction | COMPLETE — 2+ chapters, 20 pages |
-| The Prince and the Pauper | `prince-pauper.json` (15KB) | 650 | Classic | COMPLETE — 2+ chapters, 12 pages |
-| Storm Chasers | cover only | — | — | MISSING content JSON |
-| Robot Revolution | cover only | — | — | MISSING content JSON |
-| Lost City | cover only | — | — | MISSING content JSON |
-| Ocean Secrets | cover only | — | — | MISSING content JSON |
-
-**Book JSON structure:**
-```json
-{
-  "id": "dream-dead",
-  "title": "Dream of the Dead",
-  "author": "Sarah Blackwell",
-  "coverImage": "/images/covers/dream-dead.jpg",
-  "lexileLevel": 600,
-  "genre": "Mystery",
-  "summary": "...",
-  "totalPages": 15,
-  "chapters": [
-    { "title": "Chapter 1", "pages": [
-      { "pageNumber": 1, "text": "...", "image": "/images/illustrations/dream-dead-1.jpg" }
-    ]}
-  ]
-}
-```
-
-### Interactive Reading Passages — `content/passages/` (3 complete)
-
-| Passage | File | Lexile | Slides | Checkpoints |
-|---------|------|--------|--------|-------------|
-| Bomb Dogs: Canine Heroes | `bomb-dogs.json` (12KB) | 500 | 8 | highlight, drag-drop, summary |
-| Turn It Down! | `turn-it-down.json` (8KB) | 600 | 7 | drag-drop, highlight, summary |
-| Hidden Ads | `hidden-ads.json` (11KB) | 700 | 5+ | multiple-choice |
-
-**Passage JSON structure:**
-```json
-{
-  "id": "bomb-dogs",
-  "title": "Bomb Dogs: Canine Heroes",
-  "author": "I-LIT Staff",
-  "lexileLevel": 500,
-  "backgroundImage": "/images/passages/bomb-dogs-bg.jpg",
-  "slides": [
-    { "type": "reading", "heading": "...", "text": "..." },
-    { "type": "checkpoint", "checkpoint": {
-      "type": "highlight",
-      "skill": "Make Inferences",
-      "prompt": "Highlight the sentence that...",
-      "correctAnswer": "...",
-      "feedback": { "correct": "...", "incorrect": "..." }
-    }},
-    { "type": "summary", "summaryPrompt": "...", "expectedKeyConcepts": [...] }
-  ]
-}
-```
-
-### Vocabulary — `content/vocabulary/vocabulary.json` (15 words)
-
-| Word | Passage | Image | Word Parts |
-|------|---------|-------|------------|
-| handler | bomb-dogs | YES | YES |
-| explosive | bomb-dogs | no | YES |
-| detect | bomb-dogs | no | no |
-| alert | bomb-dogs | no | no |
-| canine | bomb-dogs | no | no |
-| decibel | turn-it-down | YES | YES |
-| exposure | turn-it-down | no | YES |
-| permanent | turn-it-down | no | no |
-| damage | turn-it-down | no | no |
-| frequency | turn-it-down | YES | YES |
-| sponsor | hidden-ads | YES | no |
-| influence | hidden-ads | no | no |
-| persuade | hidden-ads | no | no |
-| consumer | hidden-ads | no | YES |
-| brand | hidden-ads | YES | no |
-
-### Images — `public/images/` (46 files total)
-
-| Category | Count | Status |
-|----------|-------|--------|
-| Book covers | 9 | All present (real artwork) |
-| Book illustrations | 15 | All present, paired with content |
-| Passage backgrounds | 13 | All present (bg + variants per passage) |
-| Vocabulary images | 5 | 5/15 words have images |
-| UI textures | 4 | Borders, backgrounds |
-
----
-
-## Gap Analysis
-
-### Content that needs authoring
-
-| Gap | Priority | Notes |
-|-----|----------|-------|
-| 4 books need content JSON | HIGH | storm-chasers, robot-revolution, lost-city, ocean-secrets — covers exist, need story text |
-| 10 vocabulary images | LOW | Only 5/15 words have images. Functional without them. |
-| Additional IR passages | MEDIUM | Only 3 passages exist. Original had 7+ per grade band. |
-| Study Plan assignments | LOW | Placeholder in assignments list |
-| Word Study activities | LOW | Placeholder — word sort, word slam, phonics |
-| iPractice assignments | LOW | Placeholder — multimedia, poem, drama |
-| Monitor Progress tests | LOW | Placeholder — benchmark, reading check |
-| Resources data | LOW | Notebook resources tab is empty categories |
-| Teacher comments/stars | LOW | Connect tab is a stub |
-
-### Content we could extract from ClassView source
-
-| Content | Source File | Extractable? |
-|---------|-----------|--------------|
-| 837 book metadata entries | `fetchbooklist.js` | YES — titles, authors, Lexile, genres, descriptions |
-| 22 genre categories | `libraryview.js` | YES |
-| 26 book review presets | `libraryview.js` | YES |
-| Reading skill taxonomy | `extraAssignments_info.js` | YES |
-| 15 guiding questions | `conference_info.js` | YES |
-| 16 teacher comment presets | `buzz_info.js` | YES |
-| 1 complete lesson (G8 U1L11) | `lesson_json.js` | YES — vocab, RATA, activities |
-| Grade assessment stanines | `grade-assessment-score/` | YES |
-
-**NOT extractable** (API-only): Book page text (833 books), book covers, assignment slide data, student data.
-
----
-
 ## File Path Quick Reference
 
 ```
 content/
+  book-catalog.json              # 833 books — full metadata catalog
+  genres.json                    # 444 genre tags with counts
+  categories.json                # 448 category entries
+  assignment-categories.json     # 13 assignment types with descriptions
+  assessment-scores.json         # Stanine tables, grades 3-12
+  skills-taxonomy.json           # 121 skills across 6 groups
+  teacher-presets.json           # Conference notes, questions, quick comments
+  review-presets.json            # 26 book review comment presets
+  interest-inventory.json        # Student reading survey (BOY/MOY/EOY)
+  interest-areas.json            # Reading interest categories
+  grade-band-gle.json            # Grade Level Equivalent bands
   books/
-    crash-dive.json          # Complete book
-    dream-dead.json          # Complete book
-    jungle-jenny.json        # Complete book
-    little-big-top.json      # Complete book
-    prince-pauper.json       # Complete book
+    crash-dive.json              # Authored book (complete)
+    dream-dead.json              # Authored book (complete)
+    jungle-jenny.json            # Authored book (complete)
+    little-big-top.json          # Authored book (complete)
+    prince-pauper.json           # Authored book (complete)
+  embedded-books/
+    index.json                   # 4 books extracted from page_content.js
+    ee5a6...076e35f.json         # Big Dog and Dan (16 pages)
+    f7d64...e384b8.json          # Playground (39 pages)
+    e1369...945a66.json          # Flygirl (37 pages)
+    d6e4f...a3cb1.json           # Vladimir Tod: Ninth Grade Slays (438 pages)
   passages/
-    bomb-dogs.json           # Complete IR passage
-    hidden-ads.json          # Complete IR passage
-    turn-it-down.json        # Complete IR passage
+    bomb-dogs.json               # Authored IR passage (complete)
+    hidden-ads.json              # Authored IR passage (complete)
+    turn-it-down.json            # Authored IR passage (complete)
+  iwt-fixtures/
+    index.json                   # 4 IWT passages from CMS fixtures
+    the-power-to-move.json       # Level 3, 9 slides
+    mentors-make-a-difference.json # Level 2, 7 slides
+    having-friends-making-choices.json # Level 1, 9 slides
+    cell-phones-tools-or-troublemakers.json # Level 2, 1 slide
+  lessons/
+    g8-u1-l11.json               # Complete lesson (8 activities, 26 slides)
   vocabulary/
-    vocabulary.json          # 15 words
+    vocabulary.json              # 15 vocabulary words
 
 public/images/
-  covers/                    # 9 book covers
-  illustrations/             # 15 book illustrations
-  passages/                  # 13 passage backgrounds
-  vocabulary/                # 5 vocabulary images
-  textures/                  # UI assets
-
-docs/classview/Webclient/App/js/
-  fetchbooklist.js           # 837 book metadata entries
-  libraryjson.js             # 832 book metadata (variant)
-  lesson_json.js             # 1 complete lesson (G8 U1L11)
-  assignment_category.js     # Assignment category definitions
-  extraAssignments_info.js   # Reading skill taxonomy
-  conference_info.js         # Teacher conference data
-  buzz_info.js               # Teacher quick comments
-  grade-assessment-score/    # Stanine tables (grades 3-12)
+  covers/                        # 9 book covers
+  illustrations/                 # 15 book illustrations
+  passages/                      # 13 passage backgrounds
+  vocabulary/                    # 5 vocabulary images
+  textures/                      # UI assets
 ```

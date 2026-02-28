@@ -1,0 +1,95 @@
+[
+  {
+    "name": "INTERACTIVE READING",
+    "popupName": "Interactive Reading",
+    "alias": "iwt",
+    "description": "Each student is assigned one Interactive Reading in each Lesson Set, based on leveling data gathered by the system. There are three parts to each Interactive Reading. Reading Checkpoints and Summaries are automatically scored. Critical Responses are scored by the teacher using a rubric."
+  },
+  {
+    "name": "STUDY PLAN",
+    "popupName": "Study Plan",
+    "alias": "studyplan",
+    "description": "Each student receives a personalized plan based on the results of a Pretest in the first three Lesson Sets of each unit. After additional instruction and practice, students take a posttest, which measures mastery of the skills. A student who scores 100% on the Pretest is finished and earns 100% for that study plan."
+  },
+  {
+    "name": "VOCABULARY, WORD STUDY, AND ACADEMIC TEXTS",
+    "popupName": "Vocabulary, Word Study, And Academic Texts",
+    "alias": {
+      "0": "phonictextbasedslide",
+      "1": "pluralnouns",
+      "2": "digraphs",
+      "3": "word_families",
+      "4": "syllables",
+      "5": "word_sort",
+      "6": "rotatinglists",
+      "7": "extendedphonic",
+      "8": "word_slam"
+    },
+    "description": "Students will complete assignments for vocabulary words on which they received direct instruction, including Word Slam and Word Match. They will also complete practice assignments of words in isolation in Word Study Practice and words in context in Word Study Readers. They will practice domain specific content area vocabulary with the comprehension of content area text in Academic Text assignments."
+  },
+  {
+    "name": "iPRACTICE",
+    "popupName": "iPractice",
+    "alias": "dailyassignment",
+    "description": "These assignments provide practice for the skill or strategy taught in Whole Group instruction.  Daily assignments are mostly scored by the teacher using a rubric."
+  },
+  {
+    "name": "WRITING",
+    "popupName": "Writing",
+    "alias": {
+      "0": "essay",
+      "1": "paragraph"
+    },
+    "description": "Students are assigned one short writing assignment in each of the first three Lesson Sets of each unit. Writing is automatically scored. Students can check their score and get feedback on their writing. They can revise as many times as they choose before they submit their writing as final."
+  },
+  {
+    "name": "INFORMATION",
+    "popupName": "Information",
+    "alias": "nsa",
+    "description": "Send weekly learning objectives to students so the focus of instruction and practice is clear each week and how instruction and practice aligns to state standards."
+  },
+  {
+    "name": "EXTRA PRACTICE",
+    "popupName": "Extra Practice",
+    "alias": "ExtraPractice",
+    "description": "Word Reading Extra Practice assignments provide additional instruction and practice for foundational reading skills, including phonics, decoding, and high-frequency words. Study Plans provide additional instruction and practice for conventions, spelling, and vocabulary. Word Study Readers and Academic Text provide additional practice with vocabulary and word study skills and comprehenion"
+  },
+  {
+    "name": "SORT",
+    "popupName": "Sort",
+    "alias": {
+      "0": "interactive_sort"
+    },
+    "description": ""
+  },
+  {
+    "name": "UNIT BENCHMARK ASSESSMENT",
+    "popupName": "Unit Benchmark Assessment",
+    "alias": "unitbenchmark",
+    "description": "These 50 item assessments test students mastery of the curriculum taught in the unit, including vocabulary, reading strategies, and skills taught in Whole Group."
+  },
+  {
+    "name": "WEEKLY READING CHECK",
+    "popupName": "Weekly Reading Check",
+    "alias": "wrc",
+    "description": "These five-item assessments help monitor students' reading comprehension progress in the first four weeks of each unit. Push the check to students in Lessons 5, 10, 15, and 20."
+  },
+  {
+    "name": "EXTRA PRACTICE",
+    "popupName": "Extra Practice",
+    "alias": "ExtraPractice",
+    "description": "Word Reading Extra Practice assignments provide additional instruction and practice for foundational reading skills, including phonics, decoding, and high-frequency words. Study Plans provide additional instruction and practice for conventions, spelling, and vocabulary. Word Study Readers and Academic Text provide additional practice with vocabulary and word study skills and comprehenion"
+  },
+  {
+    "name": "GRADE",
+    "popupName": "Grade",
+    "alias": "grade",
+    "description": "The Group Reading Assessment and Diagnostic Evaluation-also known as the GRADE-is a developmentally based, group-administered assessment of reading. The GRADE should be administered three times during the school year. At the beginning of the year, administer GRADE as a diagnostic tool to set a baseline reading level for students. At mid year, administer the GRADE to monitor progress; at the end of the year, administer the GRADE to measure growth across the year."
+  },
+  {
+    "name": "EXTRA PRACTICE",
+    "popupName": "Extra Practice",
+    "alias": "ExtraPractice",
+    "description": "Word Reading Extra Practice assignments provide additional instruction and practice for foundational reading skills, including phonics, decoding, and high-frequency words. Study Plans provide additional instruction and practice for conventions, spelling, and vocabulary. Word Study Readers and Academic Text provide additional practice with vocabulary and word study skills and comprehenion"
+  }
+]

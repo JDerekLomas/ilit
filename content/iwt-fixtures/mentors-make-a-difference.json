@@ -1,0 +1,156 @@
+{
+  "id": "fea9fbc094ca457cacaf7e3b369d524d",
+  "title": "Mentors Make a Difference",
+  "level": 2,
+  "week": 1,
+  "introAnimation": "fea9fbc094ca457cacaf7e3b369d524d/AVA232204.mp4",
+  "slides": [
+    {
+      "sequenceNumber": 1,
+      "type": "text-answer",
+      "background_image": "None/IMG220032_1.jpg",
+      "slide_title": "Set me!",
+      "static_text": "<p><strong>The Wisdom of Mentors</strong></p> <p>Where would Luke Skywalker be without Obi-Wan Kenobi? Great adventure heroes have one thing in common. They do not succeed alone. This is true in real life, too. Teens, especially, often need guidance and support from others.</p> <p></p> <p>You may have lots of talent and energy. Your friends may support you. Still, at some point, you are probably going to need the wisdom of someone from an older generation. An adult who has been where you are now can guide you, inspire you, and give you the push you need to succeed.</p>",
+      "question": "",
+      "static_text_sync_file": "",
+      "fail_again_text": "",
+      "rubric": null,
+      "skill": null,
+      "_id": "e46c1a4e733a4061b859ca707d31c286",
+      "pass_text": "",
+      "static_text_audio": "",
+      "fail_text": ""
+    },
+    {
+      "sequenceNumber": 2,
+      "type": "highlight",
+      "background_image": "None/IMG220032.jpg",
+      "slide_title": "Set me!",
+      "static_text": "",
+      "highlights": [
+        11
+      ],
+      "question": "<p><strong>Make Predictions</strong></p> <p> </p> <p>You could make a prediction that this text may help you discover possible mentors that might not be obvious to you. Highlight the sentence that would lead you to that prediction.</p> <p><strong><br /></strong></p>",
+      "static_text_sync_file": "",
+      "fail_again_text": "<p>Look carefully at the highlighted sentence. <em>Although you may not realize it</em> means that it is something that you don’t know for sure. The words “if you know where to look” lets you know that you might discover who these mentors are.</p>",
+      "interactive_text_audio": "",
+      "interactive_text": "<p><br />Adults who guide young people toward success are known as mentors. The word “mentor” comes from one of the world's first adventure stories, the ancient Greek story the<em> Odyssey</em>. One of the story’s characters, Mentor, was the teacher of the hero's son.</p> <p> </p> <p>Although you may not realize it, there are mentors in your own life, if you know where to look.</p> <p><strong><br /></strong></p>",
+      "interactive_text_sync_file": "",
+      "skill": null,
+      "_id": "e781a97a8bc64848a816d8d116f06b5b",
+      "pass_text": "<p><strong>GREAT JOB!</strong></p> <p><strong> </strong></p> <p>You identified the sentence that would lead you to that prediction.</p>",
+      "static_text_audio": "",
+      "fail_text": "<p><strong>Try Again</strong></p> <p><strong> </strong></p> <p>Look at the article’s title again. Then scan the text for a sentence that supports that idea.</p>",
+      "highlightAnswers": [
+        {
+          "color": "y",
+          "text": "<p>Although you may not realize it, there are mentors in your own life, if you know where to look. </p>"
+        }
+      ]
+    },
+    {
+      "sequenceNumber": 3,
+      "type": "highlight",
+      "background_image": "None/IMG220033_1.jpg",
+      "slide_title": "Set me!",
+      "static_text": "",
+      "highlights": [
+        12
+      ],
+      "question": "<p><strong>Author’s Purpose</strong></p> <p><strong> </strong></p> <p>The author gives clues that her purpose in writing is to explain and inform. Highlight the sentence that explains <em>why</em> teens judge family members to be good mentors.</p>",
+      "static_text_sync_file": "",
+      "fail_again_text": "<p>Look carefully at the highlighted sentence. In this sentence, the author explains that family members make good mentors to teens because they are “involved in their daily lives” and “have the most impact.” </p>",
+      "interactive_text_audio": "",
+      "interactive_text": "<p><strong>Close To Home</strong></p> <p>Many kids find mentors in people close to them.  A survey of more than 3,300 middle school and high school teens across the country asked teens whom they see as role models. Teens judged family members, such as parents, aunts, uncles, and grandparents, to be their mentors. \"It's apparent that while kids look up to many people in our society, it's those who are involved in their daily lives who have the most impact,\" the survey director said.</p>",
+      "interactive_text_sync_file": "",
+      "skill": null,
+      "_id": "d0dbef86f7d548728216a17df2ed66b1",
+      "pass_text": "<p><strong>AWESOME!</strong></p> <p><strong> </strong></p> <p>You correctly identified the sentence. </p>",
+      "static_text_audio": "",
+      "fail_text": "<p><strong>Try Again</strong></p> <p><strong> </strong></p> <p>When trying to find more information about something stated in text, look at the sentences that follow it. Find the sentence that says<em> </em>teens judge family members to be good mentors, and read on to determine <em>why</em> they do.</p>",
+      "highlightAnswers": [
+        {
+          "color": "y",
+          "text": "<p>\"It's apparent that while kids look up to many people in our society, it's those who are involved in their daily lives who have the most impact,\" the survey director said.</p>"
+        }
+      ]
+    },
+    {
+      "sequenceNumber": 4,
+      "type": "drag-and-drop",
+      "background_image": "None/IMG220034.jpg",
+      "slide_title": "Set me!",
+      "static_text": "",
+      "question": "",
+      "static_text_sync_file": "",
+      "fail_again_text": "<p>Reread the text in this passage, keeping the question “Why are the teachers in the movies good mentors?” in your mind. Look for the clue words <em>These teachers taught </em> …</p> <p><strong></strong></p>",
+      "interactive_text_audio": "",
+      "interactive_text": "<p><strong>Teachers As Mentors </strong></p> <p>Teachers also scored high on the survey. Like Mentor in the <em>Odyssey,</em> teachers guide and challenge young people.  Hollywood has long recognized our appreciation of inspirational teachers.  Popular movies such as S<em>tand and Deliver </em>and <em>Freedom Writers</em> are based on the stories of real-life teachers. These teachers taught kids as much about life as they did about writing and math. In <em>Stand and Deliver</em>, a teacher motivates a class full of East Los Angeles barrio kids to care enough about mathematics to pass an Advanced Placement Calculus Test. In <em>Freedom Writers</em>, a teacher turns around the lives of troubled kids at Wilson High School in Long Beach, California. </p>",
+      "interactive_text_sync_file": "",
+      "skill": null,
+      "_id": "ed3216e2cea340fea7a7173b486061e9",
+      "pass_text": "<p><strong>WELL DONE!</strong></p> <p><strong> </strong></p> <p>You correctly identified the sentence. </p>",
+      "static_text_audio": "",
+      "fail_text": "<p><strong>Try Again</strong></p> <p><strong> </strong></p> <p>Reread the text, looking for the clue words <em>These teachers taught </em>. . .. The author tells readers exactly why the teachers were good mentors.</p>"
+    },
+    {
+      "sequenceNumber": 5,
+      "type": "highlight",
+      "background_image": "None/IMG220035.jpg",
+      "slide_title": "Set me!",
+      "static_text": "",
+      "highlights": [
+        13
+      ],
+      "question": "<p><strong>Author’s Purpose</strong></p> <p> </p> <p>When writing to inform, authors often include statistics, or numerical measurements, to support their words. Highlight the sentence in this passage that provides a statistic about the popularity of mentoring.</p>",
+      "static_text_sync_file": "",
+      "fail_again_text": "<p>Look at the highlighted sentence. The author’s purpose is to inform. She provides a statistic, or number, to inform the reader that over 3 million American adults volunteer as mentors. </p>",
+      "interactive_text_audio": "",
+      "interactive_text": "<p><strong>The Larger Community</strong></p> <p>An old African proverb says, “It takes a village to raise a child.” This proverb means the whole community can have a supportive role in a young person’s success. Adults can volunteer to be mentors, working one-on-one with young people.  It is estimated that over 3 million American adults do just that. They spend time with kids, sharing interests and cheering the kids’ successes. Whole communities can also be mentors. They can sponsor programs to help young people succeed in life. In Boston, teens learn about organic farming by working with adult farmers in community gardens. The food they grow goes to food banks and soup kitchens.</p>",
+      "interactive_text_sync_file": "",
+      "skill": null,
+      "_id": "b1ca3cb175884ed7875b8f78466e613d",
+      "pass_text": "<p><strong>GREAT JOB!</strong></p> <p><strong> </strong></p> <p>You identified the correct sentence.</p>",
+      "static_text_audio": "",
+      "fail_text": "<p><strong>Try Again</strong></p> <p> </p> <p>Look back at the text for a number that gives a clue about a statistic the author uses.</p>",
+      "highlightAnswers": [
+        {
+          "color": "y",
+          "text": "<p>It is estimated that over 3 million American adults do just that.</p>"
+        }
+      ]
+    },
+    {
+      "sequenceNumber": 6,
+      "type": "text-answer",
+      "background_image": "None/IMG220036.jpg",
+      "slide_title": "Set me!",
+      "static_text": "<p><strong>Making a Difference</strong></p> <p>Most people agree that the influence of caring adults can make a difference to kids. Many adults, however, think mentoring is just about helping kids with their homework. Adults volunteer as tutors, thinking teens only need help with schoolwork. But according to the survey, kids value mentors who are trustworthy, caring, and understanding. Successful mentors do not need to be educators. They do not need special training. So what do teens value most in a mentor? According to the survey, a good listener.</p>",
+      "question": "",
+      "static_text_sync_file": "",
+      "fail_again_text": "",
+      "rubric": null,
+      "skill": null,
+      "_id": "ea9f4d788ab043f2abe3afb6cd9a4807",
+      "pass_text": "",
+      "static_text_audio": "",
+      "fail_text": ""
+    },
+    {
+      "sequenceNumber": 7,
+      "type": "text-answer",
+      "background_image": "None/IMG220037.jpg",
+      "slide_title": "Set me!",
+      "static_text": "",
+      "question": "<p>After reading this article, do you think it’s important that adults act as mentors for teens? Provide reasons that support your answer. </p>",
+      "static_text_sync_file": "",
+      "fail_again_text": "",
+      "rubric": null,
+      "skill": null,
+      "_id": "a1b7e5fa547247bf9a1336b464a12e8b",
+      "pass_text": "",
+      "static_text_audio": "",
+      "fail_text": ""
+    }
+  ]
+}

@@ -1,0 +1,495 @@
+{
+  "BOY": {
+    "LandingPageImage": "iLit20_Sproto_Interest_Inventory_Initial.jpg",
+    "Questions": [
+      {
+        "Q": "Do you enjoy reading?",
+        "A": [
+          {
+            "val": "Y",
+            "display": "Yes"
+          },
+          {
+            "val": "N",
+            "display": "No"
+          }
+        ],
+        "FieldName": "enjoyReading"
+      },
+      {
+        "Q": "How many books have you read in the last year?",
+        "A": [
+          {
+            "val": "NON",
+            "display": "0"
+          },
+          {
+            "val": "1",
+            "display": "1"
+          },
+          {
+            "val": "2",
+            "display": "2"
+          },
+          {
+            "val": "3",
+            "display": "3"
+          },
+          {
+            "val": "4",
+            "display": "4"
+          },
+          {
+            "val": "5",
+            "display": "5"
+          },
+          {
+            "val": "MT5",
+            "display": "More"
+          }
+        ],
+        "FieldName": "booksReadLastYear"
+      },
+      {
+        "Q": "Do people in your family like to read?",
+        "A": [
+          {
+            "val": "Y",
+            "display": "Yes"
+          },
+          {
+            "val": "N",
+            "display": "No"
+          }
+        ],
+        "FieldName": "familyLikeToRead"
+      },
+      {
+        "Q": "How often do you read books?",
+        "A": [
+          {
+            "val": "DAI",
+            "display": "Daily"
+          },
+          {
+            "val": "SUM",
+            "display": "Summer"
+          },
+          {
+            "val": "VAC",
+            "display": "Vacations"
+          },
+          {
+            "val": "OCC",
+            "display": "Occasionally"
+          },
+          {
+            "val": "WEND",
+            "display": "Weekends"
+          },
+          {
+            "val": "ONLS",
+            "display": "Only School"
+          }
+        ],
+        "FieldName": "timeSpendReading"
+      },
+      {
+        "Q": "Do you have access to a local library?",
+        "A": [
+          {
+            "val": "Y",
+            "display": "Yes"
+          },
+          {
+            "val": "N",
+            "display": "No"
+          }
+        ],
+        "FieldName": "accessToLocalLibrary"
+      },
+      {
+        "Q": "Which of the following do you read? Select all that apply.",
+        "A": [
+          {
+            "val": "INTA",
+            "display": "Internet Articles"
+          },
+          {
+            "val": "SM",
+            "display": "Social Media"
+          },
+          {
+            "val": "MAG",
+            "display": "Magazines"
+          },
+          {
+            "val": "BOOK",
+            "display": "Books"
+          }
+        ],
+        "FieldName": "whatYouRead"
+      },
+      {
+        "Q": "What format do you like to read? Select all that apply.",
+        "A": [
+          {
+            "val": "ONM",
+            "display": "Phone"
+          },
+          {
+            "val": "ONT",
+            "display": "Tablet"
+          },
+          {
+            "val": "ONC",
+            "display": "Computer"
+          },
+          {
+            "val": "PB",
+            "display": "Print Book"
+          }
+        ],
+        "FieldName": "howYouRead"
+      }
+    ]
+  },
+  "MOY": {
+    "LandingPageImage": "iLit20_Sproto_Interest_Inventory_MidYear.jpg",
+    "Questions": [
+      {
+        "Q": "Are you enjoying the iLit experience?",
+        "A": [
+          {
+            "val": "Y",
+            "display": "Yes"
+          },
+          {
+            "val": "N",
+            "display": "No"
+          }
+        ],
+        "FieldName": "enjoyIlitExp"
+      },
+      {
+        "Q": "Do you enjoy reading?",
+        "A": [
+          {
+            "val": "Y",
+            "display": "Yes"
+          },
+          {
+            "val": "N",
+            "display": "No"
+          }
+        ],
+        "FieldName": "enjoyReading"
+      },
+      {
+        "Q": "How many books have you read in the last year?",
+        "A": [
+          {
+            "val": "NON",
+            "display": "0"
+          },
+          {
+            "val": "1",
+            "display": "1"
+          },
+          {
+            "val": "2",
+            "display": "2"
+          },
+          {
+            "val": "3",
+            "display": "3"
+          },
+          {
+            "val": "4",
+            "display": "4"
+          },
+          {
+            "val": "5",
+            "display": "5"
+          },
+          {
+            "val": "MT5",
+            "display": "More"
+          }
+        ],
+        "FieldName": "booksReadLastYear"
+      },
+      {
+        "Q": "Do people in your family like to read?",
+        "A": [
+          {
+            "val": "Y",
+            "display": "Yes"
+          },
+          {
+            "val": "N",
+            "display": "No"
+          }
+        ],
+        "FieldName": "familyLikeToRead"
+      },
+      {
+        "Q": "How often do you read books?",
+        "A": [
+          {
+            "val": "DAI",
+            "display": "Daily"
+          },
+          {
+            "val": "SUM",
+            "display": "Summer"
+          },
+          {
+            "val": "VAC",
+            "display": "Vacations"
+          },
+          {
+            "val": "OCC",
+            "display": "Occasionally"
+          },
+          {
+            "val": "WEND",
+            "display": "Weekends"
+          },
+          {
+            "val": "ONLS",
+            "display": "Only School"
+          }
+        ],
+        "FieldName": "timeSpendReading"
+      },
+      {
+        "Q": "Do you have access to a local library?",
+        "A": [
+          {
+            "val": "Y",
+            "display": "Yes"
+          },
+          {
+            "val": "N",
+            "display": "No"
+          }
+        ],
+        "FieldName": "accessToLocalLibrary"
+      },
+      {
+        "Q": "Which of the folowing do you read? Select all that apply.",
+        "A": [
+          {
+            "val": "INTA",
+            "display": "Internet Articles"
+          },
+          {
+            "val": "SM",
+            "display": "Social Media"
+          },
+          {
+            "val": "MAG",
+            "display": "Magazines"
+          },
+          {
+            "val": "BOOK",
+            "display": "Books"
+          }
+        ],
+        "FieldName": "whatYouRead"
+      },
+      {
+        "Q": "What format do you like to read? Select all that apply.",
+        "A": [
+          {
+            "val": "ONM",
+            "display": "Phone"
+          },
+          {
+            "val": "ONT",
+            "display": "Tablet"
+          },
+          {
+            "val": "ONC",
+            "display": "Computer"
+          },
+          {
+            "val": "PB",
+            "display": "Print Book"
+          }
+        ],
+        "FieldName": "howYouRead"
+      }
+    ]
+  },
+  "EOY": {
+    "LandingPageImage": "iLit20_Sproto_Interest_Inventory_Final.jpg",
+    "Questions": [
+      {
+        "Q": "Are you enjoying the iLit experience?",
+        "A": [
+          {
+            "val": "Y",
+            "display": "Yes"
+          },
+          {
+            "val": "N",
+            "display": "No"
+          }
+        ],
+        "FieldName": "enjoyIlitExp"
+      },
+      {
+        "Q": "Do you enjoy reading?",
+        "A": [
+          {
+            "val": "Y",
+            "display": "Yes"
+          },
+          {
+            "val": "N",
+            "display": "No"
+          }
+        ],
+        "FieldName": "enjoyReading"
+      },
+      {
+        "Q": "How many books have you read in the last year?",
+        "A": [
+          {
+            "val": "NON",
+            "display": "0"
+          },
+          {
+            "val": "1",
+            "display": "1"
+          },
+          {
+            "val": "2",
+            "display": "2"
+          },
+          {
+            "val": "3",
+            "display": "3"
+          },
+          {
+            "val": "4",
+            "display": "4"
+          },
+          {
+            "val": "5",
+            "display": "5"
+          },
+          {
+            "val": "MT5",
+            "display": "More"
+          }
+        ],
+        "FieldName": "booksReadLastYear"
+      },
+      {
+        "Q": "Do people in your family like to read?",
+        "A": [
+          {
+            "val": "Y",
+            "display": "Yes"
+          },
+          {
+            "val": "N",
+            "display": "No"
+          }
+        ],
+        "FieldName": "familyLikeToRead"
+      },
+      {
+        "Q": "How often do you read books?",
+        "A": [
+          {
+            "val": "DAI",
+            "display": "Daily"
+          },
+          {
+            "val": "SUM",
+            "display": "Summer"
+          },
+          {
+            "val": "VAC",
+            "display": "Vacations"
+          },
+          {
+            "val": "OCC",
+            "display": "Occasionally"
+          },
+          {
+            "val": "WEND",
+            "display": "Weekends"
+          },
+          {
+            "val": "ONLS",
+            "display": "Only School"
+          }
+        ],
+        "FieldName": "timeSpendReading"
+      },
+      {
+        "Q": "Do you have access to a local library?",
+        "A": [
+          {
+            "val": "Y",
+            "display": "Yes"
+          },
+          {
+            "val": "N",
+            "display": "No"
+          }
+        ],
+        "FieldName": "accessToLocalLibrary"
+      },
+      {
+        "Q": "Which of the folowing do you read? Select all that apply.",
+        "A": [
+          {
+            "val": "INTA",
+            "display": "Internet Articles"
+          },
+          {
+            "val": "SM",
+            "display": "Social Media"
+          },
+          {
+            "val": "MAG",
+            "display": "Magazines"
+          },
+          {
+            "val": "BOOK",
+            "display": "Books"
+          }
+        ],
+        "FieldName": "whatYouRead"
+      },
+      {
+        "Q": "What format do you like to read? Select all that apply.",
+        "A": [
+          {
+            "val": "ONM",
+            "display": "Phone"
+          },
+          {
+            "val": "ONT",
+            "display": "Tablet"
+          },
+          {
+            "val": "ONC",
+            "display": "Computer"
+          },
+          {
+            "val": "PB",
+            "display": "Print Book"
+          }
+        ],
+        "FieldName": "howYouRead"
+      }
+    ]
+  }
+}

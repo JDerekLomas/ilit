@@ -1,0 +1,172 @@
+{
+	  "ITEMS": [
+		  {
+			"c_s_NAME": "Action and Adventure",
+			"c_s_CODE": "ACA"
+		  },
+		  {
+			"c_s_NAME": "Animals",
+			"c_s_CODE": "ANI"
+		  },
+		  {
+			"c_s_NAME": "Art",
+			"c_s_CODE": "ART"
+		  },
+		  {
+			"c_s_NAME": "Autobiographies",
+			"c_s_CODE": "AUTB"
+		  },
+		  {
+			"c_s_NAME": "Biographies",
+			"c_s_CODE": "BIOS"
+		  },
+		  {
+			"c_s_NAME": "Cultures",
+			"c_s_CODE": "CUL"
+		  },
+		  {
+			"c_s_NAME": "Disasters and Tragedies",
+			"c_s_CODE": "DAT"
+		  },
+		  {
+			"c_s_NAME": "Dance",
+			"c_s_CODE": "DAN"
+		  },
+		  {
+			"c_s_NAME": "Drama and Plays",
+			"c_s_CODE": "DRA"
+		  },
+		  {
+			"c_s_NAME": "Fables and Folklore",
+			"c_s_CODE": "FAB"
+		  },
+		  {
+			"c_s_NAME": "Fairy Tales",
+			"c_s_CODE": "FT"
+		  },
+		  {
+			"c_s_NAME": "Fantasy",
+			"c_s_CODE": "FANT"
+		  },
+		  {
+			"c_s_NAME": "Fiction",
+			"c_s_CODE": "FIC"
+		  },
+		  {
+			"c_s_NAME": "Food",
+			"c_s_CODE": "FOOD"
+		  },
+		  {
+			"c_s_NAME": "Friendship and Family",
+			"c_s_CODE": "FRND"
+		  },
+		  {
+			"c_s_NAME": "Geography",
+			"c_s_CODE": "GEO"
+		  },
+		  {
+			"c_s_NAME": "Graphic Novels",
+			"c_s_CODE": "GN"
+		  },
+		  {
+			"c_s_NAME": "Historical Fiction",
+			"c_s_CODE": "HFIC"
+		  },
+		  {
+			"c_s_NAME": "History",
+			"c_s_CODE": "HIS"
+		  },
+		  {
+			"c_s_NAME": "Horror",
+			"c_s_CODE": "HORR"
+		  },
+		  {
+			"c_s_NAME": "Humor",
+			"c_s_CODE": "HUM"
+		  },
+		  {
+			"c_s_NAME": "Mythology and Legends",
+			"c_s_CODE": "LEG"
+		  },
+		  {
+			"c_s_NAME": "Music",
+			"c_s_CODE": "MUS"
+		  },
+		  {
+			"c_s_NAME": "Mysteries",
+			"c_s_CODE": "MYS"
+		  },
+		  {
+			"c_s_NAME": "Nature and Environment",
+			"c_s_CODE": "NENV"
+		  },
+		  {
+			"c_s_NAME": "News and Politics",
+			"c_s_CODE": "NPOL"
+		  },
+		  {
+			"c_s_NAME": "Nonfiction",
+			"c_s_CODE": "NONF"
+		  },
+		  {
+			"c_s_NAME": "Novels",
+			"c_s_CODE": "NOV"
+		  },
+		  {
+			"c_s_NAME": "Picture Books",
+			"c_s_CODE": "PICB"
+		  },
+		  {
+			"c_s_NAME": "Poetry",
+			"c_s_CODE": "POET"
+		  },
+		  {
+			"c_s_NAME": "Realistic Fiction",
+			"c_s_CODE": "RFIC"
+		  },
+		  {
+			"c_s_NAME": "Romances",
+			"c_s_CODE": "ROM"
+		  },
+		  {
+			"c_s_NAME": "Science",
+			"c_s_CODE": "SC"
+		  },
+		  {
+			"c_s_NAME": "Science Fiction",
+			"c_s_CODE": "SCF"
+		  },
+		  {
+			"c_s_NAME": "Short Stories",
+			"c_s_CODE": "SS"
+		  },
+		  {
+			"c_s_NAME": "Space",
+			"c_s_CODE": "SPA"
+		  },
+		  {
+			"c_s_NAME": "Sports",
+			"c_s_CODE": "SPO"
+		  },
+		  {
+			"c_s_NAME": "Supernatural",
+			"c_s_CODE": "SUP"
+		  },
+		  {
+			"c_s_NAME": "Technology",
+			"c_s_CODE": "TECH"
+		  },
+		  {
+			"c_s_NAME": "Thrillers",
+			"c_s_CODE": "THR"
+		  },
+		  {
+			"c_s_NAME": "Transportation",
+			"c_s_CODE": "TRAN"
+		  },
+		  {
+			"c_s_NAME": "Travel",
+			"c_s_CODE": "TRA"
+		  }
+		]
+	}

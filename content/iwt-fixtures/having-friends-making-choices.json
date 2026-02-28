@@ -1,0 +1,213 @@
+{
+  "id": "d001d47888664b988aafeba6fe1220bf",
+  "title": "Having Friends, Making Choices",
+  "level": 1,
+  "week": 1,
+  "introAnimation": "",
+  "slides": [
+    {
+      "sequenceNumber": 1,
+      "type": "highlight",
+      "background_image": "None/IMG220018_4.jpg",
+      "slide_title": "Set me!",
+      "static_text": "",
+      "highlights": [
+        2
+      ],
+      "question": "<p><strong>Author’s Purpose</strong><strong> </strong></p> <p>Highlight the sentence in this paragraph that might lead you to conclude that the author's purpose is either to inform about the effects reader's about peer pressure or to persuade them to resist peer pressure.<strong></strong></p>",
+      "static_text_sync_file": "",
+      "fail_again_text": "<p>Look carefully at the highlighted sentence. It defines peer pressure. You might expect the author to continue by providing examples. Those example might be used to inform readers about peer pressure, or they may be used to illustrate situations in which peer pressure is to be avoided in an effort to persuade readers.</p>",
+      "interactive_text_audio": "",
+      "interactive_text": "<p><strong>Choices </strong></p> <p>You may have nicknames for your friends, but “peers” is probably not one of them. However, peers are people your age who share your interests. While you may not be familiar with the word “peers,” you have probably heard of “peer pressure.” That is when your peers try to <strong>convince</strong> you to do things they are doing.</p>",
+      "interactive_text_sync_file": "",
+      "skill": null,
+      "_id": "a67ab430e5684d64bd43f89e8fadab5f",
+      "pass_text": "<p><strong>GREAT JOB!<br /> </strong></p> <p><strong></strong>You predicted that your peers might put pressure on you to do things that they are doing.</p>",
+      "static_text_audio": "",
+      "fail_text": "<p><strong>Try Again</strong></p> <p>Look carefully at each sentence. Choose a single sentence that reveals information about the impact of peer pressure.</p>",
+      "highlightAnswers": [
+        {
+          "color": "y",
+          "text": "<p>Peer pressure is when your peers try to <strong>convince</strong> you to do things that they are doing. </p>"
+        }
+      ]
+    },
+    {
+      "sequenceNumber": 2,
+      "type": "highlight",
+      "background_image": "None/IMG220019_1.jpg",
+      "slide_title": "Set me!",
+      "static_text": "",
+      "highlights": [
+        3
+      ],
+      "question": "<p><strong>Author’s Purpose</strong></p> <p>Highlight the sentence in this paragraph that might lead you to conclude that the author 's purpose is either to inform about the effects reader's about peer pressure or to persuade them to resist peer pressure.</p>",
+      "static_text_sync_file": "",
+      "fail_again_text": "<p>Look carefully at the highlighted sentence. In this sentence, the author explains that positive peer pressure can “inspire you.” This is only sentence in the passage that explains how peer pressure can lead to something positive. </p>",
+      "interactive_text_audio": "",
+      "interactive_text": "<p><strong>Good and Bad </strong></p> <p>Sometimes peer pressure can be a good thing. Maybe your buddies persuade you to try out for their basketball team or join their study group. Seeing friends set and achieve goals can inspire you to do something positive.</p>",
+      "interactive_text_sync_file": "",
+      "skill": null,
+      "_id": "a9c156217d644e6e8299c1415c4b2291",
+      "pass_text": "<p><strong>AWESOME!</strong></p> <p>You correctly identified the sentence that explains how peer pressure can lead to positive results.   </p>",
+      "static_text_audio": "",
+      "fail_text": "<p><strong>Try Again</strong> </p> <p>The author’s purpose is to inform, or teach and explain. In this passage, there is one sentence that explains how peer pressure can be a positive force. Look for the key word<em> positive</em>. </p>",
+      "highlightAnswers": [
+        {
+          "color": "y",
+          "text": "<p>Maybe your buddies persuade you to try out for their basketball team or join their study group. Seeing friends set and achieve goals can inspire you to do something positive    </p>"
+        }
+      ]
+    },
+    {
+      "sequenceNumber": 3,
+      "type": "text-answer",
+      "background_image": "None/IMG220019_1.jpg",
+      "slide_title": "Set me!",
+      "static_text": "<p>Peer pressure can also be a bad thing. It can push you in the wrong direction or down the wrong path. Have you ever felt you had to prove yourself by doing something you knew was wrong? Sometimes peer pressure stops you from speaking up. You may worry about losing friends if you disagree with them. Peer pressure can also make you take dangerous risks. You may worry that your friends will make fun of you if you don’t go along with the group, even if that could mean getting in trouble with parents, adults at school, or even the police.</p>",
+      "question": "",
+      "static_text_sync_file": "",
+      "fail_again_text": "",
+      "rubric": null,
+      "skill": null,
+      "_id": "f69f35ac1cd7495ba3d0b0858747a053",
+      "pass_text": "",
+      "static_text_audio": "",
+      "fail_text": ""
+    },
+    {
+      "sequenceNumber": 4,
+      "type": "highlight",
+      "background_image": "None/IMG220020_1.jpg",
+      "slide_title": "What To Do?",
+      "static_text": "",
+      "highlights": [
+        18
+      ],
+      "question": "<p><strong>Author’s Purpose</strong></p> <p><strong> </strong></p> <p>In this passage, the author offers a information about how you know when saying “yes” to behavior may be a mistake. Highlight this sentence in the text<strong> </strong>that tells you what to pay attention to.<strong></strong></p>",
+      "static_text_sync_file": "",
+      "fail_again_text": "<p>Look at the highlighted sentence. The author provides a specific feeling that you should pay attention to. </p>",
+      "interactive_text_audio": "",
+      "interactive_text": "<p><strong>What To Do?</strong></p> <p><strong><br /></strong></p> <p>What is the best thing to do if you find yourself in a tight spot? There are choices you can make if you feel pressured by your peers.</p> <p> </p> <p>Before you say \"yes\" to questionable behavior, take a minute to think about it. This can help you avoid making a big mistake. To test your true feelings about a situation, notice how your body feels when you think about doing something. If you feel queasy when you think of saying \"yes,\" pay attention. You are not being true to yourself when you go along with something you know is wrong.</p>",
+      "interactive_text_sync_file": "",
+      "skill": null,
+      "_id": "fa819996bfdb4e2e8b99c1df4efc2148",
+      "pass_text": "<p><strong>You rock!</strong></p> <p> </p> <p>You identified the correct sentences.<strong><br /></strong></p>",
+      "static_text_audio": "",
+      "fail_text": "<p><strong>Try again</strong></p> <p><strong> </strong></p> <p>Remember that the author’s purpose is to teach and explain. Reread the text and look for the clue words <em>You might say…</em> The author tells readers exactly what they might feel. </p>",
+      "highlightAnswers": [
+        {
+          "color": "y",
+          "text": "<p>If you feel queasy when you think of saying “yes,” pay attention.</p>"
+        }
+      ]
+    },
+    {
+      "sequenceNumber": 5,
+      "type": "text-answer",
+      "background_image": "None/IMG220020_2.jpg",
+      "slide_title": "Saying \"no\" should be easy",
+      "static_text": "<p>Saying \"no\" should be easy. The truth, however, is that actually doing so in a difficult situation can be tough. Plan ahead so that you have a reason to support your decision to say “no.” You might say, \"My dad said to be home right after school. Sorry, I'm out.\" Say \"no,\" give your reason, and get moving. An exit plan, prepared ahead of time, is a good way to confront a challenging situation. </p>",
+      "question": "",
+      "static_text_sync_file": "",
+      "fail_again_text": "",
+      "rubric": null,
+      "skill": null,
+      "_id": "f9b89b46a5dd468f84574fcb824a3ff4",
+      "pass_text": "",
+      "static_text_audio": "",
+      "fail_text": ""
+    },
+    {
+      "sequenceNumber": 6,
+      "type": "highlight",
+      "background_image": "None/IMG220021.jpg",
+      "slide_title": "Strike A Deal",
+      "static_text": "",
+      "highlights": [
+        19
+      ],
+      "question": "<p><strong>Author’s Purpose</strong></p> <p><strong> </strong></p> <p>What strategy does the author on how to deal with peer pressure? Highlight the sentence.</p>",
+      "static_text_sync_file": "",
+      "fail_again_text": "<p>Look at the highlighted sentence. The author is providing a suggestion for dealing with peer pressure. </p>",
+      "interactive_text_audio": "",
+      "interactive_text": "<p><strong>Strike A Deal</strong></p> <p>Come up with a different idea. Suggest that you go to a movie or other safe place for fun instead of somewhere that may lead to trouble. Turn on the positive peer pressure, and rally your friends to do the right thing. If no one takes your suggestion, that is okay. Remember your exit plan, and use it to get yourself out of a potentially bad situation.</p>",
+      "interactive_text_sync_file": "",
+      "skill": null,
+      "_id": "bc3ba4415e574408a3bf6cee00530da6",
+      "pass_text": "<p><strong>You rock!</strong></p> <p><strong> </strong></p> <p>You identified the correct sentences.</p>",
+      "static_text_audio": "",
+      "fail_text": "<p><strong>Try again</strong></p> <p><strong> </strong></p> <p>One method authors use to express their purpose is through topic sentences at the beginning of a paragraph. Look back at the opening sentence in the paragraph for clues to the author’s main suggestion. </p>",
+      "highlightAnswers": [
+        {
+          "color": "y",
+          "text": "<p>Come up with a different idea.</p>"
+        }
+      ]
+    },
+    {
+      "sequenceNumber": 7,
+      "type": "text-answer",
+      "background_image": "None/IMG220021_1.jpg",
+      "slide_title": "Slow Down",
+      "static_text": "<p><strong>Slow Down</strong></p> <p>If you do not know how to say \"no,\" don’t commit to the plan. Tell your friends that you are unsure if you can join them. Tell them you might catch up with them later. This gives you time to create an exit plan or figure out how best to say \"no.\"</p>",
+      "question": "",
+      "static_text_sync_file": "",
+      "fail_again_text": "",
+      "rubric": null,
+      "skill": null,
+      "_id": "a88dda1a88224fe89e8dbb081b605a1a",
+      "pass_text": "",
+      "static_text_audio": "",
+      "fail_text": ""
+    },
+    {
+      "sequenceNumber": 8,
+      "type": "highlight",
+      "background_image": "None/IMG220022.jpg",
+      "slide_title": "Tight Spot",
+      "static_text": "",
+      "highlights": [
+        20,
+        21
+      ],
+      "question": "<p><strong>Author’s Purpose</strong></p> <p><strong> </strong></p> <p>Highlight the in yellow the sentence that lets you know that the author is going to tell you what to do if you are faced with bad peer pressure. Highlight in red the sentence in which the author tells you how to find positive peers. </p>",
+      "static_text_sync_file": "",
+      "fail_again_text": "<p>Look at the highlighted sentences. The author is providing a suggestion for dealing with both positive and negative peer pressure. </p>",
+      "interactive_text_audio": "",
+      "interactive_text": "<p><strong>Tight Spot</strong></p> <p>You may find yourself in a tight spot someday. Maybe you already have. Some of your peers may be making choices you know are wrong. Sometimes you may not know the right thing to do. Talk to an adult you trust about a difficult situation you are facing. A coach, a teacher, an older sibling, or a parent may help you decide the best way to handle it. They have probably faced peer pressure themselves. Spend time with people who share your interests and beliefs. True friends do not put you down when you stand up for yourself.</p>",
+      "interactive_text_sync_file": "",
+      "skill": null,
+      "_id": "f17bdf3d71b3450eb591f9c50a9adc3d",
+      "pass_text": "<p><strong>You rock!</strong></p> <p><strong> </strong></p> <p>You identified the correct sentences.</p>",
+      "static_text_audio": "",
+      "fail_text": "<p><strong>Try Again</strong></p> <p></p> <p>The author gives clue words to help you know what is coming next.. Look back at the sentences in the paragraph for clues to that the author is giving suggestions about what you can do. </p>",
+      "highlightAnswers": [
+        {
+          "color": "y",
+          "text": "<p>Sometimes you may not know the right thing to do.</p>"
+        },
+        {
+          "color": "r",
+          "text": "<p>Spend time with people who share your interests and beliefs.</p>"
+        }
+      ]
+    },
+    {
+      "sequenceNumber": 9,
+      "type": "text-answer",
+      "background_image": "None/IMG220023.jpg",
+      "slide_title": "Read Critically",
+      "static_text": "<p><strong>Read Critically</strong></p> <p></p> <p>The author has provided many strategies on how to respond to negative peer pressure. Think about your own experiences with negative peer pressure. Then select the strategy from the text that you think is most effective to use when facing negative peer pressure. <strong>Explain your reasons</strong>.</p>",
+      "question": "",
+      "static_text_sync_file": "",
+      "fail_again_text": "",
+      "rubric": null,
+      "skill": null,
+      "_id": "da07987e690647caad1f95003df07da9",
+      "pass_text": "",
+      "static_text_audio": "",
+      "fail_text": ""
+    }
+  ]
+}

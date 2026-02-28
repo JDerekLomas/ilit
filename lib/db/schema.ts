@@ -44,7 +44,9 @@ export const students = pgTable(
     /** Email from LTI claims (may be absent) */
     email: text("email"),
     /** Current Lexile level */
-    currentLexile: integer("current_lexile").default(500),
+    currentLexile: integer("current_lexile").default(700),
+    /** IR difficulty level: L1 (hardest), L2 (default), L3 (easiest) */
+    irLevel: text("ir_level").default("L2"),
     /** Cumulative reading stats */
     totalWords: integer("total_words").default(0),
     totalPages: integer("total_pages").default(0),

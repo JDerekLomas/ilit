@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { loadStudentData, type StudentData } from "@/lib/storage";
+import { loadStudentData, getLevelLexileRange, type StudentData } from "@/lib/storage";
 import type { CatalogBook } from "@/lib/types";
 
 /** Extended catalog entry with parsed genres for UI filtering */
@@ -91,8 +91,8 @@ export default function LibraryPage() {
     if (studentData) {
       switch (filter) {
         case "My Level": {
-          const lexile = studentData.progress.currentLexile;
-          result = result.filter((b) => Math.abs(b.lexileLevel - lexile) <= 150);
+          const { center, range } = getLevelLexileRange(studentData.progress.irLevel || "L2");
+          result = result.filter((b) => Math.abs(b.lexileLevel - center) <= range);
           break;
         }
         case "My Books":
@@ -412,11 +412,12 @@ export default function LibraryPage() {
                   Progress
                 </div>
                 <div className="flex-1 flex flex-col justify-center px-3 sm:px-6 py-2">
-                  <StatRow label="Total Words" value={selectedBook?.wordCount ? selectedBook.wordCount.toLocaleString() : "—"} />
-                  <StatRow label="Total Pages" value={selectedBook?.totalPages ? selectedBook.totalPages.toString() : "—"} />
-                  <StatRow label="Total Books" value={books.length.toString()} />
+                  <StatRow label="Total Words" value={studentData?.progress.totalWords.toLocaleString() ?? "—"} />
+                  <StatRow label="Total Pages" value={studentData?.progress.totalPages.toString() ?? "—"} />
+                  <StatRow label="Total Books" value={studentData?.progress.totalBooks.toString() ?? "0"} />
                   <div className="border-t border-white/10 mt-1 pt-1">
-                    <StatRow label="IR Lexile Level" value={selectedBook?.lexileLevel ? selectedBook.lexileLevel.toString() : "—"} />
+                    <StatRow label="IR Level" value={studentData?.progress.irLevel ?? "L2"} />
+                    <StatRow label="Book Lexile" value={selectedBook?.lexileLevel ? `${selectedBook.lexileLevel}L` : "—"} />
                   </div>
                 </div>
               </div>

@@ -137,6 +137,8 @@ export interface PassageProgress {
 export interface StudentProgress {
   studentName: string;
   currentLexile: number;
+  /** IR difficulty level: L1 (hardest), L2 (default), L3 (easiest) */
+  irLevel: IrLevel;
   totalWords: number;
   totalPages: number;
   totalBooks: number;

@@ -4,9 +4,36 @@
  * Gracefully degrades if localStorage is unavailable (SSR, private browsing).
  */
 
-import type { StudentProgress, BookReview, Highlight, CheckpointScore, PassageProgress } from "./types";
+import type { StudentProgress, BookReview, Highlight, CheckpointScore, PassageProgress, IrLevel } from "./types";
 
 const STORAGE_KEY = "ilit-student-data";
+
+// ── IR Leveling (matches original Savvas server_tasks.py) ──
+// Three discrete levels: L1 (hardest) → L2 (default) → L3 (easiest)
+// Transitions capped: L1 can't promote, L3 can't demote
+
+const LEVEL_PROMOTE: Record<IrLevel, IrLevel> = { L1: "L1", L2: "L1", L3: "L2" };
+const LEVEL_DEMOTE: Record<IrLevel, IrLevel> = { L1: "L2", L2: "L3", L3: "L3" };
+const DEFAULT_IR_LEVEL: IrLevel = "L2";
+
+// Lexile ranges per IR level (for "My Level" library filter)
+const LEVEL_LEXILE: Record<IrLevel, { center: number; range: number }> = {
+  L1: { center: 1000, range: 200 }, // 800–1200
+  L2: { center: 700, range: 200 },  // 500–900
+  L3: { center: 400, range: 200 },  // 200–600
+};
+
+/** Determine new IR level from a 0–100 percentage score. Matches original algorithm. */
+export function getIrLevel(score: number, currentLevel: IrLevel): IrLevel {
+  if (score < 71) return LEVEL_DEMOTE[currentLevel];
+  if (score < 86) return currentLevel; // 71–85: stay
+  return LEVEL_PROMOTE[currentLevel]; // 86+: promote
+}
+
+/** Get the Lexile center and range for a given IR level */
+export function getLevelLexileRange(level: IrLevel) {
+  return LEVEL_LEXILE[level];
+}
 
 export interface JournalEntry {
   id: string;
@@ -41,7 +68,8 @@ export interface StudentData {
 const DEFAULT_DATA: StudentData = {
   progress: {
     studentName: "Student",
-    currentLexile: 900,
+    currentLexile: 700,
+    irLevel: DEFAULT_IR_LEVEL,
     totalWords: 8404,
     totalPages: 30,
     totalBooks: 0,
@@ -170,13 +198,22 @@ export function markPassageComplete(passageId: string): StudentData {
   return data;
 }
 
-/** Update Lexile level based on a completed passage's Lexile */
-export function updateLexileFromPassage(passageLexile: number): StudentData {
+/**
+ * Update IR level after completing a passage.
+ * Calculates score percentage from checkpoint results, then promotes/stays/demotes.
+ * Also updates currentLexile to match the new level's center.
+ */
+export function updateIrLevel(passageId: string): StudentData {
   const data = loadStudentData();
-  // Weighted moving average: 70% current, 30% new passage
-  data.progress.currentLexile = Math.round(
-    data.progress.currentLexile * 0.7 + passageLexile * 0.3
-  );
+  const pp = data.progress.passageProgress[passageId];
+  if (!pp || pp.maxPossibleScore === 0) return data;
+
+  const scorePercent = (pp.totalScore / pp.maxPossibleScore) * 100;
+  const currentLevel = data.progress.irLevel || DEFAULT_IR_LEVEL;
+  const newLevel = getIrLevel(scorePercent, currentLevel);
+
+  data.progress.irLevel = newLevel;
+  data.progress.currentLexile = LEVEL_LEXILE[newLevel].center;
   saveStudentData(data);
   return data;
 }

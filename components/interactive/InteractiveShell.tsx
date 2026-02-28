@@ -66,7 +66,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
   const bgImage = slide.backgroundImage || passage.backgroundImage;
 
   return (
-    <div className="fixed inset-0 bg-gray-900 overflow-hidden">
+    <div className="fixed inset-0 bg-gray-900 overflow-hidden flex flex-col">
       {/* Background image — per-slide or passage-level fallback */}
       <div
         className="absolute inset-0 bg-cover bg-center transition-all duration-700"
@@ -97,7 +97,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
       </div>
 
       {/* Slide content */}
-      <div className="relative z-10 flex-1 flex items-center justify-center px-2 sm:px-4 md:px-16 pb-14 pt-1 sm:pt-2 h-[calc(100vh-110px)] sm:h-[calc(100vh-120px)]">
+      <div className="relative z-10 flex-1 flex items-center justify-center px-2 sm:px-4 md:px-16 pb-14 pt-1 sm:pt-2 min-h-0">
         {/* Left arrow */}
         <button
           onClick={() => goToSlide(currentSlide - 1)}
@@ -124,7 +124,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: direction * -100 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="w-full max-w-5xl mx-auto h-full flex items-start"
+            className="w-full max-w-5xl mx-auto h-full flex items-start min-h-0"
           >
             {slide.type === "reading" && !showingCheckpointOnReading && (
               <ReadingSlide

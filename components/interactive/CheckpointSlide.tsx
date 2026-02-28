@@ -64,9 +64,9 @@ export default function CheckpointSlide({
   const passageText = slide.text || sentences.join(" ") || precedingText || "";
 
   return (
-    <div className="w-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6 items-start">
+    <div className="w-full h-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6 items-stretch min-h-0">
       {/* Left: Text panel with sentences */}
-      <div className="flex-1 bg-white rounded-xl shadow-2xl p-4 sm:p-6 max-h-[50vh] md:max-h-[70vh] overflow-y-auto w-full">
+      <div className="flex-1 bg-white rounded-xl shadow-2xl p-4 sm:p-6 overflow-y-auto w-full min-h-0">
         {slide.heading && (
           <h2 className="font-serif font-bold text-lg mb-3 text-gray-900">
             {slide.heading}
@@ -124,7 +124,7 @@ export default function CheckpointSlide({
       </div>
 
       {/* Right: Question / Feedback panel */}
-      <div className="flex-1 bg-white rounded-xl shadow-2xl p-4 sm:p-6 max-h-[40vh] md:max-h-[70vh] overflow-y-auto w-full">
+      <div className="flex-1 bg-white rounded-xl shadow-2xl p-4 sm:p-6 overflow-y-auto w-full min-h-0">
         {answered && isCorrect !== null ? (
           <FeedbackPanel
             isCorrect={isCorrect}

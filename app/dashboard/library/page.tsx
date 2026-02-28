@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import type { Book } from "@/lib/types";
+import { loadStudentData, type StudentData } from "@/lib/storage";
 
 const BOOK_IDS = [
   "storm-chasers",
@@ -24,9 +25,12 @@ export default function LibraryPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(4);
   const [filter, setFilter] = useState("Titles");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [studentData, setStudentData] = useState<StudentData | null>(null);
   const router = useRouter();
   const carouselRef = useRef<HTMLDivElement>(null);
-  // Touch/swipe support
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const touchStartX = useRef(0);
   const touchDeltaX = useRef(0);
 
@@ -36,18 +40,66 @@ export default function LibraryPage() {
         fetch(`/content/books/${id}.json`).then((r) => r.json())
       )
     ).then(setBooks);
+    setStudentData(loadStudentData());
   }, []);
 
-  const selectedBook = books[selectedIndex];
+  // Focus search input when opened
+  useEffect(() => {
+    if (searchOpen) searchInputRef.current?.focus();
+  }, [searchOpen]);
+
+  // Filter books based on active filter and search
+  const filteredBooks = useMemo(() => {
+    let result = books;
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        (b) =>
+          b.title.toLowerCase().includes(q) ||
+          b.author.toLowerCase().includes(q) ||
+          b.genre.toLowerCase().includes(q)
+      );
+    }
+
+    // Category filter
+    if (studentData) {
+      switch (filter) {
+        case "My Level": {
+          const lexile = studentData.progress.currentLexile;
+          result = result.filter((b) => Math.abs(b.lexileLevel - lexile) <= 150);
+          break;
+        }
+        case "My Books":
+          result = result.filter((b) => b.id in (studentData.progress.bookProgress ?? {}));
+          break;
+        case "Reviewed":
+          result = result.filter((b) => b.id in (studentData.progress.bookReviews ?? {}));
+          break;
+        // "Titles", "Recommended", "Reserved" show all books
+      }
+    }
+
+    return result;
+  }, [books, filter, searchQuery, studentData]);
+
+  // Clamp selectedIndex when filtered list changes
+  useEffect(() => {
+    if (filteredBooks.length > 0 && selectedIndex >= filteredBooks.length) {
+      setSelectedIndex(Math.min(selectedIndex, filteredBooks.length - 1));
+    }
+  }, [filteredBooks.length, selectedIndex]);
+
+  const selectedBook = filteredBooks[selectedIndex];
 
   const goTo = useCallback(
     (dir: -1 | 1) => {
-      setSelectedIndex((i) => Math.max(0, Math.min(books.length - 1, i + dir)));
+      setSelectedIndex((i) => Math.max(0, Math.min(filteredBooks.length - 1, i + dir)));
     },
-    [books.length]
+    [filteredBooks.length]
   );
 
-  // Touch handlers for swipe
   const onTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
     touchDeltaX.current = 0;
@@ -65,13 +117,13 @@ export default function LibraryPage() {
 
   return (
     <div className="flex flex-col h-full bg-[#0a0a12]">
-      {/* Filter bar — wraps on mobile */}
+      {/* Filter bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 px-3 sm:px-4 pt-3 pb-2">
         <div className="flex gap-0.5">
           {FILTERS_LEFT.map((f, i) => (
             <button
               key={f}
-              onClick={() => setFilter(f)}
+              onClick={() => { setFilter(f); setSearchOpen(false); setSearchQuery(""); }}
               className={`px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium transition-colors border ${
                 filter === f
                   ? "bg-white text-black border-white"
@@ -87,7 +139,7 @@ export default function LibraryPage() {
             {FILTERS_RIGHT.map((f, i) => (
               <button
                 key={f}
-                onClick={() => setFilter(f)}
+                onClick={() => { setFilter(f); setSearchOpen(false); setSearchQuery(""); }}
                 className={`px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium transition-colors border ${
                   filter === f
                     ? "bg-white text-black border-white"
@@ -99,7 +151,10 @@ export default function LibraryPage() {
             ))}
           </div>
           <button
-            className="w-8 h-8 flex items-center justify-center rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+            onClick={() => setSearchOpen(!searchOpen)}
+            className={`w-8 h-8 flex items-center justify-center rounded-full transition-colors ${
+              searchOpen ? "text-white bg-white/20" : "text-white/60 hover:text-white hover:bg-white/10"
+            }`}
             aria-label="Search"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -110,171 +165,184 @@ export default function LibraryPage() {
         </div>
       </div>
 
-      {/* 3D Book Carousel — responsive height */}
-      <div
-        className="relative flex-shrink-0"
-        style={{ height: "clamp(240px, 45vw, 360px)" }}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-      >
-        <div className="absolute inset-0 bg-black" />
-
-        <div
-          ref={carouselRef}
-          className="relative h-full flex items-center justify-center overflow-hidden"
-          style={{ perspective: 1200 }}
-        >
-          {books.map((book, i) => {
-            const offset = i - selectedIndex;
-            const absOffset = Math.abs(offset);
-            const isSelected = offset === 0;
-
-            const translateX = offset * 80;
-            const translateZ = isSelected ? 60 : -absOffset * 30;
-            const rotateY = offset * -20;
-            const scale = isSelected ? 1.05 : Math.max(0.75, 1 - absOffset * 0.08);
-
-            return (
+      {/* Search bar — slides in when open */}
+      {searchOpen && (
+        <div className="px-3 sm:px-4 pb-2">
+          <div className="relative">
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by title, author, or genre..."
+              className="w-full px-4 py-2 rounded-lg bg-white/10 text-white text-sm placeholder:text-white/40 border border-white/20 focus:outline-none focus:border-white/50"
+            />
+            {searchQuery && (
               <button
-                key={book.id}
-                onClick={() => setSelectedIndex(i)}
-                className="absolute transition-all duration-500 ease-out"
-                style={{
-                  transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
-                  zIndex: 10 - absOffset,
-                  opacity: absOffset > 4 ? 0 : 1,
-                }}
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white"
               >
-                <div className="relative" style={{ transformStyle: "preserve-3d" }}>
-                  {/* Responsive book cover */}
-                  <div
-                    className={`w-[140px] h-[195px] sm:w-[160px] sm:h-[222px] md:w-[180px] md:h-[250px] rounded-sm overflow-hidden shadow-2xl relative ${
-                      isSelected ? "ring-2 ring-yellow-400/60" : ""
-                    }`}
-                    style={{
-                      boxShadow: isSelected
-                        ? "0 0 30px rgba(255,255,255,0.15), 4px 4px 20px rgba(0,0,0,0.6)"
-                        : "4px 4px 15px rgba(0,0,0,0.5)",
-                    }}
-                  >
-                    <Image
-                      src={book.coverImage}
-                      alt={book.title}
-                      fill
-                      sizes="(max-width: 640px) 140px, (max-width: 768px) 160px, 180px"
-                      className="object-cover"
-                      draggable={false}
-                      priority={absOffset <= 2}
-                      loading={absOffset > 2 ? "lazy" : undefined}
-                    />
-                    <div className="absolute inset-0 flex items-end">
-                      <div className="w-full bg-gradient-to-t from-black/90 via-black/60 to-transparent pt-12 pb-3 px-2">
-                        <p className="text-white text-xs sm:text-sm font-extrabold leading-tight text-center drop-shadow-lg uppercase tracking-wide">
-                          {book.title}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    className="absolute top-0 h-[195px] sm:h-[222px] md:h-[250px] w-[14px] bg-gradient-to-r from-gray-800 to-gray-600"
-                    style={{
-                      left: -14,
-                      transform: "rotateY(-90deg)",
-                      transformOrigin: "right center",
-                    }}
-                  />
-                </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
               </button>
-            );
-          })}
-        </div>
-
-        {/* Nav arrows */}
-        <button
-          onClick={() => goTo(-1)}
-          className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-white/60 hover:text-white hover:bg-black/60 transition-colors z-20"
-          aria-label="Previous book"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-        </button>
-        <button
-          onClick={() => goTo(1)}
-          className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-white/60 hover:text-white hover:bg-black/60 transition-colors z-20"
-          aria-label="Next book"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Selected book title */}
-      {selectedBook && (
-        <div className="text-center py-2 sm:py-3">
-          <h2 className="text-white text-lg sm:text-xl font-bold">{selectedBook.title}</h2>
-          <p className="text-white/50 text-xs sm:text-sm">{selectedBook.author}</p>
+            )}
+          </div>
         </div>
       )}
 
-      {/* Bottom cards: Read Aloud / Progress / My Current Reading */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-3 px-3 sm:px-4 pb-4">
-        <div className="bg-black/40 rounded-lg p-2 sm:p-3 flex flex-col items-center gap-1.5 sm:gap-2">
-          <div className="w-16 h-22 sm:w-20 sm:h-28 rounded-sm overflow-hidden shadow-lg relative">
-            {selectedBook && (
-              <Image
-                src={selectedBook.coverImage}
-                alt={selectedBook.title}
-                fill
-                sizes="80px"
-                className="object-cover"
-              />
-            )}
-          </div>
-          <span className="text-white/70 text-[9px] sm:text-[10px] font-medium text-center leading-tight">
-            Read Aloud Think Aloud
-          </span>
+      {/* 3D Book Carousel */}
+      {filteredBooks.length === 0 ? (
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-white/40 text-sm italic">No books match your search</p>
         </div>
+      ) : (
+        <>
+          <div
+            className="relative flex-shrink-0"
+            style={{ height: "clamp(240px, 45vw, 360px)" }}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
+            <div className="absolute inset-0 bg-black" />
+            <div
+              ref={carouselRef}
+              className="relative h-full flex items-center justify-center overflow-hidden"
+              style={{ perspective: 1200 }}
+            >
+              {filteredBooks.map((book, i) => {
+                const offset = i - selectedIndex;
+                const absOffset = Math.abs(offset);
+                const isSelected = offset === 0;
+                const translateX = offset * 80;
+                const translateZ = isSelected ? 60 : -absOffset * 30;
+                const rotateY = offset * -20;
+                const scale = isSelected ? 1.05 : Math.max(0.75, 1 - absOffset * 0.08);
 
-        <div className="bg-black/40 rounded-lg p-2 sm:p-3 flex flex-col justify-center">
-          <h3 className="text-white/80 text-[10px] sm:text-[11px] font-semibold text-center mb-1.5 sm:mb-2 tracking-wide">
-            Progress
-          </h3>
-          <div className="space-y-1 sm:space-y-1.5">
-            <StatRow label="Total Words" value="8,404" />
-            <StatRow label="Total Pages" value="30" />
-            <StatRow label="Total Books" value="-" />
-            <div className="border-t border-white/10 pt-1 sm:pt-1.5">
-              <StatRow label="IR Lexile Level" value="900" />
+                return (
+                  <button
+                    key={book.id}
+                    onClick={() => setSelectedIndex(i)}
+                    className="absolute transition-all duration-500 ease-out"
+                    style={{
+                      transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
+                      zIndex: 10 - absOffset,
+                      opacity: absOffset > 4 ? 0 : 1,
+                    }}
+                  >
+                    <div className="relative" style={{ transformStyle: "preserve-3d" }}>
+                      <div
+                        className={`w-[140px] h-[195px] sm:w-[160px] sm:h-[222px] md:w-[180px] md:h-[250px] rounded-sm overflow-hidden shadow-2xl relative ${
+                          isSelected ? "ring-2 ring-yellow-400/60" : ""
+                        }`}
+                        style={{
+                          boxShadow: isSelected
+                            ? "0 0 30px rgba(255,255,255,0.15), 4px 4px 20px rgba(0,0,0,0.6)"
+                            : "4px 4px 15px rgba(0,0,0,0.5)",
+                        }}
+                      >
+                        <Image
+                          src={book.coverImage}
+                          alt={book.title}
+                          fill
+                          sizes="(max-width: 640px) 140px, (max-width: 768px) 160px, 180px"
+                          className="object-cover"
+                          draggable={false}
+                          priority={absOffset <= 2}
+                          loading={absOffset > 2 ? "lazy" : undefined}
+                        />
+                        <div className="absolute inset-0 flex items-end">
+                          <div className="w-full bg-gradient-to-t from-black/90 via-black/60 to-transparent pt-12 pb-3 px-2">
+                            <p className="text-white text-xs sm:text-sm font-extrabold leading-tight text-center drop-shadow-lg uppercase tracking-wide">
+                              {book.title}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className="absolute top-0 h-[195px] sm:h-[222px] md:h-[250px] w-[14px] bg-gradient-to-r from-gray-800 to-gray-600"
+                        style={{ left: -14, transform: "rotateY(-90deg)", transformOrigin: "right center" }}
+                      />
+                    </div>
+                  </button>
+                );
+              })}
             </div>
-          </div>
-        </div>
 
-        <button
-          onClick={() => {
-            if (selectedBook) router.push(`/reader/${selectedBook.id}`);
-          }}
-          className="bg-black/40 rounded-lg p-2 sm:p-3 flex flex-col items-center gap-1.5 sm:gap-2 hover:bg-black/50 transition-colors"
-        >
-          <div className="w-16 h-22 sm:w-20 sm:h-28 rounded-sm overflow-hidden shadow-lg relative">
-            {selectedBook && (
-              <Image
-                src={selectedBook.coverImage}
-                alt={selectedBook.title}
-                fill
-                sizes="80px"
-                className="object-cover"
-              />
-            )}
+            {/* Nav arrows */}
+            <button
+              onClick={() => goTo(-1)}
+              className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-white/60 hover:text-white hover:bg-black/60 transition-colors z-20"
+              aria-label="Previous book"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <button
+              onClick={() => goTo(1)}
+              className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-white/60 hover:text-white hover:bg-black/60 transition-colors z-20"
+              aria-label="Next book"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
           </div>
-          <span className="text-white/70 text-[9px] sm:text-[10px] font-medium text-center leading-tight">
-            My Current Reading
-          </span>
-        </button>
-      </div>
+
+          {/* Selected book title */}
+          {selectedBook && (
+            <div className="text-center py-2 sm:py-3">
+              <h2 className="text-white text-lg sm:text-xl font-bold">{selectedBook.title}</h2>
+              <p className="text-white/50 text-xs sm:text-sm">{selectedBook.author}</p>
+            </div>
+          )}
+
+          {/* Bottom cards */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 px-3 sm:px-4 pb-4">
+            <div className="bg-black/40 rounded-lg p-2 sm:p-3 flex flex-col items-center gap-1.5 sm:gap-2">
+              <div className="w-16 h-22 sm:w-20 sm:h-28 rounded-sm overflow-hidden shadow-lg relative">
+                {selectedBook && (
+                  <Image src={selectedBook.coverImage} alt={selectedBook.title} fill sizes="80px" className="object-cover" />
+                )}
+              </div>
+              <span className="text-white/70 text-[9px] sm:text-[10px] font-medium text-center leading-tight">
+                Read Aloud Think Aloud
+              </span>
+            </div>
+
+            <div className="bg-black/40 rounded-lg p-2 sm:p-3 flex flex-col justify-center">
+              <h3 className="text-white/80 text-[10px] sm:text-[11px] font-semibold text-center mb-1.5 sm:mb-2 tracking-wide">
+                Progress
+              </h3>
+              <div className="space-y-1 sm:space-y-1.5">
+                <StatRow label="Total Words" value={studentData?.progress.totalWords.toLocaleString() ?? "—"} />
+                <StatRow label="Total Pages" value={studentData?.progress.totalPages.toString() ?? "—"} />
+                <StatRow label="Total Books" value={studentData?.progress.totalBooks.toString() ?? "—"} />
+                <div className="border-t border-white/10 pt-1 sm:pt-1.5">
+                  <StatRow label="IR Lexile Level" value={studentData?.progress.currentLexile.toString() ?? "—"} />
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => { if (selectedBook) router.push(`/reader/${selectedBook.id}`); }}
+              className="bg-black/40 rounded-lg p-2 sm:p-3 flex flex-col items-center gap-1.5 sm:gap-2 hover:bg-black/50 transition-colors"
+            >
+              <div className="w-16 h-22 sm:w-20 sm:h-28 rounded-sm overflow-hidden shadow-lg relative">
+                {selectedBook && (
+                  <Image src={selectedBook.coverImage} alt={selectedBook.title} fill sizes="80px" className="object-cover" />
+                )}
+              </div>
+              <span className="text-white/70 text-[9px] sm:text-[10px] font-medium text-center leading-tight">
+                My Current Reading
+              </span>
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

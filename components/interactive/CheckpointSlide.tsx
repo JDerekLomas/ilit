@@ -15,8 +15,7 @@ interface Props {
 }
 
 // Scoring constants from the reference spec
-const DND_FIRST_TRIAL_SCORE = 2.0;
-const DND_SECOND_TRIAL_SCORE = 1.5;
+const MAX_SCORE = 2.0;
 const MAX_ATTEMPTS = 2;
 
 type DndState =
@@ -26,6 +25,12 @@ type DndState =
   | "snapSuccess"     // correct answer, snap animation
   | "finalCorrect"    // done, correct
   | "finalIncorrect"; // done, both wrong, showing correct answer
+
+type HighlightState =
+  | "selecting"       // student is highlighting sentences
+  | "correct"         // answered correctly
+  | "showingWrong"    // wrong on attempt 1, showing fail text + retry
+  | "revealAnswer";   // both attempts wrong, showing correct answer
 
 export default function CheckpointSlide({
   slide,
@@ -41,6 +46,12 @@ export default function CheckpointSlide({
   );
   const [activeMarker, setActiveMarker] = useState<"yellow" | "pink">("yellow");
   const [attemptCount, setAttemptCount] = useState(0);
+  const [score, setScore] = useState<number | null>(null);
+
+  // Highlight state
+  const [highlightState, setHighlightState] = useState<HighlightState>(
+    completed && checkpoint.type === "highlight" ? "correct" : "selecting"
+  );
 
   // Drag-drop state
   const [droppedWord, setDroppedWord] = useState<string | null>(null);
@@ -49,7 +60,6 @@ export default function CheckpointSlide({
   const [dndState, setDndState] = useState<DndState>(
     completed && checkpoint.type === "drag-drop" ? "finalCorrect" : "interacting"
   );
-  const [score, setScore] = useState<number | null>(null);
   const dropZoneRef = useRef<HTMLDivElement>(null);
 
   const handleAnswer = useCallback((correct: boolean) => {
@@ -60,7 +70,17 @@ export default function CheckpointSlide({
     }
   }, [onComplete]);
 
-  const handleRetry = () => {
+  // Highlight answer handler (receives score from HighlightCheckpoint)
+  const handleHighlightAnswer = useCallback((correct: boolean, hlScore: number) => {
+    setScore(hlScore);
+    setIsCorrect(correct);
+    setAnswered(true);
+    if (correct) {
+      onComplete();
+    }
+  }, [onComplete]);
+
+  const handleDndRetry = () => {
     setDndState("interacting");
     setDroppedWord(null);
     setDragActiveWord(null);
@@ -86,7 +106,7 @@ export default function CheckpointSlide({
     setAttemptCount(newAttempt);
 
     if (correct) {
-      const trialScore = newAttempt === 1 ? DND_FIRST_TRIAL_SCORE : DND_SECOND_TRIAL_SCORE;
+      const trialScore = newAttempt === 1 ? 2.0 : 1.5;
       setScore(trialScore);
       setDndState("snapSuccess");
       setTimeout(() => {
@@ -97,7 +117,6 @@ export default function CheckpointSlide({
       setDndState("shaking");
       setTimeout(() => {
         if (newAttempt >= MAX_ATTEMPTS) {
-          // Show correct answer
           const correctWord = Array.isArray(checkpoint.correctAnswer)
             ? checkpoint.correctAnswer[0]
             : checkpoint.correctAnswer;
@@ -120,7 +139,6 @@ export default function CheckpointSlide({
     if (word) setDroppedWord(word);
   };
 
-  // Handle touch-based placement (tap word, then tap drop zone or just tap word to place)
   const handleWordTap = (word: string) => {
     if (dndState !== "interacting") return;
     setDragActiveWord(word);
@@ -139,7 +157,9 @@ export default function CheckpointSlide({
   const wordBankVisible = isDragDrop && (dndState === "interacting" || dndState === "retryPrompt");
 
   // Right panel shows feedback when in a final state
-  const showFeedback = dndState === "finalCorrect" || dndState === "finalIncorrect";
+  const showDndFeedback = dndState === "finalCorrect" || dndState === "finalIncorrect";
+  const showHighlightFeedback = highlightState === "correct" || highlightState === "revealAnswer";
+  const highlightToolsDisabled = highlightState !== "selecting";
 
   return (
     <div className="w-full h-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6 items-stretch min-h-0">
@@ -152,14 +172,17 @@ export default function CheckpointSlide({
         )}
         {isHighlight ? (
           <HighlightCheckpoint
-            key={attemptCount}
             sentences={sentences}
             paragraphBreaks={slide.paragraphBreaks}
             checkpoint={checkpoint}
-            onAnswer={handleAnswer}
+            onAnswer={handleHighlightAnswer}
             answered={answered}
             isCorrect={isCorrect}
             activeMarker={activeMarker}
+            attemptCount={attemptCount}
+            onAttemptChange={setAttemptCount}
+            highlightState={highlightState}
+            onStateChange={setHighlightState}
           />
         ) : (
           <div>
@@ -229,9 +252,10 @@ export default function CheckpointSlide({
       {/* Right: Question / Feedback panel */}
       <div className="flex-1 bg-white rounded-xl shadow-2xl p-4 sm:p-6 overflow-y-auto w-full min-h-0">
         <AnimatePresence mode="wait">
-          {showFeedback && !isHighlight ? (
+          {/* DnD feedback panel */}
+          {showDndFeedback && !isHighlight ? (
             <motion.div
-              key="feedback"
+              key="dnd-feedback"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -250,6 +274,25 @@ export default function CheckpointSlide({
                 }
               />
             </motion.div>
+
+          /* Highlight feedback panel */
+          ) : showHighlightFeedback && isHighlight ? (
+            <motion.div
+              key="highlight-feedback"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <FeedbackPanel
+                isCorrect={highlightState === "correct"}
+                feedback={checkpoint.feedback}
+                score={score}
+                revealedAnswer={null}
+              />
+            </motion.div>
+
+          /* DnD interaction panel */
           ) : isDragDrop ? (
             <motion.div
               key="dragdrop"
@@ -272,7 +315,7 @@ export default function CheckpointSlide({
                   <p className="text-sm text-orange-800 font-medium mb-1">Not quite right.</p>
                   <p className="text-xs text-orange-700">{checkpoint.feedback.incorrect}</p>
                   <button
-                    onClick={handleRetry}
+                    onClick={handleDndRetry}
                     className="mt-2 px-4 py-1.5 bg-orange-600 text-white text-xs font-semibold rounded-full hover:bg-orange-700 transition-colors"
                   >
                     Try Again (1 attempt remaining)
@@ -381,36 +424,88 @@ export default function CheckpointSlide({
                 </div>
               )}
             </motion.div>
+
+          /* Highlight tools panel */
           ) : isHighlight ? (
-            <div className="flex flex-col h-full" key="highlight">
-              <h3 className="font-bold text-base text-gray-900 mb-2">
+            <motion.div
+              className="flex flex-col h-full"
+              key="highlight-tools"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 30 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h3 className="font-bold text-base text-gray-900 mb-1">
                 {checkpoint.skill}
               </h3>
+
+              {/* Show retry feedback inline */}
+              {highlightState === "showingWrong" && (
+                <motion.div
+                  className="mb-3 p-3 bg-orange-50 border border-orange-200 rounded-lg"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  <p className="text-sm text-orange-800 font-medium mb-1">Not quite right.</p>
+                  <p className="text-xs text-orange-700">{checkpoint.feedback.incorrect}</p>
+                </motion.div>
+              )}
+
               <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
                 {checkpoint.prompt}
               </p>
-              <div className="mt-auto flex items-center gap-2 pt-4 border-t border-gray-100">
-                <span className="text-xs text-gray-500 mr-1">Marker:</span>
-                <button
-                  onClick={() => setActiveMarker("yellow")}
-                  className={`w-7 h-7 rounded-full border-2 ${
-                    activeMarker === "yellow"
-                      ? "border-gray-800 ring-2 ring-gray-400"
-                      : "border-gray-300"
-                  } bg-yellow-300`}
-                  title="Yellow marker"
-                />
-                <button
-                  onClick={() => setActiveMarker("pink")}
-                  className={`w-7 h-7 rounded-full border-2 ${
-                    activeMarker === "pink"
-                      ? "border-gray-800 ring-2 ring-gray-400"
-                      : "border-gray-300"
-                  } bg-pink-300`}
-                  title="Pink marker"
-                />
+
+              {/* Highlighter tools */}
+              <div className={`mt-auto pt-4 border-t border-gray-100 ${highlightToolsDisabled ? "opacity-40 pointer-events-none" : ""}`}>
+                <p className="text-xs text-gray-500 mb-3 uppercase tracking-wide">Highlighter Tools</p>
+                <div className="flex items-center gap-3">
+                  {/* Yellow marker */}
+                  <motion.button
+                    onClick={() => setActiveMarker("yellow")}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 transition-colors ${
+                      activeMarker === "yellow"
+                        ? "border-gray-800 bg-yellow-50 shadow-md"
+                        : "border-gray-200 bg-white hover:border-gray-400"
+                    }`}
+                    title="Yellow highlighter"
+                  >
+                    <span
+                      className="w-5 h-5 rounded-full border border-gray-300"
+                      style={{ backgroundColor: "#f4df76" }}
+                    />
+                    <span className="text-xs font-medium text-gray-700">Yellow</span>
+                  </motion.button>
+
+                  {/* Pink/Red marker */}
+                  <motion.button
+                    onClick={() => setActiveMarker("pink")}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 transition-colors ${
+                      activeMarker === "pink"
+                        ? "border-gray-800 bg-pink-50 shadow-md"
+                        : "border-gray-200 bg-white hover:border-gray-400"
+                    }`}
+                    title="Pink highlighter"
+                  >
+                    <span
+                      className="w-5 h-5 rounded-full border border-gray-300"
+                      style={{ backgroundColor: "#f47676" }}
+                    />
+                    <span className="text-xs font-medium text-gray-700">Red</span>
+                  </motion.button>
+                </div>
+
+                {/* Attempt counter */}
+                {attemptCount > 0 && highlightState === "selecting" && (
+                  <p className="mt-3 text-xs text-gray-400">
+                    Attempt {attemptCount + 1} of {MAX_ATTEMPTS}
+                  </p>
+                )}
               </div>
-            </div>
+            </motion.div>
           ) : (
             <div key="generic">
               <p className="text-sm text-gray-700">{checkpoint.prompt}</p>
@@ -477,7 +572,7 @@ function FeedbackPanel({
           </h3>
           {score !== null && (
             <p className="text-xs text-gray-500">
-              Score: {score} / {DND_FIRST_TRIAL_SCORE} points
+              Score: {score} / {MAX_SCORE} points
             </p>
           )}
         </div>

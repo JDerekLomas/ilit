@@ -2,6 +2,15 @@
 
 This document traces every user path through the Savvas I-LIT student app and maps it to our replica implementation. Written by reading the original ClassView source code and our Next.js replica side by side.
 
+**Production URL:** https://ilit.vercel.app
+**Repository:** https://github.com/JDerekLomas/ilit
+**Open issues:** `gh issue list --repo JDerekLomas/ilit --state open`
+
+**Related docs:**
+- `docs/asset-inventory.md` -- catalog of original PNG/JPEG assets and their usage status
+- `docs/reference-design-spec.md` -- pixel-level design spec (colors, fonts, spacing)
+- `docs/reference-source/interactive-reader-spec.md` -- deep IR source code spec
+
 ---
 
 ## Table of Contents
@@ -141,7 +150,7 @@ Background uses `bg3.jpg` served from `/images/backgrounds/`.
 ### Our Replica
 
 - Books loaded from `/content/books/catalog.json` (static JSON, no API).
-- 26 real Savvas books at Lexile levels 100L-1030L.
+- 27 real Savvas books at Lexile levels 100L-1030L. Five also have individual JSON files in `content/books/` with extended metadata.
 - 3D carousel replicated with CSS transforms and Framer Motion.
 - Filter tabs work client-side:
   - "My Level" filters within +/- 150 Lexile of student's level (wider band than original's +/- 25).
@@ -364,8 +373,10 @@ On re-entry, all slide states are restored: highlights re-applied, dropped words
 - `VocabPopup` -- tap-to-define vocabulary popup
 
 **Differences from original:**
-- No freeze/unfreeze system -- students can navigate freely between slides.
-- Checkpoint completion tracked via `Set<number>` state in InteractiveShell.
+- No freeze/unfreeze system -- students can freely navigate all slides. Completion tracked via `Set<number>` state in InteractiveShell, persisted as `PassageProgress.completedSlides[]` in localStorage.
+- Text Answer checkpoint type (`iwttextanswerslide`) not yet implemented -- see issue #46.
+- Only two feedback tiers (correct/incorrect) -- original has three (pass/fail/fail_again). See issue #34.
+- No timing delays on wrong answers -- original shows 2s/3s overlays. See issues #43, #44.
 - Highlight checkpoints use sentence-level selection (pre-split in JSON), not character-index-based.
 - Drag-and-drop uses HTML5 drag-and-drop or tap-to-select, not jQuery UI.
 - No PKT integration for summary scoring.
@@ -728,19 +739,17 @@ Additional per-book localStorage:
 | Feature | Route/Component | Status |
 |---------|----------------|--------|
 | Navigation bar (5 tabs) | `app/dashboard/layout.tsx` | Complete -- matches tab order, icons, active states |
-| Library carousel | `app/dashboard/library/page.tsx` | Complete -- 26 books, filters, search, progress stats |
+| Library carousel | `app/dashboard/library/page.tsx` | Complete -- 27 books, filters, search, progress stats |
 | Assignments TOC | `app/dashboard/assignments/page.tsx` | Complete -- 7 categories, accordion, badges |
 | Interactive Reader shell | `components/interactive/InteractiveShell.tsx` | Complete -- slide nav, dots, background images, audio |
 | IR: Reading slides | `components/interactive/ReadingSlide.tsx` | Complete -- text display, "Reading Checkpoint" button |
 | IR: Highlight checkpoint | `components/interactive/HighlightCheckpoint.tsx` | Complete -- sentence highlighting, 2-attempt scoring |
-| IR: Drag-and-Drop checkpoint | `components/interactive/DragDropCheckpoint.tsx` | Complete -- word tiles, drop zone, scoring |
+| IR: Drag-and-Drop checkpoint | In `CheckpointSlide.tsx` | Complete -- word tiles, drop zone, scoring |
 | IR: Multiple choice | `components/interactive/MultipleChoiceCheckpoint.tsx` | Complete -- radio options, submit, feedback |
-| IR: Summary writing | `components/interactive/SummarySlide.tsx` | Complete -- textarea, instructions panel |
 | eBook Reader shell | `components/reader/ReaderShell.tsx` | Complete -- two-page spread, navigation, toolbar |
 | eBook: Page display | `components/reader/BookPage.tsx` | Complete -- word-level spans, serif font |
-| eBook: Toolbar | `components/reader/ReaderToolbar.tsx` | Complete -- all tool buttons |
 | eBook: TOC panel | `components/reader/TableOfContents.tsx` | Complete -- chapter list + book notes |
-| eBook: Annotations | `components/reader/CollectedHighlights.tsx` | Complete -- highlight by color |
+| eBook: Annotations | `components/reader/CollectedHighlights.tsx` | Complete -- highlight collection grouped by color |
 | eBook: Page slider | `components/reader/PageSlider.tsx` | Complete -- page range display |
 | eBook: Accessibility | `components/reader/AccessibilityPanel.tsx` | Complete -- keyboard shortcuts |
 | Notebook (locked cover) | `app/dashboard/notebook/page.tsx` | Complete -- fingerprint scanner animation |
@@ -751,26 +760,36 @@ Additional per-book localStorage:
 | Progress persistence | `lib/storage.ts` | Complete -- localStorage with all data types |
 | IR vocabulary popup | `components/interactive/VocabPopup.tsx` | Complete -- tap-to-define |
 
-### Partially Implemented / Missing
+### Partially Implemented
 
-| Feature | Gap | Original Behavior |
-|---------|-----|-------------------|
-| Freeze/unfreeze slide progression | Students can freely navigate all slides | Linear progression enforced; checkpoints must be completed to advance |
-| PKT summary scoring | No automated feedback | External API returns content + wording scores |
-| Pre-recorded audio per slide | Browser TTS (SpeechSynthesis) | Specific audio files per slide with scrubber |
-| 3D carousel perspective math | CSS transforms + motion | jQuery plugin with easeInOutSine, 3D perspective, scale coefficients |
-| Interest inventory | Not implemented | 4-slide onboarding flow with drag-and-drop interest selection |
-| Notebook: Class Notes organizers | Not implemented | 7 graphic organizer templates insertable at cursor |
-| Notebook: My Work (grades) | Stub view | Shows real assignment scores + "View Feedback" links |
-| Notebook: Resources | Stub view | Lesson Screens, Routine Cards, Book Club, Standards |
-| Book detail popup (Library) | Direct navigation to reader | Full-screen popup with book info before reader launch |
-| Assignment types beyond IR | Not routable | Study Plan, Word Study, iPractice, Writing, Monitor Progress, etc. |
-| Teacher communication (Connect) | Static sample data | Real-time buzz comments + stars from teacher |
-| Annotation pen dropdown (Reader) | Basic highlight toggle | Full dropdown with Strikethrough, 3 colors, Eraser, Collect |
-| Screen mask | Not implemented | Masks part of screen for visual distraction reduction |
-| Translation feature | Not implemented | 100+ languages via SpeechStream |
-| Word count timer | Not implemented | Timer-based word counting while reading |
-| Class switcher | Not implemented | Dropdown for students in multiple classes |
+| Feature | Current State | Gap vs. Original | Issue |
+|---------|--------------|------------------|-------|
+| IR: Summary writing | `SummarySlide.tsx` -- textarea + instructions panel | "Get Feedback" shows placeholder; no automated scoring (PKT). Missing tabbed Instructions/Feedback panel. | #48 |
+| IR: Text Answer checkpoint | **Not implemented** | Original has `iwttextanswerslide`: open-ended short response, always passes, no scoring. | #46 |
+| IR: Three-tier feedback | Only correct/incorrect | Original has pass_text, fail_text, fail_again_text with timing delays (2s/3s overlays). | #34, #43, #44 |
+| IR: Slide transitions | Basic Framer Motion fades | Original uses 3D slit animation (rotateY 90deg, 0.7s) + right-panel slide-in. | #35, #36 |
+| IR: Score display | Not shown during passage | Original shows running "X/Y" score in header, "Save & Exit" → green "Done" button. | #47 |
+| IR: Blue gradient wrapper | Not implemented | Original wraps slides in `linear-gradient(#6cbaf8, #3a8ae1)`. | #49 |
+| eBook: Toolbar | `ReaderToolbar.tsx` -- all buttons render | Annotation pen is a simple toggle, not the full dropdown with Strikethrough + 3 colors + Eraser. | -- |
+| eBook: Translation | Placeholder UI in `TextHelpToolbar.tsx` | Shows "Translation not available in offline mode"; no API integration. | -- |
+| eBook: Screen mask | State toggle exists (`screenMaskEnabled`) | No visual mask UI renders; button is wired but non-functional. | -- |
+
+### Not Implemented
+
+| Feature | Original Behavior |
+|---------|-------------------|
+| Freeze/unfreeze slide progression | Linear progression enforced; checkpoints must be completed to advance |
+| Pre-recorded audio per slide | Specific audio files per slide with scrubber (we use browser TTS) |
+| 3D carousel perspective math | jQuery plugin with easeInOutSine, 3D perspective, scale coefficients |
+| Interest inventory | 4-slide onboarding flow with drag-and-drop interest selection |
+| Notebook: Class Notes organizers | 7 graphic organizer templates (Venn diagram, timeline, etc.) insertable at cursor |
+| Notebook: My Work (grades) | Shows real assignment scores + "View Feedback" links (stub view) |
+| Notebook: Resources | Lesson Screens, Routine Cards, Book Club, Standards (stub view) |
+| Book detail popup (Library) | Full-screen popup with book info before reader launch |
+| Assignment types beyond IR | Study Plan, Word Study, iPractice, Writing, Monitor Progress, etc. |
+| Teacher communication (Connect) | Real-time buzz comments + stars from teacher (static sample data) |
+| Word count timer | Timer-based word counting while reading |
+| Class switcher | Dropdown for students in multiple classes |
 
 ---
 
@@ -818,5 +837,10 @@ Additional per-book localStorage:
 | `components/reader/CollectedHighlights.tsx` | Highlight collection dialog |
 | `components/reader/TextHelpToolbar.tsx` | Word tap floating toolbar |
 | `components/reader/AccessibilityPanel.tsx` | Keyboard shortcuts |
+| `components/reader/types.ts` | Reader interfaces: FlatPage, AnnotationColor, PageAnnotations |
 | `lib/types.ts` | Shared TypeScript types |
 | `lib/storage.ts` | localStorage persistence layer |
+| `content/books/catalog.json` | Full book catalog (27 entries) |
+| `content/passages/*.json` | IR passage data (bomb-dogs, turn-it-down, hidden-ads) |
+| `content/vocabulary/vocabulary.json` | Vocabulary definitions |
+| `docs/asset-inventory.md` | Original PNG/JPEG asset catalog and usage status |

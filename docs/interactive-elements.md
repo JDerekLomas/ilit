@@ -365,3 +365,81 @@ Lower priority (can stub initially):
 - Oral fluency recording
 - Essay/paragraph scoring
 - Study plan routing
+
+---
+
+## Adaptive IR Leveling Algorithm
+
+Source: `docs/classview/CMS/classroom_server/server_tasks.py`
+
+### Three-Level System
+
+I-LIT uses three discrete IR levels — not a continuous Lexile scale:
+
+| Level | Difficulty | Description |
+|-------|-----------|-------------|
+| **L1** | Hardest | On/above grade level text |
+| **L2** | Middle | Default starting level for all students |
+| **L3** | Easiest | Below grade level, more scaffolding |
+
+Each IR passage topic exists in up to 3 versions (one per level). The student's current IR level determines which version they see.
+
+### Level Transition Rules
+
+```
+Score < 71%  → DEMOTE (one level easier)
+Score 71-85% → STAY   (same level)
+Score >= 86% → PROMOTE (one level harder)
+```
+
+Transitions are capped at boundaries:
+- L1 cannot promote (already hardest) → stays L1
+- L3 cannot demote (already easiest) → stays L3
+
+```python
+ILIT_LEVEL_PROMOTE = {'L1': 'L1', 'L2': 'L1', 'L3': 'L2'}
+ILIT_LEVEL_DEMOTE  = {'L1': 'L2', 'L2': 'L3', 'L3': 'L3'}
+```
+
+### Score Calculation
+
+Weekly percentage score aggregated from all IR activities:
+
+| Activity | Multiplier Key |
+|----------|---------------|
+| IWT checkpoints (highlight, drag-drop, MC) | `iwt` |
+| Summary writing | `summary_writing` |
+| Text answer / critical response | `critical_response` |
+| Whole-group polls | `whole_group_poll` |
+| SSR conferences | `ssr_conference` |
+
+Formula: `score = Σ(points × multiplier) / Σ(max_points × multiplier) × 100`
+
+The multipliers are configurable per classroom, allowing teachers to weight different activity types differently.
+
+### When Leveling Runs
+
+In the original system:
+- Leveling runs **weekly** per classroom via a batch job (`run_student_leveling.py`) on a Mac Mini server
+- Only triggers if the student has **completed their IWT assignment** for that week
+- Only triggers if there is **scoring data** to evaluate
+- Teachers can set a default starting level before any IR assignments are sent
+
+### Our Implementation
+
+In `lib/storage.ts`:
+- `getIrLevel(score, currentLevel)` — pure function matching the original algorithm
+- `updateIrLevel(passageId)` — called when all checkpoints in a passage are completed
+- Calculates score percentage from `passageProgress.totalScore / maxPossibleScore`
+- Updates `irLevel` in student progress
+- We evaluate per-passage (not weekly) since we don't have a classroom server
+
+### Lexile Mapping for Library
+
+IR levels map to Lexile ranges for the "My Level" library filter:
+
+| Level | Lexile Center | Filter Range |
+|-------|--------------|--------------|
+| L1 | 1000L | 800–1200L |
+| L2 | 700L | 500–900L |
+| L3 | 400L | 200–600L |

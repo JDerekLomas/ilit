@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import type { FlatPage, PageAnnotations, AnnotationColor } from "./types";
 import type { HighlightColor, TranslateLanguage } from "./ReaderToolbar";
 import TextHelpToolbar from "./TextHelpToolbar";
@@ -105,8 +105,97 @@ export default function BookPageView({
     }
   }, []);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Keyboard navigation within book text
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handler = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      // Only handle keys when focus is inside this page container
+      if (!container.contains(target)) return;
+
+      const isOnParagraph = target.hasAttribute("data-para");
+      const isOnWord = target.parentElement?.hasAttribute("data-para") && target.tabIndex === 0 && !target.hasAttribute("data-para");
+
+      if (e.key === "Tab") {
+        e.preventDefault();
+        // Move between paragraphs
+        const paras = Array.from(container.querySelectorAll<HTMLElement>("[data-para]"));
+        if (paras.length === 0) return;
+        const currentPara = isOnParagraph ? target : target.closest<HTMLElement>("[data-para]");
+        const currentIdx = currentPara ? paras.indexOf(currentPara) : -1;
+        const nextIdx = e.shiftKey
+          ? (currentIdx <= 0 ? paras.length - 1 : currentIdx - 1)
+          : (currentIdx >= paras.length - 1 ? 0 : currentIdx + 1);
+        paras[nextIdx].focus();
+      }
+
+      if (e.key === "w" || e.key === "W") {
+        // From paragraph, move to first word
+        if (isOnParagraph) {
+          e.preventDefault();
+          const firstWord = target.querySelector<HTMLElement>("[tabindex='0']");
+          if (firstWord) firstWord.focus();
+        }
+      }
+
+      if (e.key === "p" || e.key === "P") {
+        // From word, move back to paragraph
+        if (isOnWord) {
+          e.preventDefault();
+          const para = target.closest<HTMLElement>("[data-para]");
+          if (para) para.focus();
+        }
+      }
+
+      if (e.key === "ArrowLeft" && isOnWord) {
+        e.preventDefault();
+        // Move to previous word (skip space tokens)
+        let prev = target.previousElementSibling as HTMLElement | null;
+        while (prev && prev.tabIndex !== 0) prev = prev.previousElementSibling as HTMLElement | null;
+        if (prev) prev.focus();
+      }
+
+      if (e.key === "ArrowRight" && isOnWord) {
+        e.preventDefault();
+        // Move to next word (skip space tokens)
+        let next = target.nextElementSibling as HTMLElement | null;
+        while (next && next.tabIndex !== 0) next = next.nextElementSibling as HTMLElement | null;
+        if (next) next.focus();
+      }
+
+      if (e.key === " ") {
+        e.preventDefault();
+        if (isOnParagraph) {
+          // Highlight paragraph and show TextHelp
+          const pIdx = Number(target.getAttribute("data-para"));
+          const rect = target.getBoundingClientRect();
+          const paraText = paragraphs[pIdx];
+          setSelectionHighlight({ paraIndex: pIdx, wordIndex: null });
+          setTextHelp({ text: paraText, scope: "sentence", anchorRect: rect });
+        } else if (isOnWord) {
+          // Highlight word and show TextHelp
+          const para = target.closest<HTMLElement>("[data-para]");
+          if (!para) return;
+          const pIdx = Number(para.getAttribute("data-para"));
+          const siblings = Array.from(para.children);
+          const wIdx = siblings.indexOf(target);
+          const rect = target.getBoundingClientRect();
+          setSelectionHighlight({ paraIndex: pIdx, wordIndex: wIdx });
+          setTextHelp({ text: target.textContent ?? "", scope: "word", anchorRect: rect });
+        }
+      }
+    };
+
+    container.addEventListener("keydown", handler);
+    return () => container.removeEventListener("keydown", handler);
+  }, [paragraphs]);
+
   return (
-    <div className="h-full flex flex-col px-2 md:px-4 py-2">
+    <div ref={containerRef} className="h-full flex flex-col px-2 md:px-4 py-2">
       {/* Chapter header */}
       {page.isFirstInChapter && (
         <h2 className="text-center text-amber-900 font-bold uppercase tracking-widest text-sm md:text-base mb-4 font-sans">
@@ -141,9 +230,10 @@ export default function BookPageView({
             <p
               key={pIdx}
               data-para={pIdx}
+              tabIndex={0}
               className={`${pIdx < paragraphs.length - 1 ? "mb-3" : ""} ${
                 isParaSelected ? "bg-yellow-200" : ""
-              } rounded-sm transition-colors`}
+              } rounded-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-1`}
             >
               {splitIntoWords(para).map((token, wIdx) => {
                 if (token.type === "space") {
@@ -156,7 +246,7 @@ export default function BookPageView({
                   selectionHighlight.wordIndex === wIdx;
 
                 // Build class list
-                let wordClass = "cursor-pointer rounded-sm transition-colors";
+                let wordClass = "cursor-pointer rounded-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-amber-500";
                 if (isWordSelected && !isParaSelected) {
                   wordClass += " bg-yellow-300";
                 } else if (annotation) {

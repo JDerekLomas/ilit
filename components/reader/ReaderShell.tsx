@@ -9,6 +9,7 @@ import ReaderToolbar, { type HighlightColor, type TranslateLanguage } from "./Re
 import TableOfContents, { type BookNote } from "./TableOfContents";
 import PageSlider from "./PageSlider";
 import CollectedHighlights from "./CollectedHighlights";
+import AccessibilityPanel from "./AccessibilityPanel";
 
 interface Props {
   book: Book;
@@ -30,6 +31,7 @@ export default function ReaderShell({ book, onExit }: Props) {
   const [showCollected, setShowCollected] = useState(false);
   const [translateLang, setTranslateLang] = useState<TranslateLanguage>(null);
   const [bookNotes, setBookNotes] = useState<BookNote[]>([]);
+  const [showAccessibility, setShowAccessibility] = useState(false);
 
   // Load book notes from localStorage
   useEffect(() => {
@@ -169,9 +171,20 @@ export default function ReaderShell({ book, onExit }: Props) {
   // Keyboard nav
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") goPrev();
-      if (e.key === "ArrowRight") goNext();
-      if (e.key === "Escape") setShowTOC(false);
+      // Don't handle arrow keys for page nav when focus is on a word or paragraph
+      const target = e.target as HTMLElement;
+      const isInBookText = target.closest("[data-para]") || target.hasAttribute("data-para");
+
+      if (e.key === "ArrowLeft" && !isInBookText) goPrev();
+      if (e.key === "ArrowRight" && !isInBookText) goNext();
+      if (e.key === "Escape") {
+        setShowTOC(false);
+        setShowAccessibility(false);
+      }
+      // A key toggles annotation pen (only when not typing in an input)
+      if (e.key === "a" && !e.metaKey && !e.ctrlKey && !(target instanceof HTMLInputElement) && !(target instanceof HTMLTextAreaElement)) {
+        setActiveHighlight((prev) => prev === "none" ? "cyan" : "none");
+      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -252,6 +265,7 @@ export default function ReaderShell({ book, onExit }: Props) {
         onCollectHighlights={() => setShowCollected(true)}
         translateLang={translateLang}
         onTranslateLangChange={setTranslateLang}
+        onToggleAccessibility={() => setShowAccessibility((v) => !v)}
       />
 
       {/* Book frame + nav arrows */}
@@ -376,6 +390,11 @@ export default function ReaderShell({ book, onExit }: Props) {
           flatPages={flatPages}
           onClose={() => setShowCollected(false)}
         />
+      )}
+
+      {/* Accessibility Info Panel */}
+      {showAccessibility && (
+        <AccessibilityPanel onClose={() => setShowAccessibility(false)} />
       )}
     </div>
   );

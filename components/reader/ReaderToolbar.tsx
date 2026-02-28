@@ -34,6 +34,7 @@ interface Props {
   onCollectHighlights: () => void;
   translateLang: TranslateLanguage;
   onTranslateLangChange: (lang: TranslateLanguage) => void;
+  onToggleAccessibility: () => void;
 }
 
 const HIGHLIGHT_COLORS: { color: HighlightColor; label: string; bg: string; textLabel?: string }[] = [
@@ -59,6 +60,7 @@ export default function ReaderToolbar({
   onCollectHighlights,
   translateLang,
   onTranslateLangChange,
+  onToggleAccessibility,
 }: Props) {
   const [showAnnotation, setShowAnnotation] = useState(false);
   const [showTranslate, setShowTranslate] = useState(false);
@@ -195,6 +197,11 @@ export default function ReaderToolbar({
           <MaskIcon />
         </ToolButton>
 
+        {/* Accessibility info */}
+        <ToolButton onClick={onToggleAccessibility} title="Accessibility Instructions">
+          <InfoIcon />
+        </ToolButton>
+
         {/* Font size */}
         <ToolButton onClick={onFontSizeChange} title={`Font size: ${fontSize}`}>
           <FontSizeIcon />
@@ -290,6 +297,16 @@ function MaskIcon() {
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <line x1="3" y1="9" x2="21" y2="9" />
       <line x1="3" y1="15" x2="21" y2="15" />
+    </svg>
+  );
+}
+
+function InfoIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="16" x2="12" y2="12" />
+      <line x1="12" y1="8" x2="12.01" y2="8" />
     </svg>
   );
 }

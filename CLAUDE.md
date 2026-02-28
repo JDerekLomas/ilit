@@ -95,10 +95,35 @@ GitHub Issues is the shared task board. Each issue maps to a specific page file.
 5. Comment with what was done and the deploy URL
 
 ### Current open issues
-- **#4** Library carousel density — `app/dashboard/library/page.tsx` (HIGH)
-- **#11** Notebook skeuomorphic redesign — `app/dashboard/notebook/page.tsx` (MEDIUM)
-- **#12** Connect tab polish — `app/dashboard/connect/page.tsx` (LOW)
-- **#14** Assignments particle effect — `app/dashboard/assignments/page.tsx` (LOW)
+Run `gh issue list --repo JDerekLomas/ilit --state open` for the latest list. Key streams:
+
+**eBook Reader** (Stream 2):
+- **#16** Word-level interaction + TextHelp popup
+- **#17** Annotation pen with colored highlights
+- **#18** Translation dropdown
+- **#19** TOC panel with book notes tab
+- **#29** Accessibility info panel + keyboard nav
+
+**Interactive Reader** (Stream 3):
+- **#20** Drag-and-drop checkpoint polish
+- **#21** Highlight checkpoint type
+- **#22** Multiple choice checkpoint type
+- **#28** Vocabulary word popup (tap-to-define)
+- **#32** Summary writing slide with feedback
+
+**Dashboard** (Stream 1):
+- **#25** Notebook: ruled lines + paper texture
+- **#26** Connect tab: comments feed + stars
+- **#27** Dashboard layout: bottom nav styling
+- **#30** Review tab: match reference modal
+- **#31** Library: book detail panel polish
+
+**Content** (Stream 4):
+- **#23** Add 3-5 more book entries
+- **#24** Add 2-3 more IR passages
+
+**Cross-cutting**:
+- **#33** Progress tracking: localStorage persistence
 - **#1** LTI integration plan (PLANNING — don't start yet)
 
 ## Design Philosophy

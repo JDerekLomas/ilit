@@ -19,7 +19,7 @@ export default function DashboardLayout({
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen flex flex-col relative" style={{ background: "linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 25%, #1e3a5f 50%, #0d4f4f 75%, #1a3a2a 100%)" }}>
+    <div className="min-h-screen flex flex-col relative" style={{ background: "linear-gradient(135deg, #4a0e2e 0%, #3b1248 20%, #2a1555 40%, #1e3a6f 60%, #0d5f5f 80%, #0a6e5a 100%)" }}>
       {/* Constellation/network pattern overlay */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.07] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
         <defs>

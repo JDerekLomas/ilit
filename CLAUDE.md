@@ -64,14 +64,33 @@ node scripts/visual-compare.mjs --url https://ilit-xyz.vercel.app
 
 ## Coordination (Multi-Window)
 
-Multiple Claude Code windows may work on this project simultaneously.
+Multiple Claude Code windows work on this project simultaneously via cmux.
+GitHub Issues is the shared task board. Each issue maps to a specific page file.
 
-- **Check open issues first**: `gh issue list` — see what needs doing and what's claimed
-- **Claim before starting**: Comment "claiming this" on the issue, or self-assign
-- **Branch per issue**: `git checkout -b issue/11-notebook-redesign` — don't commit directly to main when other windows are active
-- **PR when done**: Push branch, create PR, reference the issue number
-- **Verify after fixing**: Deploy and re-screenshot to confirm the visual gap is closed
-- **Don't duplicate work**: If an issue already has a recent comment or assignee, pick a different one
+### Before starting work
+1. Run `gh issue list --repo JDerekLomas/ilit --state open` to see what's available
+2. Pick an issue that does NOT have the `wip` label
+3. Claim it: `gh issue edit N --add-label wip`
+4. Comment on the issue with what you're about to do
+
+### While working
+- Commit directly to main — each issue touches a different file, so no conflicts
+- If you need to touch a shared file (types.ts, layout.tsx), check `git diff HEAD` first
+- Reference screenshots are in `docs/screenshots/` — check them before and after
+
+### When done
+1. Commit and push to main
+2. Deploy: `vercel --prod --yes`
+3. Remove wip label: `gh issue edit N --remove-label wip`
+4. Close the issue: `gh issue close N`
+5. Comment with what was done and the deploy URL
+
+### Current open issues
+- **#4** Library carousel density — `app/dashboard/library/page.tsx` (HIGH)
+- **#11** Notebook skeuomorphic redesign — `app/dashboard/notebook/page.tsx` (MEDIUM)
+- **#12** Connect tab polish — `app/dashboard/connect/page.tsx` (LOW)
+- **#14** Assignments particle effect — `app/dashboard/assignments/page.tsx` (LOW)
+- **#1** LTI integration plan (PLANNING — don't start yet)
 
 ## Design Philosophy
 

@@ -1,6 +1,6 @@
 export default function ConnectPage() {
   return (
-    <div className="max-w-3xl mx-auto px-4 pt-6">
+    <div className="max-w-5xl mx-auto px-4 pt-6">
       <div className="bg-white rounded-xl p-6 min-h-[60vh] relative">
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
@@ -32,8 +32,8 @@ export default function ConnectPage() {
             height="140"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#e05540"
-            strokeWidth="0.75"
+            stroke="#ef4444"
+            strokeWidth="2"
             strokeLinejoin="round"
           >
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />

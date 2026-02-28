@@ -80,9 +80,9 @@ catalog.forEach((book, i) => {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="420" viewBox="0 0 300 420">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:${palette[0]}"/>
-      <stop offset="50%" style="stop-color:${palette[1]}"/>
-      <stop offset="100%" style="stop-color:${palette[2]}"/>
+      <stop offset="0%" stop-color="${palette[0]}"/>
+      <stop offset="50%" stop-color="${palette[1]}"/>
+      <stop offset="100%" stop-color="${palette[2]}"/>
     </linearGradient>
   </defs>
   <rect width="300" height="420" fill="url(#bg)" rx="4"/>

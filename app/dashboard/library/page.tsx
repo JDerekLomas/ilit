@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { loadStudentData, type StudentData } from "@/lib/storage";
 
 /** Lightweight catalog entry — no chapter content */
@@ -260,14 +259,12 @@ export default function LibraryPage() {
                         boxShadow: "0px 2px 13px rgba(50, 50, 50, 0.86)",
                       }}
                     >
-                      <Image
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
                         src={book.coverImage}
                         alt={book.title}
-                        fill
-                        sizes="(max-width: 640px) 110px, 14vw"
-                        className="object-cover"
+                        className="absolute inset-0 w-full h-full object-cover"
                         draggable={false}
-                        priority={absOffset <= 2}
                         loading={absOffset > 2 ? "lazy" : undefined}
                       />
                     </div>
@@ -330,7 +327,8 @@ export default function LibraryPage() {
                   }}
                 >
                   {selectedBook && (
-                    <Image src={selectedBook.coverImage} alt={selectedBook.title} fill sizes="114px" className="object-cover" />
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img src={selectedBook.coverImage} alt={selectedBook.title} className="absolute inset-0 w-full h-full object-cover" />
                   )}
                 </div>
                 <span className="text-white/70 text-[10px] sm:text-xs font-medium text-center leading-tight mt-2">
@@ -382,7 +380,8 @@ export default function LibraryPage() {
                   }}
                 >
                   {selectedBook && (
-                    <Image src={selectedBook.coverImage} alt={selectedBook.title} fill sizes="114px" className="object-cover" />
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img src={selectedBook.coverImage} alt={selectedBook.title} className="absolute inset-0 w-full h-full object-cover" />
                   )}
                 </div>
                 <span className="text-white/70 text-[10px] sm:text-xs font-medium text-center leading-tight mt-2">

@@ -28,6 +28,14 @@ const categories: AssignmentCategory[] = [
     ],
   },
   {
+    label: "Study Plan",
+    type: "vocabulary",
+    badgeColor: "red",
+    items: [
+      { id: "study-plan-1", title: "Study Plan Week 1", type: "vocabulary" },
+    ],
+  },
+  {
     label: "Vocabulary, Word Study, and Reading Comprehension",
     type: "vocabulary",
     badgeColor: "red",
@@ -61,6 +69,15 @@ const categories: AssignmentCategory[] = [
       { id: "reading-check-7", title: "Reading Check 7", type: "monitor" },
     ],
   },
+  {
+    label: "Information",
+    type: "info",
+    badgeColor: "red",
+    items: [
+      { id: "lo-u3w1", title: "Learning Objectives, Unit 3, Week 1", type: "info" },
+      { id: "lo-u5w1", title: "Learning Objectives, Unit 5, Week 1", type: "info" },
+    ],
+  },
 ];
 
 export default function AssignmentsPage() {
@@ -80,38 +97,41 @@ export default function AssignmentsPage() {
     if (item.type === "interactive-reading") {
       router.push(`/interactive/${item.id}`);
     }
-    // Other types are placeholder for now
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 pt-6 pb-4">
+    <div className="max-w-2xl mx-auto px-4 pt-8 pb-4">
       {/* Header */}
-      <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl border-2 border-dashed border-gray-500 px-6 py-4 mb-6">
-        <h1 className="text-white text-xl font-bold tracking-wide">
+      <div className="bg-gray-900/60 backdrop-blur-sm rounded-xl px-6 py-4 mb-6">
+        <h1 className="text-white text-xl font-bold tracking-wide text-center">
           Assignments
         </h1>
       </div>
 
-      {/* Category list */}
-      <div className="space-y-2">
-        {categories.map((cat) => {
+      {/* Single white card with all categories */}
+      <div className="bg-white rounded-xl overflow-hidden shadow-lg">
+        {categories.map((cat, catIndex) => {
           const isOpen = expanded.has(cat.label);
           const count = cat.items.length;
+          const isLast = catIndex === categories.length - 1;
 
           return (
             <div key={cat.label}>
-              {/* Category header */}
+              {/* Category row */}
               <button
                 onClick={() => toggle(cat.label)}
-                className="w-full flex items-center gap-3 bg-white/90 backdrop-blur-sm rounded-xl px-4 py-3.5 shadow-sm hover:bg-white transition-colors"
+                className={`w-full flex items-center justify-between px-5 py-3.5 hover:bg-gray-50 transition-colors ${
+                  !isLast && !isOpen ? "border-b border-gray-200" : ""
+                }`}
               >
-                <ChevronIcon open={isOpen} />
-                <span className="flex-1 text-left text-sm font-semibold text-gray-800 leading-snug">
+                <span className="text-sm font-bold text-gray-900 text-left">
                   {cat.label}
                 </span>
                 <span
-                  className={`min-w-[28px] h-7 flex items-center justify-center rounded-full text-xs font-bold text-white ${
-                    cat.badgeColor === "green" ? "bg-green-500" : "bg-red-500"
+                  className={`min-w-[26px] h-[26px] flex items-center justify-center rounded-full text-xs font-bold border-2 ${
+                    cat.badgeColor === "green"
+                      ? "border-green-500 text-green-600 bg-green-50"
+                      : "border-red-500 text-red-600 bg-red-50"
                   }`}
                 >
                   {count}
@@ -119,30 +139,27 @@ export default function AssignmentsPage() {
               </button>
 
               {/* Expanded items */}
-              {isOpen && cat.items.length > 0 && (
-                <div className="ml-4 mt-1 space-y-1">
-                  {cat.items.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => handleItemClick(item)}
-                      className={`w-full text-left px-4 py-3 rounded-lg text-sm transition-colors ${
-                        item.type === "interactive-reading"
-                          ? "bg-white/80 text-gray-800 hover:bg-white hover:shadow-sm cursor-pointer"
-                          : "bg-white/50 text-gray-500 cursor-default"
-                      }`}
-                    >
-                      {item.title}
-                      {item.type === "interactive-reading" && (
-                        <span className="float-right text-gray-400">&rsaquo;</span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {isOpen && cat.items.length === 0 && (
-                <div className="ml-4 mt-1 px-4 py-3 bg-white/50 rounded-lg text-sm text-gray-400 italic">
-                  All complete
+              {isOpen && (
+                <div className={`bg-gray-50 ${!isLast ? "border-b border-gray-200" : ""}`}>
+                  {cat.items.length > 0 ? (
+                    cat.items.map((item, itemIndex) => (
+                      <button
+                        key={item.id}
+                        onClick={() => handleItemClick(item)}
+                        className={`w-full text-left px-8 py-3 text-sm transition-colors ${
+                          item.type === "interactive-reading"
+                            ? "text-gray-800 hover:bg-gray-100 cursor-pointer"
+                            : "text-gray-500 cursor-default"
+                        } ${itemIndex < cat.items.length - 1 ? "border-b border-gray-100" : ""}`}
+                      >
+                        {item.title}
+                      </button>
+                    ))
+                  ) : (
+                    <div className="px-8 py-3 text-sm text-gray-400 italic">
+                      All complete
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -150,23 +167,5 @@ export default function AssignmentsPage() {
         })}
       </div>
     </div>
-  );
-}
-
-function ChevronIcon({ open }: { open: boolean }) {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={`text-gray-500 transition-transform ${open ? "rotate-90" : ""}`}
-    >
-      <polyline points="9 18 15 12 9 6" />
-    </svg>
   );
 }

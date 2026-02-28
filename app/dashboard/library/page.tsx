@@ -3,27 +3,28 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import type { Book } from "@/lib/types";
 import { loadStudentData, type StudentData } from "@/lib/storage";
 
-const BOOK_IDS = [
-  "storm-chasers",
-  "little-big-top",
-  "crash-dive",
-  "dream-dead",
-  "jungle-jenny",
-  "prince-pauper",
-  "robot-revolution",
-  "lost-city",
-  "ocean-secrets",
-];
+/** Lightweight catalog entry — no chapter content */
+interface CatalogBook {
+  id: string;
+  title: string;
+  author: string;
+  coverImage: string;
+  lexileLevel: number;
+  genre: string;
+  summary: string;
+  totalPages: number;
+  chapterCount: number;
+  wordCount: number;
+}
 
 const FILTERS_LEFT = ["All Titles", "My Level", "My Books"] as const;
 const FILTERS_RIGHT = ["Recommended", "Reviewed", "Reserved"] as const;
 
 export default function LibraryPage() {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [selectedIndex, setSelectedIndex] = useState(4);
+  const [books, setBooks] = useState<CatalogBook[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [filter, setFilter] = useState("All Titles");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -35,11 +36,12 @@ export default function LibraryPage() {
   const touchDeltaX = useRef(0);
 
   useEffect(() => {
-    Promise.all(
-      BOOK_IDS.map((id) =>
-        fetch(`/content/books/${id}.json`).then((r) => r.json())
-      )
-    ).then(setBooks);
+    fetch("/content/books/catalog.json")
+      .then((r) => r.json())
+      .then((data: CatalogBook[]) => {
+        setBooks(data);
+        setSelectedIndex(Math.floor(data.length / 2));
+      });
     setStudentData(loadStudentData());
   }, []);
 
@@ -352,11 +354,11 @@ export default function LibraryPage() {
                   Progress
                 </div>
                 <div className="flex-1 flex flex-col justify-center px-3 sm:px-6 py-2">
-                  <StatRow label="Total Words" value={studentData?.progress.totalWords.toLocaleString() ?? "—"} />
-                  <StatRow label="Total Pages" value={studentData?.progress.totalPages.toString() ?? "—"} />
-                  <StatRow label="Total Books" value={studentData?.progress.totalBooks.toString() ?? "—"} />
+                  <StatRow label="Total Words" value={selectedBook?.wordCount.toLocaleString() ?? "—"} />
+                  <StatRow label="Total Pages" value={selectedBook?.totalPages.toString() ?? "—"} />
+                  <StatRow label="Chapters" value={selectedBook?.chapterCount.toString() ?? "—"} />
                   <div className="border-t border-white/10 mt-1 pt-1">
-                    <StatRow label="IR Lexile Level" value={studentData?.progress.currentLexile.toString() ?? "—"} />
+                    <StatRow label="Lexile Level" value={selectedBook?.lexileLevel.toString() ?? "—"} />
                   </div>
                 </div>
               </div>

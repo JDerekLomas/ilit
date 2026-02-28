@@ -1,6 +1,6 @@
 export default function ReviewPage() {
   return (
-    <div className="fixed inset-0 z-40 flex flex-col">
+    <div className="fixed inset-0 z-[60] flex flex-col">
       {/* Dark overlay background matching reference */}
       <div className="absolute inset-0 bg-[#555] " />
 

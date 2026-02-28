@@ -62,19 +62,22 @@ The two-page-spread book reader: `PlayerTemp.html`, core CSS, and scripts.
 
 ## Full Source Location
 
-The complete ClassView repo (all services) is at:
+The full ClassView Webclient source (38MB, gitignored) is at:
 ```
-~/classview/
-├── Webclient/          # Student + instructor web apps (34MB)
-│   └── App/            # All student app files (this is where we cherry-picked from)
-├── CMS/                # Django CMS backend (29MB)
-├── WebAPI_Services/    # .NET API services (37MB)
-├── Graphics/           # Design assets (1.1GB)
-├── AppZips/            # Packaged builds (403MB)
-└── ...
+docs/classview/Webclient/
+├── App/                # All student app files (this is where we cherry-picked from)
+│   ├── js/             # 98 JS files
+│   ├── css/            # 56 CSS files
+│   ├── media/          # 183 image assets
+│   ├── ebookplayer/    # Full eBook reader
+│   ├── assignment-content/ # Assignment config data
+│   └── *.html          # All page templates
+├── css/                # Global styles
+├── js/                 # Core framework JS
+└── media/              # Login/shell assets
 ```
 
-For files not in this cherry-pick (e.g., `assignments_frs.js`, extra media), look in `~/classview/Webclient/App/`.
+For files not in this cherry-pick (e.g., `assignments_frs.js`, extra media), look in `docs/classview/Webclient/App/`.
 
 ## How to Use
 

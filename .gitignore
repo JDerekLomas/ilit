@@ -5,3 +5,6 @@ node_modules/
 .env.production.local
 .vercel
 *.tsbuildinfo
+
+# Full ClassView source (38MB, local reference only)
+docs/classview/

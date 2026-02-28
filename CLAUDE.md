@@ -42,18 +42,20 @@ lib/
 Complete design specification with every color, font size, spacing value, and layout detail extracted from the original app. **Read this first** before implementing any feature.
 
 ### Source Code (`docs/reference-source/`)
-Actual HTML/CSS/JS/media extracted from the production Savvas I-LIT app. 41 files total:
-- **HTML**: `library.html`, `notebook.html`, `assignment.html`
-- **CSS** (9 files): `style.css` (global), `library.css`, `notebook.css`, `assignments.css`, plus `_dev.css` variants and carousel CSS
-- **JS** (14 files): `student.js`, `application.js`, `libraryview.js`, `assignments.js`, `ilit_book_shelf_rounder.js`, `swipe.js`, and data files
-- **Media** (14 files): Background images, sprite sheets, notebook assets — see `docs/reference-source/README.md`
+Cherry-picked HTML/CSS/JS/media from the ClassView source code. 76 files covering all student-facing features. See `docs/reference-source/README.md` for full inventory.
 
-Key insight: Spiral binding, ruled lines, and constellation patterns are **PNG/JPEG images**, NOT CSS. See design spec for details.
+### Full ClassView Source (`docs/classview/` — gitignored)
+Complete Webclient source (38MB, 98 JS files, 56 CSS files, 183 media assets). For deep dives into any feature not in the cherry-pick. **Not committed to git** — obtain from the ClassView zip.
+
+### Interactive Elements (`docs/interactive-elements.md`)
+Complete documentation of all interactive element types: IWT slides (highlight, drag-and-drop, text answer, summary, multiple choice), word study, FRS, eBook reader features, and data models.
 
 ### UI Audit (`docs/ui-audit.md`)
 Comprehensive screen-by-screen audit of every element in the original app.
 
-Read the design spec and reference source files before implementing a feature to match the original's behavior and visual design.
+Key insight: Spiral binding, ruled lines, and constellation patterns are **PNG/JPEG images**, NOT CSS. See design spec for details.
+
+Read the design spec, interactive elements doc, and reference source files before implementing a feature.
 
 ## Visual Comparison Workflow
 

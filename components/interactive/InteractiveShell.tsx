@@ -95,20 +95,20 @@ export default function InteractiveShell({ passage, onExit }: Props) {
 
       {/* Slide content */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-4 md:px-16 pb-16 pt-2 h-[calc(100vh-120px)]">
-        {/* Left arrow */}
+        {/* Left arrow — green circle matching original I-LIT */}
         <button
           onClick={() => goToSlide(currentSlide - 1)}
           disabled={currentSlide === 0}
-          className="absolute left-2 md:left-6 z-20 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white disabled:opacity-30 hover:bg-white/30 transition-colors"
+          className="absolute left-2 md:left-4 z-20 w-11 h-11 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-green-600 text-white shadow-lg disabled:opacity-30 hover:bg-green-500 transition-colors"
         >
           <ChevronLeft />
         </button>
 
-        {/* Right arrow */}
+        {/* Right arrow — green circle matching original I-LIT */}
         <button
           onClick={() => goToSlide(currentSlide + 1)}
           disabled={currentSlide === totalSlides - 1}
-          className="absolute right-2 md:right-6 z-20 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white disabled:opacity-30 hover:bg-white/30 transition-colors"
+          className="absolute right-2 md:right-4 z-20 w-11 h-11 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-green-600 text-white shadow-lg disabled:opacity-30 hover:bg-green-500 transition-colors"
         >
           <ChevronRight />
         </button>
@@ -156,15 +156,15 @@ export default function InteractiveShell({ passage, onExit }: Props) {
         </AnimatePresence>
       </div>
 
-      {/* Dot navigation */}
-      <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center gap-2">
+      {/* Dot navigation — larger dots matching original */}
+      <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center gap-2.5">
         {passage.slides.map((_, i) => (
           <button
             key={i}
             onClick={() => goToSlide(i)}
-            className={`w-2.5 h-2.5 rounded-full transition-all ${
+            className={`w-3 h-3 rounded-full transition-all ${
               i === currentSlide
-                ? "bg-white scale-125"
+                ? "bg-white scale-125 shadow-md"
                 : "bg-white/40 hover:bg-white/60"
             }`}
           />
@@ -193,6 +193,10 @@ function AudioControls({ text }: { text: string }) {
         {playing ? <PauseIcon /> : <PlayIcon />}
       </button>
       <span className="text-white/70 text-xs font-mono">0:00 / {duration}</span>
+      {/* Scrubber bar */}
+      <div className="w-16 md:w-24 h-1 bg-white/20 rounded-full overflow-hidden">
+        <div className="h-full w-0 bg-white/70 rounded-full" />
+      </div>
       <button className="w-5 h-5 flex items-center justify-center text-white/70">
         <VolumeIcon />
       </button>
@@ -203,7 +207,7 @@ function AudioControls({ text }: { text: string }) {
 // Icons
 function ChevronLeft() {
   return (
-    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+    <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
     </svg>
   );
@@ -211,7 +215,7 @@ function ChevronLeft() {
 
 function ChevronRight() {
   return (
-    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+    <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
     </svg>
   );

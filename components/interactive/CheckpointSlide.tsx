@@ -124,6 +124,13 @@ export default function CheckpointSlide({
   );
 }
 
+const CELEBRATION_MESSAGES = [
+  "YOU GOT IT!",
+  "WAY TO GO!",
+  "GREAT JOB!",
+  "NICE WORK!",
+];
+
 function FeedbackPanel({
   isCorrect,
   feedback,
@@ -133,6 +140,11 @@ function FeedbackPanel({
   feedback: { correct: string; incorrect: string };
   onRetry?: () => void;
 }) {
+  // Pick a random celebration message on mount
+  const [celebrationMsg] = useState(
+    () => CELEBRATION_MESSAGES[Math.floor(Math.random() * CELEBRATION_MESSAGES.length)]
+  );
+
   return (
     <div>
       <h3
@@ -140,7 +152,7 @@ function FeedbackPanel({
           isCorrect ? "text-green-700" : "text-orange-700"
         }`}
       >
-        {isCorrect ? "YOU GOT IT!" : "Not quite."}
+        {isCorrect ? celebrationMsg : "Not quite."}
       </h3>
       <p className="text-sm md:text-base text-gray-700 leading-relaxed">
         {isCorrect ? feedback.correct : feedback.incorrect}

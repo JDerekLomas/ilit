@@ -303,46 +303,91 @@ export default function LibraryPage() {
             </div>
           )}
 
-          {/* Bottom cards */}
-          <div className="grid grid-cols-3 gap-px px-3 sm:px-4 pb-4" style={{ background: "url(/images/textures/bgnn.png) repeat 0 0" }}>
-            <div className="bg-[#1a1a1a] p-2 sm:p-3 flex flex-col items-center gap-1.5 sm:gap-2 rounded-l-md">
-              <div className="w-16 h-22 sm:w-20 sm:h-28 rounded-sm overflow-hidden shadow-lg relative">
-                {selectedBook && (
-                  <Image src={selectedBook.coverImage} alt={selectedBook.title} fill sizes="80px" className="object-cover" />
-                )}
-              </div>
-              <span className="text-white/70 text-[9px] sm:text-[10px] font-medium text-center leading-tight">
-                Read Aloud Think Aloud
-              </span>
-            </div>
+          {/* Book detail panel */}
+          <div className="flex justify-center px-3 sm:px-4 pb-4">
+            <div
+              className="w-full flex items-stretch"
+              style={{ maxWidth: 903 }}
+            >
+              {/* Left: Read Aloud Think Aloud */}
+              <button
+                onClick={() => { if (selectedBook) router.push(`/reader/${selectedBook.id}`); }}
+                className="flex flex-col items-center justify-center px-3 sm:px-5 py-3 hover:brightness-110 transition-all"
+                style={{
+                  background: "#121313",
+                  borderRadius: "5px 0 0 5px",
+                  width: "clamp(100px, 18%, 160px)",
+                }}
+              >
+                <div
+                  className="rounded-[3px] overflow-hidden relative shadow-lg"
+                  style={{
+                    width: "clamp(70px, 100%, 114px)",
+                    aspectRatio: "114 / 164",
+                    border: "3px solid #fff",
+                  }}
+                >
+                  {selectedBook && (
+                    <Image src={selectedBook.coverImage} alt={selectedBook.title} fill sizes="114px" className="object-cover" />
+                  )}
+                </div>
+                <span className="text-white/70 text-[10px] sm:text-xs font-medium text-center leading-tight mt-2">
+                  Read Aloud Think Aloud
+                </span>
+              </button>
 
-            <div className="bg-[#1a1a1a] p-2 sm:p-3 flex flex-col justify-center">
-              <h3 className="text-white/80 text-[10px] sm:text-[11px] font-semibold text-center mb-1.5 sm:mb-2 tracking-wide">
-                Progress
-              </h3>
-              <div className="space-y-1 sm:space-y-1.5">
-                <StatRow label="Total Words" value={studentData?.progress.totalWords.toLocaleString() ?? "—"} />
-                <StatRow label="Total Pages" value={studentData?.progress.totalPages.toString() ?? "—"} />
-                <StatRow label="Total Books" value={studentData?.progress.totalBooks.toString() ?? "—"} />
-                <div className="border-t border-white/10 pt-1 sm:pt-1.5">
-                  <StatRow label="IR Lexile Level" value={studentData?.progress.currentLexile.toString() ?? "—"} />
+              {/* Center: Progress stats */}
+              <div
+                className="flex-1 flex flex-col"
+                style={{ background: "#121313" }}
+              >
+                <div
+                  className="text-white text-center font-semibold py-2"
+                  style={{
+                    fontSize: 16,
+                    background: "#0b0c0c",
+                    borderBottom: "2px solid #000",
+                  }}
+                >
+                  Progress
+                </div>
+                <div className="flex-1 flex flex-col justify-center px-3 sm:px-6 py-2">
+                  <StatRow label="Total Words" value={studentData?.progress.totalWords.toLocaleString() ?? "—"} />
+                  <StatRow label="Total Pages" value={studentData?.progress.totalPages.toString() ?? "—"} />
+                  <StatRow label="Total Books" value={studentData?.progress.totalBooks.toString() ?? "—"} />
+                  <div className="border-t border-white/10 mt-1 pt-1">
+                    <StatRow label="IR Lexile Level" value={studentData?.progress.currentLexile.toString() ?? "—"} />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <button
-              onClick={() => { if (selectedBook) router.push(`/reader/${selectedBook.id}`); }}
-              className="bg-[#1a1a1a] p-2 sm:p-3 flex flex-col items-center gap-1.5 sm:gap-2 hover:bg-[#222] transition-colors rounded-r-md"
-            >
-              <div className="w-16 h-22 sm:w-20 sm:h-28 rounded-sm overflow-hidden shadow-lg relative">
-                {selectedBook && (
-                  <Image src={selectedBook.coverImage} alt={selectedBook.title} fill sizes="80px" className="object-cover" />
-                )}
-              </div>
-              <span className="text-white/70 text-[9px] sm:text-[10px] font-medium text-center leading-tight">
-                My Current Reading
-              </span>
-            </button>
+              {/* Right: My Current Reading */}
+              <button
+                onClick={() => { if (selectedBook) router.push(`/reader/${selectedBook.id}`); }}
+                className="flex flex-col items-center justify-center px-3 sm:px-5 py-3 hover:brightness-110 transition-all"
+                style={{
+                  background: "#121313",
+                  borderRadius: "0 5px 5px 0",
+                  width: "clamp(100px, 18%, 160px)",
+                }}
+              >
+                <div
+                  className="rounded-[3px] overflow-hidden relative shadow-lg"
+                  style={{
+                    width: "clamp(70px, 100%, 114px)",
+                    aspectRatio: "114 / 164",
+                    border: "3px solid #fff",
+                  }}
+                >
+                  {selectedBook && (
+                    <Image src={selectedBook.coverImage} alt={selectedBook.title} fill sizes="114px" className="object-cover" />
+                  )}
+                </div>
+                <span className="text-white/70 text-[10px] sm:text-xs font-medium text-center leading-tight mt-2">
+                  My Current Reading
+                </span>
+              </button>
+            </div>
           </div>
         </>
       )}
@@ -352,9 +397,9 @@ export default function LibraryPage() {
 
 function StatRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex justify-between items-center">
-      <span className="text-white/50 text-[9px] sm:text-[10px]">{label}</span>
-      <span className="text-white text-[11px] sm:text-xs font-bold">{value}</span>
+    <div className="flex justify-between items-center py-1.5 sm:py-2">
+      <span className="text-white/70 text-xs sm:text-[15px]">{label}</span>
+      <span className="text-white text-sm sm:text-[15px] font-bold">{value}</span>
     </div>
   );
 }

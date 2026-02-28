@@ -238,9 +238,9 @@ export default function LibraryPage() {
                     onClick={() => setSelectedIndex(i)}
                     className="absolute transition-all duration-500 ease-out"
                     style={{
-                      width: "clamp(100px, 12vw, 180px)",
-                      height: "clamp(140px, 16.8vw, 250px)",
-                      transform: `translateX(calc(${offset} * clamp(55px, 7vw, 100px))) translateZ(${isSelected ? "clamp(30px, 4vw, 60px)" : `calc(${-absOffset} * clamp(15px, 2vw, 30px))`}) rotateY(${offset * -20}deg) scale(${isSelected ? 1.05 : Math.max(0.75, 1 - absOffset * 0.08)})`,
+                      width: "clamp(110px, 15vw, 200px)",
+                      height: "clamp(155px, 21vw, 280px)",
+                      transform: `translateX(calc(${offset} * clamp(40px, 5vw, 75px))) translateZ(${isSelected ? "clamp(20px, 3vw, 50px)" : `calc(${-absOffset} * clamp(10px, 1.5vw, 25px))`}) rotateY(${offset * -15}deg) scale(${isSelected ? 1.08 : Math.max(0.78, 1 - absOffset * 0.07)})`,
                       zIndex: 10 - absOffset,
                       opacity: absOffset > 5 ? 0 : 1,
                     }}

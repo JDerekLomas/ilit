@@ -4,7 +4,7 @@
  * Gracefully degrades if localStorage is unavailable (SSR, private browsing).
  */
 
-import type { StudentProgress, BookReview, Highlight } from "./types";
+import type { StudentProgress, BookReview, Highlight, CheckpointScore, PassageProgress } from "./types";
 
 const STORAGE_KEY = "ilit-student-data";
 
@@ -46,6 +46,7 @@ const DEFAULT_DATA: StudentData = {
     totalPages: 30,
     totalBooks: 0,
     completedPassages: [],
+    passageProgress: {},
     bookProgress: {},
     highlights: {},
     bookReviews: {},
@@ -166,5 +167,94 @@ export function markPassageComplete(passageId: string): StudentData {
     data.progress.completedPassages.push(passageId);
     saveStudentData(data);
   }
+  return data;
+}
+
+export function getPassageProgress(passageId: string): PassageProgress {
+  const data = loadStudentData();
+  return (
+    data.progress.passageProgress[passageId] || {
+      passageId,
+      completedSlides: [],
+      checkpointScores: [],
+      summarySubmitted: false,
+      totalScore: 0,
+      maxPossibleScore: 0,
+    }
+  );
+}
+
+export function recordCheckpointScore(
+  passageId: string,
+  score: CheckpointScore
+): StudentData {
+  const data = loadStudentData();
+  if (!data.progress.passageProgress[passageId]) {
+    data.progress.passageProgress[passageId] = {
+      passageId,
+      completedSlides: [],
+      checkpointScores: [],
+      summarySubmitted: false,
+      totalScore: 0,
+      maxPossibleScore: 0,
+    };
+  }
+  const pp = data.progress.passageProgress[passageId];
+  // Replace if already scored this slide, otherwise add
+  const existing = pp.checkpointScores.findIndex(
+    (s) => s.slideIndex === score.slideIndex
+  );
+  if (existing >= 0) {
+    pp.checkpointScores[existing] = score;
+  } else {
+    pp.checkpointScores.push(score);
+  }
+  // Recompute totals
+  pp.totalScore = pp.checkpointScores.reduce((sum, s) => sum + s.score, 0);
+  pp.maxPossibleScore = pp.checkpointScores.reduce(
+    (sum, s) => sum + s.maxScore,
+    0
+  );
+  saveStudentData(data);
+  return data;
+}
+
+export function markSlideComplete(
+  passageId: string,
+  slideIndex: number
+): StudentData {
+  const data = loadStudentData();
+  if (!data.progress.passageProgress[passageId]) {
+    data.progress.passageProgress[passageId] = {
+      passageId,
+      completedSlides: [],
+      checkpointScores: [],
+      summarySubmitted: false,
+      totalScore: 0,
+      maxPossibleScore: 0,
+    };
+  }
+  const pp = data.progress.passageProgress[passageId];
+  if (!pp.completedSlides.includes(slideIndex)) {
+    pp.completedSlides.push(slideIndex);
+  }
+  saveStudentData(data);
+  return data;
+}
+
+export function markSummarySubmitted(passageId: string): StudentData {
+  const data = loadStudentData();
+  if (!data.progress.passageProgress[passageId]) {
+    data.progress.passageProgress[passageId] = {
+      passageId,
+      completedSlides: [],
+      checkpointScores: [],
+      summarySubmitted: false,
+      totalScore: 0,
+      maxPossibleScore: 0,
+    };
+  }
+  data.progress.passageProgress[passageId].summarySubmitted = true;
+  saveStudentData(data);
   return data;
 }

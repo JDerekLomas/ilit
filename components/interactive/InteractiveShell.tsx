@@ -6,6 +6,7 @@ import type { Passage, Slide, VocabularyWord } from "@/lib/types";
 import ReadingSlide from "./ReadingSlide";
 import CheckpointSlide from "./CheckpointSlide";
 import SummarySlide from "./SummarySlide";
+import { recordCheckpointScore, markSlideComplete, markPassageComplete } from "@/lib/storage";
 
 interface Props {
   passage: Passage;
@@ -60,9 +61,34 @@ export default function InteractiveShell({ passage, onExit }: Props) {
     [currentSlide, totalSlides]
   );
 
-  const handleCheckpointComplete = useCallback(() => {
-    setCompletedCheckpoints((prev) => new Set([...prev, currentSlide]));
-  }, [currentSlide]);
+  const handleCheckpointComplete = useCallback(
+    (score: number, maxScore: number, attempts: number) => {
+      setCompletedCheckpoints((prev) => new Set([...prev, currentSlide]));
+
+      // Persist checkpoint score
+      const slideData = passage.slides[currentSlide];
+      const checkpointType = slideData.checkpoint?.type || "highlight";
+      recordCheckpointScore(passage.id, {
+        slideIndex: currentSlide,
+        type: checkpointType,
+        score,
+        maxScore,
+        attempts,
+      });
+      markSlideComplete(passage.id, currentSlide);
+
+      // Check if all checkpoints are now complete
+      const allCheckpointIndices = passage.slides
+        .map((s, i) => (s.type === "checkpoint" || s.checkpoint ? i : -1))
+        .filter((i) => i >= 0);
+      const newCompleted = new Set([...completedCheckpoints, currentSlide]);
+      const allDone = allCheckpointIndices.every((i) => newCompleted.has(i));
+      if (allDone) {
+        markPassageComplete(passage.id);
+      }
+    },
+    [currentSlide, passage, completedCheckpoints]
+  );
 
   const handleShowCheckpoint = useCallback(() => {
     setShowCheckpoint(true);

@@ -94,6 +94,24 @@ export interface VocabularyWord {
 
 // ── Student Progress ──
 
+export interface CheckpointScore {
+  slideIndex: number;
+  type: "highlight" | "drag-drop" | "multiple-choice";
+  score: number;
+  maxScore: number;
+  attempts: number;
+}
+
+export interface PassageProgress {
+  passageId: string;
+  completedSlides: number[];
+  checkpointScores: CheckpointScore[];
+  summarySubmitted: boolean;
+  totalScore: number;
+  maxPossibleScore: number;
+  completedAt?: string; // ISO string
+}
+
 export interface StudentProgress {
   studentName: string;
   currentLexile: number;
@@ -101,6 +119,7 @@ export interface StudentProgress {
   totalPages: number;
   totalBooks: number;
   completedPassages: string[];
+  passageProgress: Record<string, PassageProgress>; // passageId -> progress
   bookProgress: Record<string, number>; // bookId -> last page
   highlights: Record<string, Highlight[]>;
   bookReviews: Record<string, BookReview>;

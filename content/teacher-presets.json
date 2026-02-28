@@ -1,0 +1,83 @@
+{
+  "conferenceNotes": [
+    "Good progress",
+    "On track",
+    "Book too difficult",
+    "Book too easy",
+    "Not on task",
+    "Not interested in reading",
+    "Not interested in this book",
+    "Lost interest in this book",
+    "Like this book",
+    "Likes this genre"
+  ],
+  "comprehensionLevels": [
+    { "value": 0, "label": "Inappropriate" },
+    { "value": 1, "label": "Struggling" },
+    { "value": 2, "label": "Fair" },
+    { "value": 3, "label": "Satisfactory" },
+    { "value": 4, "label": "Good" }
+  ],
+  "guidingQuestions": [
+    "Why did you choose this book?",
+    "Is this book easy, just right or challenging? How do you know?",
+    "Tell me what this book is about so far.",
+    "Is this book what you expected it to be about?",
+    "Does your mind ever wander when you are reading? If so, what do you do?",
+    "What connection can you make between this book and your own life?",
+    "What do you wonder about this book?",
+    "Can you relate to any of the characters? If so, in what ways?",
+    "Have any questions come up as you have been reading?",
+    "What word or phrase would you use to describe this book? Why?",
+    "What's the most interesting thing so far in your book?",
+    "Would you recommend this book to a friend? Why or why not?",
+    "Are there any confusing parts in the book? Why are they confusing?",
+    "Summarize what you have read so far.",
+    "What do you think would be the best ending for this book?"
+  ],
+  "speakingNotes": [
+    "Prepares in advance",
+    "Adapts speech to formal / informal contexts",
+    "Communicates ideas effectively",
+    "Goes off-topic",
+    "Justifies opinions with evidence",
+    "Uses academic vocabulary",
+    "Speaks at an appropriate pace, volume",
+    "Makes eye contact",
+    "Forms and uses verb tenses correctly",
+    "Makes grammatical errors with verbs or pronouns",
+    "Uses Standard English word order",
+    "Pronunciation interferes with communication"
+  ],
+  "listeningNotes": [
+    "Shows respect",
+    "Shows impatience",
+    "Shows attention to speaker",
+    "Allows attention to wander",
+    "Interrupts",
+    "Asks for elaboration or clarification",
+    "Asks relevant questions /makes comments",
+    "Is unaware of topic",
+    "Summarizes key ideas",
+    "Acknowledges others' ideas",
+    "Understands alternate viewpoints"
+  ],
+  "quickComments": [
+    "Excellent progress",
+    "Nicely done",
+    "Great job today",
+    "Outstanding effort",
+    "Way to go",
+    "Impressive work today",
+    "Tremendous focus",
+    "Proud of your progress",
+    "Pleased with your progress",
+    "Amazing improvement",
+    "Keep working hard",
+    "Please pay attention",
+    "Please stay on task",
+    "Please see me after class",
+    "Not your best effort",
+    "Be respectful of others"
+  ]
+}

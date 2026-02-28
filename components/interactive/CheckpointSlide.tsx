@@ -11,7 +11,7 @@ interface Props {
   sentences: string[];
   precedingText?: string;
   checkpoint: Checkpoint;
-  onComplete: () => void;
+  onComplete: (score: number, maxScore: number, attempts: number) => void;
   completed: boolean;
 }
 
@@ -68,12 +68,10 @@ export default function CheckpointSlide({
   );
   const dropZoneRef = useRef<HTMLDivElement>(null);
 
-  const handleAnswer = useCallback((correct: boolean) => {
+  const handleAnswer = useCallback((correct: boolean, finalScore: number, attempts: number) => {
     setIsCorrect(correct);
     setAnswered(true);
-    if (correct) {
-      onComplete();
-    }
+    onComplete(finalScore, MAX_SCORE, attempts);
   }, [onComplete]);
 
   // Highlight answer handler (receives score from HighlightCheckpoint)
@@ -81,10 +79,8 @@ export default function CheckpointSlide({
     setScore(hlScore);
     setIsCorrect(correct);
     setAnswered(true);
-    if (correct) {
-      onComplete();
-    }
-  }, [onComplete]);
+    onComplete(hlScore, MAX_SCORE, attemptCount + 1);
+  }, [onComplete, attemptCount]);
 
   const handleDndRetry = () => {
     setDndState("interacting");
@@ -118,7 +114,7 @@ export default function CheckpointSlide({
       setDndState("snapSuccess");
       setTimeout(() => {
         setDndState("finalCorrect");
-        handleAnswer(true);
+        handleAnswer(true, trialScore, newAttempt);
       }, 900);
     } else {
       setDndState("shaking");
@@ -130,7 +126,7 @@ export default function CheckpointSlide({
           setDroppedWord(correctWord);
           setScore(0);
           setDndState("finalIncorrect");
-          setTimeout(() => handleAnswer(false), 1000);
+          setTimeout(() => handleAnswer(false, 0, newAttempt), 1000);
         } else {
           setDndState("retryPrompt");
         }
@@ -168,10 +164,8 @@ export default function CheckpointSlide({
     setScore(mcScore);
     setIsCorrect(correct);
     setAnswered(true);
-    if (correct) {
-      onComplete();
-    }
-  }, [onComplete]);
+    onComplete(mcScore, MAX_SCORE, attemptCount + 1);
+  }, [onComplete, attemptCount]);
 
   // Right panel shows feedback when in a final state
   const showDndFeedback = dndState === "finalCorrect" || dndState === "finalIncorrect";

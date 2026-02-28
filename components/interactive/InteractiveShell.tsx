@@ -13,21 +13,18 @@ interface Props {
   onExit: () => void;
 }
 
-// 3D slit transition variants (from original ClassView assignments.css)
+// Horizontal slide transition matching original Swipe.js parallax engine
 const slideVariants = {
   enter: (dir: number) => ({
-    rotateY: dir > 0 ? 90 : -90,
-    z: -250,
+    x: dir > 0 ? "60%" : "-60%",
     opacity: 0,
   }),
   center: {
-    rotateY: 0,
-    z: 0,
+    x: 0,
     opacity: 1,
   },
   exit: (dir: number) => ({
-    rotateY: dir > 0 ? -90 : 90,
-    z: -250,
+    x: dir > 0 ? "-40%" : "40%",
     opacity: 0,
   }),
 };
@@ -223,7 +220,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
       </div>
 
       {/* Slide content with 3D perspective */}
-      <div className="relative z-10 flex-1 flex items-center justify-center px-2 sm:px-4 md:px-16 pb-14 pt-1 sm:pt-2 min-h-0" style={{ perspective: 1200 }}>
+      <div className="relative z-10 flex-1 flex items-center justify-center px-2 sm:px-4 md:px-16 pb-14 pt-1 sm:pt-2 min-h-0 overflow-hidden">
         {/* Left arrow — white border with shadow for contrast against blue gradient */}
         <button
           onClick={() => goToSlide(currentSlide - 1)}
@@ -250,8 +247,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 1.2, ease: "easeInOut" }}
-            style={{ transformStyle: "preserve-3d" }}
+            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
             className="w-full max-w-5xl mx-auto h-full flex items-start min-h-0"
           >
             {slide.type === "reading" && !showingCheckpointOnReading && (

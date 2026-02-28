@@ -208,7 +208,7 @@ export default function CheckpointSlide({
   const showOverlay = dndState === "showingOverlay" || dndState === "showingFinalOverlay" || highlightState === "checking";
 
   return (
-    <div className="w-full h-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6 items-stretch min-h-0 relative">
+    <div className="w-full h-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-0 items-stretch min-h-0 relative">
       {/* Semi-transparent overlay during feedback delays (#34) */}
       <AnimatePresence>
         {showOverlay && (
@@ -222,8 +222,8 @@ export default function CheckpointSlide({
         )}
       </AnimatePresence>
 
-      {/* Left: Text panel with sentences */}
-      <div className="flex-1 bg-white rounded-xl border-[6px] border-black/30 p-4 sm:p-6 overflow-y-auto w-full min-h-0">
+      {/* Left: Text panel with sentences — 57% width matching original 550/950 ratio */}
+      <div className="md:w-[57%] md:flex-none flex-1 bg-white rounded-xl border-[6px] border-black/30 p-4 sm:p-6 overflow-y-auto w-full min-h-0">
         {slide.heading && (
           <h2 className="font-serif font-bold text-lg mb-3 text-gray-900">
             {slide.heading}
@@ -275,26 +275,33 @@ export default function CheckpointSlide({
                           if (de.dataTransfer) {
                             de.dataTransfer.setData("text/plain", word);
                             de.dataTransfer.effectAllowed = "move";
+                            // Custom drag ghost with dark teal styling (#35484C) matching original
+                            const ghost = document.createElement("div");
+                            ghost.textContent = word;
+                            ghost.style.cssText = "background:#35484C;color:#fff;padding:5px 12px;border-radius:3px;font-size:14px;font-weight:600;position:fixed;top:-1000px;white-space:nowrap;";
+                            document.body.appendChild(ghost);
+                            de.dataTransfer.setDragImage(ghost, ghost.offsetWidth / 2, ghost.offsetHeight / 2);
+                            requestAnimationFrame(() => document.body.removeChild(ghost));
                           }
                           setDragActiveWord(word);
                         }}
                         onDragEnd={() => setDragActiveWord(null)}
                         onClick={() => handleWordTap(word)}
-                        whileHover={{ scale: 1.05, boxShadow: "0 4px 15px rgba(0,0,0,0.12)" }}
+                        whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         animate={
                           isPlaced
                             ? { opacity: 0.4, scale: 0.95 }
                             : isActive
-                            ? { scale: 1.08, boxShadow: "0 6px 20px rgba(99,102,241,0.3)" }
+                            ? { scale: 1.05, backgroundColor: "#35484C", color: "#ffffff" }
                             : { opacity: 1, scale: 1 }
                         }
-                        className={`px-5 py-2.5 border-2 rounded-xl text-sm font-semibold cursor-grab active:cursor-grabbing transition-colors select-none ${
+                        className={`px-4 py-2 border rounded text-sm font-semibold cursor-grab active:cursor-grabbing transition-colors select-none ${
                           isPlaced
-                            ? "border-indigo-300 bg-indigo-50 text-indigo-400"
+                            ? "border-gray-300 bg-gray-100 text-gray-400"
                             : isActive
-                            ? "border-indigo-500 bg-indigo-50 text-indigo-700 shadow-lg"
-                            : "border-gray-200 bg-white text-gray-800 hover:border-indigo-400 hover:bg-indigo-50 shadow-sm"
+                            ? "border-[#35484C] bg-[#35484C] text-white shadow-md"
+                            : "border-gray-300 bg-white text-gray-800 hover:border-[#35484C] hover:bg-gray-50 shadow-sm"
                         }`}
                       >
                         {word}
@@ -308,9 +315,9 @@ export default function CheckpointSlide({
         )}
       </div>
 
-      {/* Right: Question / Feedback panel — slides in from right (#36) */}
+      {/* Right: Question / Feedback panel — slides in from right, overlaps left by 12px (#36) */}
       <motion.div
-        className="flex-1 bg-[#f7f9f9] rounded-xl border-[6px] border-black/30 p-4 sm:p-6 overflow-y-auto w-full min-h-0"
+        className="md:w-[43%] md:flex-none md:-ml-3 flex-1 bg-[#f7f9f9] rounded-xl border-[6px] border-black/30 p-4 sm:p-6 overflow-y-auto w-full min-h-0"
         variants={rightPanelVariants}
         initial="hidden"
         animate="visible"
@@ -489,16 +496,16 @@ export default function CheckpointSlide({
                     {part}
                     {i < templateParts.length - 1 && (
                       <motion.span
-                        className={`inline-block min-w-[120px] mx-1 px-4 py-1.5 rounded-lg border-2 text-center align-middle ${
+                        className={`inline-block min-w-[120px] mx-1 px-4 py-1.5 rounded border-2 text-center align-middle ${
                           dndState === "snapSuccess"
                             ? "border-green-400 bg-green-50 text-green-800 font-bold"
                             : dndState === "finalIncorrect"
                             ? "border-blue-400 bg-blue-50 text-blue-800 font-bold"
                             : droppedWord
-                            ? "border-indigo-400 bg-indigo-50 text-indigo-800 font-semibold"
+                            ? "border-[#35484C] bg-[#35484C]/10 text-[#35484C] font-semibold"
                             : isDragOverDrop
-                            ? "border-indigo-500 bg-indigo-100 text-indigo-500 border-solid shadow-inner"
-                            : "border-gray-300 bg-white text-gray-400 border-dashed"
+                            ? "border-[#35484C] bg-[#35484C]/10 text-[#35484C] border-solid shadow-inner"
+                            : "border-gray-400 bg-white text-gray-400 border-dashed"
                         }`}
                         animate={
                           dndState === "shaking"

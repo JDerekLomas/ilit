@@ -36,7 +36,7 @@ export default function ReadingSlide({
   const closePopup = useCallback(() => setActiveWord(null), []);
 
   return (
-    <div className="w-full max-w-full sm:max-w-[90%] md:max-w-[48%] md:mr-auto self-stretch flex min-h-0">
+    <div className="w-full max-w-full sm:max-w-[90%] md:max-w-[550px] md:mr-auto self-stretch flex min-h-0">
       <div className="bg-white rounded-xl border-[6px] border-black/30 p-4 sm:p-5 md:p-7 overflow-y-auto flex-1 min-h-0">
         {slide.heading && (
           <h2 className="font-serif font-bold text-lg md:text-xl mb-4 text-gray-900">

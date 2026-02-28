@@ -274,8 +274,11 @@ export default function LibraryPage() {
               })}
             </div>
 
-            {/* Shelf edge / shadow */}
-            <div className="absolute bottom-0 left-0 right-0 h-6 z-10 pointer-events-none" style={{ background: "linear-gradient(to bottom, transparent, #222224)", borderBottom: "4px solid #1a1a1c" }} />
+            {/* Shelf ledge — thick dark bar like the original */}
+            <div className="absolute bottom-0 left-0 right-0 z-10 pointer-events-none">
+              <div style={{ height: 8, background: "linear-gradient(to bottom, transparent, rgba(0,0,0,0.6))" }} />
+              <div style={{ height: 20, background: "linear-gradient(to bottom, #2a2a2c, #1a1a1c)", borderTop: "2px solid #3a3a3c", borderBottom: "3px solid #111" }} />
+            </div>
           </div>
 
           {/* Selected book title */}
@@ -338,9 +341,9 @@ export default function LibraryPage() {
                 <div className="flex-1 flex flex-col justify-center px-3 sm:px-6 py-2">
                   <StatRow label="Total Words" value={selectedBook?.wordCount.toLocaleString() ?? "—"} />
                   <StatRow label="Total Pages" value={selectedBook?.totalPages.toString() ?? "—"} />
-                  <StatRow label="Chapters" value={selectedBook?.chapterCount.toString() ?? "—"} />
+                  <StatRow label="Total Books" value="—" />
                   <div className="border-t border-white/10 mt-1 pt-1">
-                    <StatRow label="Lexile Level" value={selectedBook?.lexileLevel.toString() ?? "—"} />
+                    <StatRow label="IR Lexile Level" value={selectedBook?.lexileLevel.toString() ?? "—"} />
                   </div>
                 </div>
               </div>

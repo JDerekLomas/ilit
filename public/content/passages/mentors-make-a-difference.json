@@ -1,0 +1,109 @@
+{
+  "id": "mentors-make-a-difference",
+  "title": "Mentors Make a Difference",
+  "author": "I-LIT Staff",
+  "lexileLevel": 600,
+  "backgroundImage": "/images/passages/mentors-make-a-difference-bg.jpg",
+  "slides": [
+    {
+      "type": "reading",
+      "heading": "The Wisdom of Mentors",
+      "text": "Where would Luke Skywalker be without Obi-Wan Kenobi? Great adventure heroes have one thing in common. They do not succeed alone. This is true in real life, too. Teens, especially, often need guidance and support from others.\n\nYou may have lots of talent and energy. Your friends may support you. Still, at some point, you are probably going to need the wisdom of someone from an older generation. An adult who has been where you are now can guide you, inspire you, and give you the push you need to succeed."
+    },
+    {
+      "type": "reading",
+      "heading": "Set me!",
+      "text": "Adults who guide young people toward success are known as mentors. The word \"mentor\" comes from one of the world's first adventure stories, the ancient Greek story the Odyssey. One of the story's characters, Mentor, was the teacher of the hero's son.\n\n \n\nAlthough you may not realize it, there are mentors in your own life, if you know where to look."
+    },
+    {
+      "type": "checkpoint",
+      "checkpoint": {
+        "type": "highlight",
+        "skill": "Make Predictions",
+        "prompt": "You could make a prediction that this text may help you discover possible mentors that might not be obvious to you. Highlight the sentence that would lead you to that prediction.",
+        "correctAnswer": "Although you may not realize it, there are mentors in your own life, if you know where to look.",
+        "feedback": {
+          "correct": "GREAT JOB!\n\n \n\nYou identified the sentence that would lead you to that prediction.",
+          "incorrect": "Try Again\n\n \n\nLook at the article's title again. Then scan the text for a sentence that supports that idea.",
+          "incorrectFinal": "Look carefully at the highlighted sentence. Although you may not realize it means that it is something that you don't know for sure. The words \"if you know where to look\" lets you know that you might discover who these mentors are."
+        }
+      },
+      "sentences": [
+        "Adults who guide young people toward success are known as mentors.",
+        "The word \"mentor\" comes from one of the world's first adventure stories, the ancient Greek story the Odyssey.",
+        "One of the story's characters, Mentor, was the teacher of the hero's son.",
+        "Although you may not realize it, there are mentors in your own life, if you know where to look."
+      ]
+    },
+    {
+      "type": "reading",
+      "heading": "Close To Home",
+      "text": "Many kids find mentors in people close to them. A survey of more than 3,300 middle school and high school teens across the country asked teens whom they see as role models. Teens judged family members, such as parents, aunts, uncles, and grandparents, to be their mentors. \"It's apparent that while kids look up to many people in our society, it's those who are involved in their daily lives who have the most impact,\" the survey director said."
+    },
+    {
+      "type": "checkpoint",
+      "checkpoint": {
+        "type": "highlight",
+        "skill": "Author's Purpose",
+        "prompt": "The author gives clues that her purpose in writing is to explain and inform. Highlight the sentence that explains why teens judge family members to be good mentors.",
+        "correctAnswer": "\"It's apparent that while kids look up to many people in our society, it's those who are involved in their daily lives who have the most impact,\" the survey director said.",
+        "feedback": {
+          "correct": "AWESOME!\n\n \n\nYou correctly identified the sentence.",
+          "incorrect": "Try Again\n\n \n\nWhen trying to find more information about something stated in text, look at the sentences that follow it. Find the sentence that says teens judge family members to be good mentors, and read on to determine why they do.",
+          "incorrectFinal": "Look carefully at the highlighted sentence. In this sentence, the author explains that family members make good mentors to teens because they are \"involved in their daily lives\" and \"have the most impact.\""
+        }
+      },
+      "sentences": [
+        "Many kids find mentors in people close to them.",
+        "A survey of more than 3,300 middle school and high school teens across the country asked teens whom they see as role models.",
+        "Teens judged family members, such as parents, aunts, uncles, and grandparents, to be their mentors.",
+        "\"It's apparent that while kids look up to many people in our society, it's those who are involved in their daily lives who have the most impact,\" the survey director said."
+      ]
+    },
+    {
+      "type": "reading",
+      "heading": "Teachers As Mentors",
+      "text": "Teachers also scored high on the survey. Like Mentor in the Odyssey, teachers guide and challenge young people. Hollywood has long recognized our appreciation of inspirational teachers. Popular movies such as Stand and Deliver and Freedom Writers are based on the stories of real-life teachers. These teachers taught kids as much about life as they did about writing and math. In Stand and Deliver, a teacher motivates a class full of East Los Angeles barrio kids to care enough about mathematics to pass an Advanced Placement Calculus Test. In Freedom Writers, a teacher turns around the lives of troubled kids at Wilson High School in Long Beach, California."
+    },
+    {
+      "type": "reading",
+      "heading": "The Larger Community",
+      "text": "An old African proverb says, \"It takes a village to raise a child.\" This proverb means the whole community can have a supportive role in a young person's success. Adults can volunteer to be mentors, working one-on-one with young people. It is estimated that over 3 million American adults do just that. They spend time with kids, sharing interests and cheering the kids' successes. Whole communities can also be mentors. They can sponsor programs to help young people succeed in life. In Boston, teens learn about organic farming by working with adult farmers in community gardens. The food they grow goes to food banks and soup kitchens."
+    },
+    {
+      "type": "checkpoint",
+      "checkpoint": {
+        "type": "highlight",
+        "skill": "Author's Purpose",
+        "prompt": "When writing to inform, authors often include statistics, or numerical measurements, to support their words. Highlight the sentence in this passage that provides a statistic about the popularity of mentoring.",
+        "correctAnswer": "It is estimated that over 3 million American adults do just that.",
+        "feedback": {
+          "correct": "GREAT JOB!\n\n \n\nYou identified the correct sentence.",
+          "incorrect": "Try Again\n\n \n\nLook back at the text for a number that gives a clue about a statistic the author uses.",
+          "incorrectFinal": "Look at the highlighted sentence. The author's purpose is to inform. She provides a statistic, or number, to inform the reader that over 3 million American adults volunteer as mentors."
+        }
+      },
+      "sentences": [
+        "An old African proverb says, \"It takes a village to raise a child.\"",
+        "This proverb means the whole community can have a supportive role in a young person's success.",
+        "Adults can volunteer to be mentors, working one-on-one with young people.",
+        "It is estimated that over 3 million American adults do just that.",
+        "They spend time with kids, sharing interests and cheering the kids' successes.",
+        "Whole communities can also be mentors.",
+        "They can sponsor programs to help young people succeed in life.",
+        "In Boston, teens learn about organic farming by working with adult farmers in community gardens.",
+        "The food they grow goes to food banks and soup kitchens."
+      ]
+    },
+    {
+      "type": "reading",
+      "heading": "Making a Difference",
+      "text": "Most people agree that the influence of caring adults can make a difference to kids. Many adults, however, think mentoring is just about helping kids with their homework. Adults volunteer as tutors, thinking teens only need help with schoolwork. But according to the survey, kids value mentors who are trustworthy, caring, and understanding. Successful mentors do not need to be educators. They do not need special training. So what do teens value most in a mentor? According to the survey, a good listener."
+    },
+    {
+      "type": "summary",
+      "summaryPrompt": "After reading this article, do you think it's important that adults act as mentors for teens? Provide reasons that support your answer.",
+      "expectedKeyConcepts": []
+    }
+  ]
+}

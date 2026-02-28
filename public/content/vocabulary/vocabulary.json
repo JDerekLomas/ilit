@@ -148,5 +148,204 @@
     "wordParts": null,
     "image": "/images/vocabulary/brand.jpg",
     "passageId": "hidden-ads"
+  },
+  {
+    "word": "conscious",
+    "definition": "Aware of and responding to one's surroundings; done on purpose.",
+    "exampleSentence": "He made a conscious choice to change his life for the better.",
+    "wordParts": null,
+    "image": null,
+    "passageId": "the-power-to-move"
+  },
+  {
+    "word": "motivate",
+    "definition": "To give someone a reason or desire to do something.",
+    "exampleSentence": "Love for his son motivated Gardner to work harder.",
+    "wordParts": {
+      "base": "motive",
+      "affix": "-ate",
+      "affixType": "suffix",
+      "result": "motivate"
+    },
+    "image": null,
+    "passageId": "the-power-to-move"
+  },
+  {
+    "word": "stockbroker",
+    "definition": "A person who buys and sells stocks and other investments for other people.",
+    "exampleSentence": "Gardner got a job as a stockbroker and worked hard to succeed.",
+    "wordParts": {
+      "base": "stock",
+      "affix": "broker",
+      "affixType": "suffix",
+      "result": "stockbroker"
+    },
+    "image": null,
+    "passageId": "the-power-to-move"
+  },
+  {
+    "word": "individuality",
+    "definition": "The qualities that make a person different from everyone else.",
+    "exampleSentence": "Self-motivation is a mark of your individuality.",
+    "wordParts": {
+      "base": "individual",
+      "affix": "-ity",
+      "affixType": "suffix",
+      "result": "individuality"
+    },
+    "image": null,
+    "passageId": "the-power-to-move"
+  },
+  {
+    "word": "overwhelmed",
+    "definition": "Feeling that something is too much to handle.",
+    "exampleSentence": "Do not take on so much that you get overwhelmed.",
+    "wordParts": {
+      "base": "overwhelm",
+      "affix": "-ed",
+      "affixType": "suffix",
+      "result": "overwhelmed"
+    },
+    "image": null,
+    "passageId": "the-power-to-move"
+  },
+  {
+    "word": "mentor",
+    "definition": "An experienced person who gives advice and guidance to someone younger or less experienced.",
+    "exampleSentence": "A good mentor can help a teen succeed in school and in life.",
+    "wordParts": null,
+    "image": null,
+    "passageId": "mentors-make-a-difference"
+  },
+  {
+    "word": "generation",
+    "definition": "All the people who were born around the same time period.",
+    "exampleSentence": "You may need the wisdom of someone from an older generation.",
+    "wordParts": {
+      "base": "generate",
+      "affix": "-ion",
+      "affixType": "suffix",
+      "result": "generation"
+    },
+    "image": null,
+    "passageId": "mentors-make-a-difference"
+  },
+  {
+    "word": "inspirational",
+    "definition": "Providing encouragement or new ideas; making people feel motivated.",
+    "exampleSentence": "Hollywood has long recognized our appreciation of inspirational teachers.",
+    "wordParts": {
+      "base": "inspire",
+      "affix": "-ational",
+      "affixType": "suffix",
+      "result": "inspirational"
+    },
+    "image": null,
+    "passageId": "mentors-make-a-difference"
+  },
+  {
+    "word": "volunteer",
+    "definition": "A person who freely offers to do something without being paid.",
+    "exampleSentence": "Over 3 million American adults volunteer as mentors to young people.",
+    "wordParts": null,
+    "image": null,
+    "passageId": "mentors-make-a-difference"
+  },
+  {
+    "word": "trustworthy",
+    "definition": "Able to be relied on as honest and truthful.",
+    "exampleSentence": "Kids value mentors who are trustworthy, caring, and understanding.",
+    "wordParts": {
+      "base": "trust",
+      "affix": "-worthy",
+      "affixType": "suffix",
+      "result": "trustworthy"
+    },
+    "image": null,
+    "passageId": "mentors-make-a-difference"
+  },
+  {
+    "word": "peer pressure",
+    "definition": "The feeling that you must do the same things as other people your age in order to be liked or accepted.",
+    "exampleSentence": "Peer pressure can push you in the wrong direction or down the wrong path.",
+    "wordParts": null,
+    "image": null,
+    "passageId": "having-friends-making-choices"
+  },
+  {
+    "word": "convince",
+    "definition": "To persuade someone to do or believe something.",
+    "exampleSentence": "Your peers may try to convince you to do things they are doing.",
+    "wordParts": null,
+    "image": null,
+    "passageId": "having-friends-making-choices"
+  },
+  {
+    "word": "questionable",
+    "definition": "Doubtful; possibly wrong or dishonest.",
+    "exampleSentence": "Before you say yes to questionable behavior, take a minute to think about it.",
+    "wordParts": {
+      "base": "question",
+      "affix": "-able",
+      "affixType": "suffix",
+      "result": "questionable"
+    },
+    "image": null,
+    "passageId": "having-friends-making-choices"
+  },
+  {
+    "word": "confront",
+    "definition": "To face a difficult situation directly.",
+    "exampleSentence": "An exit plan is a good way to confront a challenging situation.",
+    "wordParts": null,
+    "image": null,
+    "passageId": "having-friends-making-choices"
+  },
+  {
+    "word": "potentially",
+    "definition": "Possibly; with the chance of happening.",
+    "exampleSentence": "Use your exit plan to get yourself out of a potentially bad situation.",
+    "wordParts": {
+      "base": "potential",
+      "affix": "-ly",
+      "affixType": "suffix",
+      "result": "potentially"
+    },
+    "image": null,
+    "passageId": "having-friends-making-choices"
+  },
+  {
+    "word": "necessity",
+    "definition": "Something that is needed and cannot be done without.",
+    "exampleSentence": "Some people say cell phones are a necessity, while others call them toys.",
+    "wordParts": {
+      "base": "necessary",
+      "affix": "-ity",
+      "affixType": "suffix",
+      "result": "necessity"
+    },
+    "image": null,
+    "passageId": "cell-phones-tools-or-troublemakers"
+  },
+  {
+    "word": "ban",
+    "definition": "To officially say that something is not allowed.",
+    "exampleSentence": "Many schools have banned cell phone use in class.",
+    "wordParts": null,
+    "image": null,
+    "passageId": "cell-phones-tools-or-troublemakers"
+  },
+  {
+    "word": "communicate",
+    "definition": "To share information or ideas with others.",
+    "exampleSentence": "School leaders need to communicate cell phone rules better.",
+    "wordParts": {
+      "base": "communic",
+      "affix": "-ate",
+      "affixType": "suffix",
+      "result": "communicate"
+    },
+    "image": null,
+    "passageId": "cell-phones-tools-or-troublemakers"
   }
 ]

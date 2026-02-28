@@ -62,13 +62,16 @@ export default function InteractiveShell({ passage, onExit }: Props) {
     slide.type === "reading" && slide.checkpoint != null;
   const showingCheckpointOnReading = hasAttachedCheckpoint && showCheckpoint;
 
+  // Per-slide background with fallback to passage-level
+  const bgImage = slide.backgroundImage || passage.backgroundImage;
+
   return (
     <div className="fixed inset-0 bg-gray-900 overflow-hidden">
-      {/* Background image */}
+      {/* Background image — per-slide or passage-level fallback */}
       <div
-        className="absolute inset-0 bg-cover bg-center transition-opacity duration-700"
+        className="absolute inset-0 bg-cover bg-center transition-all duration-700"
         style={{
-          backgroundImage: `url(${passage.backgroundImage})`,
+          backgroundImage: `url(${bgImage})`,
           filter: slide.type === "summary" ? "brightness(0.3)" : "brightness(0.6)",
         }}
       />
@@ -95,20 +98,20 @@ export default function InteractiveShell({ passage, onExit }: Props) {
 
       {/* Slide content */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-4 md:px-16 pb-16 pt-2 h-[calc(100vh-120px)]">
-        {/* Left arrow — green circle matching original I-LIT */}
+        {/* Left arrow */}
         <button
           onClick={() => goToSlide(currentSlide - 1)}
           disabled={currentSlide === 0}
-          className="absolute left-2 md:left-4 z-20 w-11 h-11 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-green-600 text-white shadow-lg disabled:opacity-30 hover:bg-green-500 transition-colors"
+          className="absolute left-2 md:left-4 z-20 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-lg disabled:opacity-20 hover:bg-white transition-colors"
         >
           <ChevronLeft />
         </button>
 
-        {/* Right arrow — green circle matching original I-LIT */}
+        {/* Right arrow */}
         <button
           onClick={() => goToSlide(currentSlide + 1)}
           disabled={currentSlide === totalSlides - 1}
-          className="absolute right-2 md:right-4 z-20 w-11 h-11 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-green-600 text-white shadow-lg disabled:opacity-30 hover:bg-green-500 transition-colors"
+          className="absolute right-2 md:right-4 z-20 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-lg disabled:opacity-20 hover:bg-white transition-colors"
         >
           <ChevronRight />
         </button>

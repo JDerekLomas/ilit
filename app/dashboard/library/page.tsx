@@ -201,7 +201,7 @@ export default function LibraryPage() {
         <>
           <div
             className="relative border-b-[25px] border-[#222224]"
-            style={{ height: "clamp(220px, 40vh, 340px)" }}
+            style={{ height: "clamp(260px, 45vh, 420px)" }}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
@@ -223,8 +223,8 @@ export default function LibraryPage() {
                 // easeInOutSine positioning: books bunch near center, spread at edges
                 const normalizedPos = offset / (filteredBooks.length || 1);
                 const sineX = Math.sin(normalizedPos * Math.PI * 0.5);
-                const xPx = sineX * 480;
-                const zPx = -5 * absOffset * 10;
+                const xPx = sineX * 380;
+                const zPx = -5 * absOffset * 8;
 
                 return (
                   <button
@@ -232,9 +232,9 @@ export default function LibraryPage() {
                     onClick={() => setSelectedIndex(i)}
                     className="absolute transition-all duration-500 ease-out"
                     style={{
-                      width: "clamp(100px, 13vw, 160px)",
-                      height: "clamp(140px, 18vw, 220px)",
-                      transform: `translateX(${xPx}px) translateZ(${isSelected ? 40 : zPx}px) scale(${isSelected ? 1.05 : Math.max(0.8, 1 - absOffset * 0.05)})`,
+                      width: "clamp(110px, 14vw, 200px)",
+                      height: "clamp(155px, 19.5vw, 280px)",
+                      transform: `translateX(${xPx}px) translateZ(${isSelected ? 50 : zPx}px) scale(${isSelected ? 1.08 : Math.max(0.78, 1 - absOffset * 0.05)})`,
                       zIndex: 50 - absOffset * 10,
                       opacity: absOffset > 5 ? 0 : 1,
                     }}
@@ -251,7 +251,7 @@ export default function LibraryPage() {
                         src={book.coverImage}
                         alt={book.title}
                         fill
-                        sizes="(max-width: 640px) 100px, 13vw"
+                        sizes="(max-width: 640px) 110px, 14vw"
                         className="object-cover"
                         draggable={false}
                         priority={absOffset <= 2}

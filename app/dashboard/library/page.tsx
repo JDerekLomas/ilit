@@ -200,7 +200,8 @@ export default function LibraryPage() {
       ) : (
         <>
           <div
-            className="relative flex-1 min-h-0"
+            className="relative"
+            style={{ height: "clamp(240px, 50vh, 500px)" }}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}

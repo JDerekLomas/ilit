@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Book } from "@/lib/types";
 import type { FlatPage } from "./types";
 import BookPageView from "./BookPage";
-import ReaderToolbar from "./ReaderToolbar";
+import ReaderToolbar, { type HighlightColor } from "./ReaderToolbar";
 import TableOfContents from "./TableOfContents";
 import PageSlider from "./PageSlider";
 
@@ -23,6 +23,8 @@ export default function ReaderShell({ book, onExit }: Props) {
   const [showTOC, setShowTOC] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isWide, setIsWide] = useState(false);
+  const [activeHighlight, setActiveHighlight] = useState<HighlightColor>("none");
+  const [screenMaskEnabled, setScreenMaskEnabled] = useState(false);
 
   // Flatten chapters into a single page array
   const flatPages = useMemo<FlatPage[]>(() => {
@@ -159,6 +161,10 @@ export default function ReaderShell({ book, onExit }: Props) {
         onToggleTTS={toggleTTS}
         onToggleTOC={() => setShowTOC((v) => !v)}
         onExit={onExit}
+        activeHighlight={activeHighlight}
+        onHighlightChange={setActiveHighlight}
+        screenMaskEnabled={screenMaskEnabled}
+        onToggleScreenMask={() => setScreenMaskEnabled((v) => !v)}
       />
 
       {/* Book frame + nav arrows */}
@@ -239,6 +245,9 @@ export default function ReaderShell({ book, onExit }: Props) {
         </button>
       </div>
 
+      {/* Screen mask overlay */}
+      {screenMaskEnabled && <ScreenMask />}
+
       {/* Table of Contents overlay */}
       {showTOC && (
         <TableOfContents
@@ -269,5 +278,51 @@ function ChevronRight() {
     <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
     </svg>
+  );
+}
+
+function ScreenMask() {
+  const [maskY, setMaskY] = useState(50); // percentage from top
+  const dragging = useRef(false);
+
+  useEffect(() => {
+    const handleMove = (clientY: number) => {
+      if (!dragging.current) return;
+      const pct = (clientY / window.innerHeight) * 100;
+      setMaskY(Math.max(10, Math.min(90, pct)));
+    };
+    const onMouseMove = (e: MouseEvent) => handleMove(e.clientY);
+    const onTouchMove = (e: TouchEvent) => handleMove(e.touches[0].clientY);
+    const onUp = () => { dragging.current = false; };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onUp);
+    window.addEventListener("touchmove", onTouchMove);
+    window.addEventListener("touchend", onUp);
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onUp);
+    };
+  }, []);
+
+  return (
+    <div className="fixed inset-0 z-30 pointer-events-none">
+      {/* Dark mask covering bottom portion */}
+      <div
+        className="absolute left-0 right-0 bottom-0 bg-black/80 pointer-events-auto"
+        style={{ top: `${maskY}%` }}
+      />
+      {/* Draggable handle at the edge */}
+      <div
+        className="absolute left-0 right-0 h-6 flex items-center justify-center cursor-ns-resize pointer-events-auto"
+        style={{ top: `calc(${maskY}% - 12px)` }}
+        onMouseDown={() => { dragging.current = true; }}
+        onTouchStart={() => { dragging.current = true; }}
+      >
+        <div className="w-16 h-1.5 rounded-full bg-white/70 shadow" />
+      </div>
+    </div>
   );
 }

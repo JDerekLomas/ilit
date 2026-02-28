@@ -3,7 +3,6 @@
 import { useState } from "react";
 import type { Slide, Checkpoint } from "@/lib/types";
 import HighlightCheckpoint from "./HighlightCheckpoint";
-import DragDropCheckpoint from "./DragDropCheckpoint";
 
 interface Props {
   slide: Slide;
@@ -27,6 +26,10 @@ export default function CheckpointSlide({
     completed ? true : null
   );
   const [activeMarker, setActiveMarker] = useState<"yellow" | "pink">("yellow");
+  const [retryCount, setRetryCount] = useState(0);
+
+  // Drag-drop state lifted here so left panel (word bank) and right panel (drop zone) share it
+  const [droppedWord, setDroppedWord] = useState<string | null>(null);
 
   const handleAnswer = (correct: boolean) => {
     setIsCorrect(correct);
@@ -35,6 +38,30 @@ export default function CheckpointSlide({
       onComplete();
     }
   };
+
+  const handleRetry = () => {
+    setAnswered(false);
+    setIsCorrect(null);
+    setRetryCount((c) => c + 1);
+    setDroppedWord(null);
+  };
+
+  const isDragDrop = checkpoint.type === "drag-drop";
+  const isHighlight = checkpoint.type === "highlight";
+
+  const options = checkpoint.options || [];
+  const template = checkpoint.template || "";
+  const templateParts = template.split("___");
+
+  const handleDragDropSubmit = () => {
+    if (!droppedWord) return;
+    const correct = Array.isArray(checkpoint.correctAnswer)
+      ? checkpoint.correctAnswer.includes(droppedWord)
+      : checkpoint.correctAnswer === droppedWord;
+    handleAnswer(correct);
+  };
+
+  const passageText = slide.text || sentences.join(" ") || precedingText || "";
 
   return (
     <div className="w-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6 items-start">
@@ -45,8 +72,9 @@ export default function CheckpointSlide({
             {slide.heading}
           </h2>
         )}
-        {checkpoint.type === "highlight" ? (
+        {isHighlight ? (
           <HighlightCheckpoint
+            key={retryCount}
             sentences={sentences}
             paragraphBreaks={slide.paragraphBreaks}
             checkpoint={checkpoint}
@@ -56,10 +84,41 @@ export default function CheckpointSlide({
             activeMarker={activeMarker}
           />
         ) : (
-          <div className="font-serif text-sm md:text-base leading-relaxed text-gray-800 space-y-4">
-            {(slide.text || sentences.join(" ") || precedingText || "").split("\n\n").map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
+          <div>
+            <div className="font-serif text-sm md:text-base leading-relaxed text-gray-800 space-y-4">
+              {passageText.split("\n\n").map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+            </div>
+
+            {/* Drag-drop: word bank lives here, in the text panel */}
+            {isDragDrop && !answered && (
+              <div className="border-t border-gray-200 pt-3 mt-4">
+                <p className="text-xs text-gray-500 mb-2 font-sans">
+                  Drag a word to complete the sentence:
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {options.map((word) => (
+                    <button
+                      key={word}
+                      draggable
+                      onDragStart={(e) => {
+                        e.dataTransfer.setData("text/plain", word);
+                        e.dataTransfer.effectAllowed = "move";
+                      }}
+                      onClick={() => setDroppedWord(word)}
+                      className={`px-4 py-2 border-2 rounded-lg text-sm font-medium cursor-grab active:cursor-grabbing transition-colors ${
+                        droppedWord === word
+                          ? "border-indigo-400 bg-indigo-50 text-indigo-600 opacity-50"
+                          : "border-gray-300 bg-white text-gray-800 hover:border-indigo-400 hover:bg-indigo-50"
+                      }`}
+                    >
+                      {word}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -70,21 +129,68 @@ export default function CheckpointSlide({
           <FeedbackPanel
             isCorrect={isCorrect}
             feedback={checkpoint.feedback}
-            onRetry={
-              !isCorrect
-                ? () => {
-                    setAnswered(false);
-                    setIsCorrect(null);
-                  }
-                : undefined
-            }
+            onRetry={!isCorrect ? handleRetry : undefined}
           />
-        ) : checkpoint.type === "drag-drop" ? (
-          <DragDropCheckpoint
-            checkpoint={checkpoint}
-            onAnswer={handleAnswer}
-          />
-        ) : checkpoint.type === "highlight" ? (
+        ) : isDragDrop ? (
+          <div>
+            <h3 className="font-bold text-base text-gray-900 mb-2">
+              {checkpoint.skill}
+            </h3>
+            <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
+              {checkpoint.prompt}
+            </p>
+
+            {/* Template with drop zone */}
+            <div
+              className="bg-gray-50 rounded-lg p-4 mb-4 text-sm md:text-base leading-relaxed"
+              onDragOver={(e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = "move";
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                const word = e.dataTransfer.getData("text/plain");
+                if (word) setDroppedWord(word);
+              }}
+            >
+              {templateParts.map((part, i) => (
+                <span key={i}>
+                  {part}
+                  {i < templateParts.length - 1 && (
+                    <span
+                      className={`inline-block min-w-[100px] mx-1 px-3 py-1 rounded border-2 border-dashed text-center ${
+                        droppedWord
+                          ? "border-indigo-400 bg-indigo-50 text-indigo-800 font-medium"
+                          : "border-gray-400 bg-white text-gray-400"
+                      }`}
+                    >
+                      {droppedWord || "___________"}
+                    </span>
+                  )}
+                </span>
+              ))}
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-2 justify-end">
+              {droppedWord && (
+                <button
+                  onClick={() => setDroppedWord(null)}
+                  className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+                >
+                  Reset
+                </button>
+              )}
+              <button
+                onClick={handleDragDropSubmit}
+                disabled={!droppedWord}
+                className="px-5 py-2 bg-indigo-700 text-white text-sm font-medium rounded-full hover:bg-indigo-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        ) : isHighlight ? (
           <div className="flex flex-col h-full">
             <h3 className="font-bold text-base text-gray-900 mb-2">
               {checkpoint.skill}

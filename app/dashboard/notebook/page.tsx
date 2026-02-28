@@ -15,6 +15,7 @@ import {
   type JournalEntry,
   type SavedWord,
 } from "@/lib/storage";
+import skillsTaxonomy from "@/content/skills-taxonomy.json";
 
 const tabs = [
   { name: "Journal" as const, color: "#0b89b7" },
@@ -128,52 +129,145 @@ function NotebookCover({ onUnlock }: { onUnlock: () => void }) {
   );
 }
 
-// ── My Work data ──
+// ── My Work data — maps to real I-LIT unit/lesson structure ──
 
 const MY_WORK_UNITS = [
   {
     unit: "Unit 1",
     items: [
       { title: "Interactive Reading: Bomb Dogs", score: "29/36", hasLink: true },
-      { title: "Vocabulary: Week 1", score: "18/20", hasLink: true },
+      { title: "Interactive Reading: Turn It Down!", score: "32/36", hasLink: true },
+      { title: "Vocabulary: Lesson 11 — Introduce Vocabulary", score: "18/20", hasLink: true },
+      { title: "Word Study Practice", score: "14/15", hasLink: true },
+      { title: "Weekly Reading Check 1", score: "4/5", hasLink: true },
+      { title: "Weekly Reading Check 2", score: "3/5", hasLink: true },
     ],
   },
   {
     unit: "Unit 2",
     items: [
-      { title: "Interactive Reading: Turn It Down!", score: "32/36", hasLink: true },
       { title: "Interactive Reading: Hidden Ads", score: "—", hasLink: false },
-      { title: "Vocabulary: Week 2", score: "15/20", hasLink: true },
+      { title: "Interactive Reading: The Power to Move", score: "—", hasLink: false },
+      { title: "Vocabulary: Word Slam", score: "15/20", hasLink: true },
+      { title: "Writing: Narrative Paragraph", score: "—", hasLink: false },
+      { title: "Weekly Reading Check 3", score: "—", hasLink: false },
     ],
   },
   {
     unit: "Unit 3",
     items: [
-      { title: "Weekly Reading Check 1", score: "—", hasLink: false },
-      { title: "Benchmark Assessment", score: "—", hasLink: false },
+      { title: "Interactive Reading: Mentors Make a Difference", score: "—", hasLink: false },
+      { title: "Study Plan: Pretest", score: "—", hasLink: false },
+      { title: "iPractice: Plan a Multimedia Presentation", score: "—", hasLink: false },
+      { title: "Unit Benchmark Assessment", score: "—", hasLink: false },
+    ],
+  },
+  {
+    unit: "Unit 4",
+    items: [
+      { title: "Interactive Reading: Having Friends, Making Choices", score: "—", hasLink: false },
+      { title: "Vocabulary: Context Clues", score: "—", hasLink: false },
+      { title: "Writing: Explanatory Essay", score: "—", hasLink: false },
+    ],
+  },
+  {
+    unit: "Unit 5",
+    items: [
+      { title: "Interactive Reading: Cell Phones: Tools or Troublemakers?", score: "—", hasLink: false },
+      { title: "iPractice: Write a Poem", score: "—", hasLink: false },
+      { title: "Weekly Reading Check 4", score: "—", hasLink: false },
+      { title: "Weekly Reading Check 5", score: "—", hasLink: false },
     ],
   },
 ];
 
-// ── Resources data ──
+// ── Resources data — built from real skills taxonomy ──
 
-const RESOURCE_CATEGORIES = [
+const RESOURCE_CATEGORIES: {
+  label: string;
+  children: {
+    label: string;
+    items: { label: string; links: string[] }[];
+  }[];
+}[] = [
   {
     label: "Lesson Screens",
     children: [
       {
         label: "Vocabulary",
         items: [
-          { label: "Unit 1, Lessons 1-5", links: ["1.1 Vocabulary 1", "1.1 Vocabulary 2", "1.2 Vocabulary 1", "1.2 Vocabulary 2"] },
-          { label: "Unit 2, Lessons 6-10", links: ["2.1 Vocabulary 1", "2.1 Vocabulary 2", "2.2 Vocabulary 1", "2.2 Vocabulary 2"] },
+          { label: "Unit 1, Lessons 1-5", links: ["1.1 Introduce Vocabulary", "1.1 Vocabulary Practice", "1.2 Introduce Vocabulary", "1.2 Vocabulary Practice"] },
+          { label: "Unit 1, Lessons 6-10", links: ["1.3 Introduce Vocabulary", "1.3 Vocabulary Practice", "1.4 Introduce Vocabulary", "1.4 Vocabulary Practice"] },
+          { label: "Unit 2, Lessons 11-15", links: ["2.1 Introduce Vocabulary", "2.1 Vocabulary Practice", "2.2 Introduce Vocabulary", "2.2 Vocabulary Practice"] },
+          { label: "Unit 2, Lessons 16-20", links: ["2.3 Introduce Vocabulary", "2.3 Vocabulary Practice", "2.4 Introduce Vocabulary", "2.4 Vocabulary Practice"] },
+          { label: "Unit 3, Lessons 21-25", links: ["3.1 Introduce Vocabulary", "3.1 Vocabulary Practice", "3.2 Introduce Vocabulary", "3.2 Vocabulary Practice"] },
         ],
       },
     ],
   },
-  { label: "Whole Group Instruction", children: [] },
-  { label: "Routine Cards", children: [] },
-  { label: "Book Club", children: [] },
-  { label: "Standards", children: [] },
+  {
+    label: "Skills Practice",
+    children: skillsTaxonomy.groups.map((group) => ({
+      label: group.title,
+      items: group.skills.slice(0, 6).map((skill) => ({
+        label: skill,
+        links: [`${group.title}: ${skill} Practice`, `${group.title}: ${skill} Review`],
+      })),
+    })),
+  },
+  {
+    label: "Whole Group Instruction",
+    children: [
+      {
+        label: "Reading Strategies",
+        items: [
+          { label: "Make Inferences", links: ["Whole Group: Make Inferences Lesson", "Whole Group: Make Inferences Practice"] },
+          { label: "Main Idea & Details", links: ["Whole Group: Main Idea Lesson", "Whole Group: Main Idea Practice"] },
+          { label: "Summarize", links: ["Whole Group: Summarize Lesson", "Whole Group: Summarize Practice"] },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Routine Cards",
+    children: [
+      {
+        label: "Daily Routines",
+        items: [
+          { label: "Read Aloud Think Aloud", links: ["Routine: Read Aloud Think Aloud"] },
+          { label: "Vocabulary Warm-Up", links: ["Routine: Vocabulary Warm-Up"] },
+          { label: "Partner Reading", links: ["Routine: Partner Reading"] },
+          { label: "Word Study", links: ["Routine: Word Study"] },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Book Club",
+    children: [
+      {
+        label: "Discussion Guides",
+        items: [
+          { label: "Crash Dive", links: ["Book Club: Crash Dive Discussion Guide"] },
+          { label: "Dream of the Dead", links: ["Book Club: Dream of the Dead Discussion Guide"] },
+          { label: "Jungle Jenny", links: ["Book Club: Jungle Jenny Discussion Guide"] },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Standards",
+    children: [
+      {
+        label: "Common Core ELA",
+        items: [
+          { label: "Reading Literature", links: ["RL.8.1 Cite Textual Evidence", "RL.8.2 Determine Theme", "RL.8.4 Word Meaning in Context"] },
+          { label: "Reading Informational", links: ["RI.8.1 Cite Textual Evidence", "RI.8.2 Central Idea", "RI.8.4 Word Meaning in Context"] },
+          { label: "Language", links: ["L.8.4 Determine Word Meaning", "L.8.5 Figurative Language", "L.8.6 Academic Vocabulary"] },
+        ],
+      },
+    ],
+  },
 ];
 
 // ── Main component ──
@@ -752,8 +846,11 @@ function ResourcesTab() {
   const [selectedCategory, setSelectedCategory] = useState<string>("Vocabulary");
   const [selectedLesson, setSelectedLesson] = useState<string>("Unit 1, Lessons 1-5");
 
-  const vocabCategory = RESOURCE_CATEGORIES[0]?.children?.[0];
-  const selectedItems = vocabCategory?.items.find((i) => i.label === selectedLesson);
+  // Find the selected item across all categories
+  const selectedItems = RESOURCE_CATEGORIES
+    .flatMap((cat) => cat.children)
+    .find((child) => child.label === selectedCategory)
+    ?.items.find((item) => item.label === selectedLesson);
 
   return (
     <div className="flex-1 flex overflow-hidden">

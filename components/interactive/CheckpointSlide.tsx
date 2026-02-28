@@ -37,6 +37,7 @@ type DndState =
 type HighlightState =
   | "selecting"       // student is highlighting sentences
   | "correct"         // answered correctly
+  | "checking"        // overlay visible during feedback delay
   | "showingWrong"    // wrong on attempt 1, showing fail text + retry
   | "revealAnswer";   // both attempts wrong, showing correct answer
 
@@ -203,7 +204,7 @@ export default function CheckpointSlide({
   const highlightToolsDisabled = highlightState !== "selecting";
 
   // Overlay visible during timing delays
-  const showOverlay = dndState === "showingOverlay" || dndState === "showingFinalOverlay";
+  const showOverlay = dndState === "showingOverlay" || dndState === "showingFinalOverlay" || highlightState === "checking";
 
   return (
     <div className="w-full h-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6 items-stretch min-h-0 relative">

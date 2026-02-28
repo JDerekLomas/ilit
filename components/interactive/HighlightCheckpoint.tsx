@@ -9,6 +9,10 @@ const HIGHLIGHT_FIRST_TRIAL_SCORE = 2.0;
 const HIGHLIGHT_SECOND_TRIAL_SCORE = 1.5;
 const MAX_ATTEMPTS = 2;
 
+// Timing delays from original ClassView
+const INCORRECT_DELAY_MS = 2000;
+const INCORRECT_FINAL_DELAY_MS = 3000;
+
 // Highlight colors matching the reference app
 const HIGHLIGHT_COLORS = {
   yellow: { bg: "#f4df76", bgLight: "#fdf8e1", border: "#e6c619" },
@@ -18,6 +22,7 @@ const HIGHLIGHT_COLORS = {
 type HighlightState =
   | "selecting"      // student is selecting sentences
   | "correct"        // answered correctly
+  | "checking"       // overlay visible during feedback delay
   | "showingWrong"   // showing what was wrong (before retry)
   | "revealAnswer";  // both attempts wrong, showing correct answer
 
@@ -110,12 +115,17 @@ export default function HighlightCheckpoint({
       onStateChange("correct");
       onAnswer(true, trialScore);
     } else {
+      // Show checking overlay, then transition to result
+      onStateChange("checking");
       if (newAttempt >= MAX_ATTEMPTS) {
-        // Reveal correct answer
-        onStateChange("revealAnswer");
-        onAnswer(false, 0);
+        setTimeout(() => {
+          onStateChange("revealAnswer");
+          onAnswer(false, 0);
+        }, INCORRECT_FINAL_DELAY_MS);
       } else {
-        onStateChange("showingWrong");
+        setTimeout(() => {
+          onStateChange("showingWrong");
+        }, INCORRECT_DELAY_MS);
       }
     }
   };
@@ -211,6 +221,18 @@ export default function HighlightCheckpoint({
           );
         })}
       </div>
+
+      {/* Checking overlay indicator */}
+      {highlightState === "checking" && (
+        <motion.div
+          className="mt-5 flex items-center gap-2 justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-gray-600">Checking your answer...</p>
+        </motion.div>
+      )}
 
       {/* Submit button during selecting state */}
       {isSelecting && selectedSentences.size > 0 && (

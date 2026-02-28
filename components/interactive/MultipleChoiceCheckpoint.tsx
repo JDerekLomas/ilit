@@ -105,6 +105,7 @@ export default function MultipleChoiceCheckpoint({
           let textColor = "text-gray-800";
           let letterBg = "bg-gray-100 text-gray-600";
           let ringStyle = "";
+          let opacity = "";
 
           if (isShowingResult) {
             if (isCorrect) {
@@ -117,6 +118,9 @@ export default function MultipleChoiceCheckpoint({
               bgColor = "bg-red-50";
               textColor = "text-red-700";
               letterBg = "bg-red-400 text-white";
+            } else {
+              // Dim non-selected, non-correct options
+              opacity = "opacity-40";
             }
           } else if (mcState === "showingWrong") {
             if (isSelected) {
@@ -124,6 +128,14 @@ export default function MultipleChoiceCheckpoint({
               bgColor = "bg-red-50";
               textColor = "text-red-700";
               letterBg = "bg-red-400 text-white";
+            } else if (isCorrect) {
+              // Show correct answer in green on first wrong attempt
+              borderColor = "border-green-400";
+              bgColor = "bg-green-50";
+              textColor = "text-green-900";
+              letterBg = "bg-green-500 text-white";
+            } else {
+              opacity = "opacity-40";
             }
           } else if (isSelected) {
             borderColor = "border-indigo-400";
@@ -145,7 +157,7 @@ export default function MultipleChoiceCheckpoint({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05, duration: 0.2 }}
-              className={`w-full flex items-start gap-3 p-3.5 rounded-xl border-2 text-left transition-colors ${borderColor} ${bgColor} ${textColor} ${ringStyle} ${
+              className={`w-full flex items-start gap-3 p-3.5 rounded-xl border-2 text-left transition-colors ${borderColor} ${bgColor} ${textColor} ${ringStyle} ${opacity} ${
                 isClickable ? "cursor-pointer hover:shadow-md" : "cursor-default"
               }`}
             >

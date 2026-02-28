@@ -7,6 +7,7 @@ This document traces every user path through the Savvas I-LIT student app and ma
 **Open issues:** `gh issue list --repo JDerekLomas/ilit --state open`
 
 **Related docs:**
+- `docs/design-vision.md` -- purpose, pedagogy, and how each feature connects to reading science
 - `docs/asset-inventory.md` -- catalog of original PNG/JPEG assets and their usage status
 - `docs/reference-design-spec.md` -- pixel-level design spec (colors, fonts, spacing)
 - `docs/reference-source/interactive-reader-spec.md` -- deep IR source code spec

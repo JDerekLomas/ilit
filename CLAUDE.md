@@ -39,6 +39,9 @@ lib/
 - **Our current build**: `docs/screenshots/current/*.png`
 - **Comparison HTML**: `docs/screenshots/compare.html`
 
+### Design Vision (`docs/design-vision.md`)
+Why I-LIT exists, who it serves, and how each feature connects to reading science. Covers the workshop model, adaptive Lexile system, theoretical foundations (GRR, Science of Reading, SIOP, CLR), program authors, and what our build preserves vs. doesn't. **Read this to understand the instructional design behind the UI.**
+
 ### Design Spec (`docs/reference-design-spec.md`)
 Complete design specification with every color, font size, spacing value, and layout detail extracted from the original app. **Read this first** before implementing any feature.
 

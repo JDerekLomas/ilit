@@ -3,14 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 /**
  * Middleware: protect app routes behind LTI session.
  *
- * When DATABASE_URL is set, routes under /dashboard, /reader, and /interactive
- * require the ilit_session cookie. Without it, redirect to landing page.
- *
- * When DATABASE_URL is NOT set (local dev without LMS), all routes pass through.
+ * Only enforces auth when LTI_AUTH_REQUIRED=true is explicitly set.
+ * This allows the app to work standalone (demo/dev) while still supporting
+ * LTI launches when integrated with an LMS.
  */
 export function middleware(request: NextRequest) {
-  // Skip LTI auth enforcement when no database is configured (local dev)
-  if (!process.env.DATABASE_URL) {
+  // Only enforce LTI session auth when explicitly enabled
+  if (process.env.LTI_AUTH_REQUIRED !== "true") {
     return NextResponse.next();
   }
 

@@ -14,8 +14,8 @@ export default function ReadingSlide({
   checkpointCompleted,
 }: Props) {
   return (
-    <div className="w-full max-w-xl">
-      <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 max-h-[70vh] overflow-y-auto">
+    <div className="w-full max-w-md md:max-w-lg lg:max-w-xl">
+      <div className="bg-white rounded-xl shadow-2xl p-5 md:p-7 max-h-[75vh] overflow-y-auto">
         {slide.heading && (
           <h2 className="font-serif font-bold text-lg md:text-xl mb-4 text-gray-900">
             {slide.heading}

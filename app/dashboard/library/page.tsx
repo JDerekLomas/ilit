@@ -73,14 +73,14 @@ export default function LibraryPage() {
       </div>
 
       {/* 3D Book Carousel */}
-      <div className="relative flex-shrink-0" style={{ height: 280 }}>
+      <div className="relative flex-shrink-0" style={{ height: 320 }}>
         {/* Dark carousel background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/40" />
+        <div className="absolute inset-0 bg-black" />
 
         {/* Carousel container */}
         <div
           ref={carouselRef}
-          className="relative h-full flex items-center justify-center"
+          className="relative h-full flex items-center justify-center overflow-hidden"
           style={{ perspective: 1200 }}
         >
           {books.map((book, i) => {
@@ -88,11 +88,11 @@ export default function LibraryPage() {
             const absOffset = Math.abs(offset);
             const isSelected = offset === 0;
 
-            // Coverflow-style positioning
-            const translateX = offset * 110;
-            const translateZ = isSelected ? 80 : -absOffset * 40;
-            const rotateY = offset * -25;
-            const scale = isSelected ? 1 : Math.max(0.7, 1 - absOffset * 0.1);
+            // Tighter shelf-style positioning matching original I-LIT
+            const translateX = offset * 95;
+            const translateZ = isSelected ? 60 : -absOffset * 30;
+            const rotateY = offset * -20;
+            const scale = isSelected ? 1.05 : Math.max(0.75, 1 - absOffset * 0.08);
 
             return (
               <button
@@ -102,7 +102,7 @@ export default function LibraryPage() {
                 style={{
                   transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
                   zIndex: 10 - absOffset,
-                  opacity: absOffset > 3 ? 0 : 1,
+                  opacity: absOffset > 4 ? 0 : 1,
                 }}
               >
                 {/* Book with 3D spine effect */}
@@ -112,9 +112,9 @@ export default function LibraryPage() {
                     transformStyle: "preserve-3d",
                   }}
                 >
-                  {/* Book cover */}
+                  {/* Book cover — larger to match original */}
                   <div
-                    className={`w-[140px] h-[200px] rounded-sm overflow-hidden shadow-2xl relative ${
+                    className={`w-[160px] h-[230px] rounded-sm overflow-hidden shadow-2xl relative ${
                       isSelected ? "ring-2 ring-yellow-400/60" : ""
                     }`}
                     style={{
@@ -130,10 +130,10 @@ export default function LibraryPage() {
                       className="w-full h-full object-cover"
                       draggable={false}
                     />
-                    {/* Title overlay */}
+                    {/* Bold title overlay covering lower portion — matches original printed-cover style */}
                     <div className="absolute inset-0 flex items-end">
-                      <div className="w-full bg-gradient-to-t from-black/80 via-black/50 to-transparent pt-8 pb-2 px-2">
-                        <p className="text-white text-xs font-bold leading-tight text-center drop-shadow-lg">
+                      <div className="w-full bg-gradient-to-t from-black/90 via-black/60 to-transparent pt-12 pb-3 px-2">
+                        <p className="text-white text-sm font-extrabold leading-tight text-center drop-shadow-lg uppercase tracking-wide">
                           {book.title}
                         </p>
                       </div>
@@ -142,9 +142,9 @@ export default function LibraryPage() {
 
                   {/* Spine edge (visible on angled books) */}
                   <div
-                    className="absolute top-0 h-[200px] w-[12px] bg-gradient-to-r from-gray-800 to-gray-600"
+                    className="absolute top-0 h-[230px] w-[14px] bg-gradient-to-r from-gray-800 to-gray-600"
                     style={{
-                      left: -12,
+                      left: -14,
                       transform: "rotateY(-90deg)",
                       transformOrigin: "right center",
                     }}

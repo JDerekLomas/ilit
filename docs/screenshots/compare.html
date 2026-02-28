@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>I-LIT Visual Comparison</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0a; color: #e0e0e0; padding: 20px; }
+    h1 { text-align: center; margin-bottom: 8px; font-size: 24px; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; font-size: 14px; }
+    .pair { margin-bottom: 40px; border: 1px solid #333; border-radius: 12px; overflow: hidden; background: #111; }
+    .pair-header { padding: 12px 20px; background: #1a1a2e; display: flex; justify-content: space-between; align-items: center; }
+    .pair-header h2 { font-size: 16px; font-weight: 600; }
+    .pair-header .status { font-size: 12px; padding: 3px 10px; border-radius: 999px; }
+    .status.both { background: #1a4d2e; color: #4ade80; }
+    .status.ref-only { background: #4d1a1a; color: #f87171; }
+    .status.cur-only { background: #4d3b1a; color: #fbbf24; }
+    .images { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: #333; }
+    .images.single { grid-template-columns: 1fr; }
+    .image-col { background: #111; padding: 8px; }
+    .image-col .label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; text-align: center; }
+    .image-col img { width: 100%; border-radius: 4px; display: block; }
+    .image-col .missing { padding: 60px 20px; text-align: center; color: #555; font-style: italic; }
+    .legend { display: flex; gap: 20px; justify-content: center; margin-bottom: 20px; font-size: 13px; }
+    .legend span { display: flex; align-items: center; gap: 6px; }
+    .legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .summary { text-align: center; padding: 20px; color: #888; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>I-LIT Visual Comparison</h1>
+  <p class="subtitle">Reference (Savvas I-LIT) vs Current Build &mdash; Generated 2026-02-28</p>
+  <div class="legend">
+    <span><span class="dot" style="background:#4ade80"></span> Both available</span>
+    <span><span class="dot" style="background:#f87171"></span> Reference only</span>
+    <span><span class="dot" style="background:#fbbf24"></span> Current only</span>
+  </div>
+  <div class="pair">
+    <div class="pair-header">
+      <h2>Library (Carousel)</h2>
+      <span class="status both">Compare</span>
+    </div>
+    <div class="images">
+      <div class="image-col">
+        <div class="label">Reference (Savvas)</div>
+        <img src="library-main.png" alt="Reference: Library (Carousel)" loading="lazy">
+      </div>
+      <div class="image-col">
+        <div class="label">Current (Ours)</div>
+        <img src="current/library.png" alt="Current: Library (Carousel)" loading="lazy">
+      </div>
+    </div>
+  </div>
+  <div class="pair">
+    <div class="pair-header">
+      <h2>Assignments</h2>
+      <span class="status both">Compare</span>
+    </div>
+    <div class="images">
+      <div class="image-col">
+        <div class="label">Reference (Savvas)</div>
+        <img src="assignments-all-expanded.png" alt="Reference: Assignments" loading="lazy">
+      </div>
+      <div class="image-col">
+        <div class="label">Current (Ours)</div>
+        <img src="current/assignments.png" alt="Current: Assignments" loading="lazy">
+      </div>
+    </div>
+  </div>
+  <div class="pair">
+    <div class="pair-header">
+      <h2>Notebook</h2>
+      <span class="status both">Compare</span>
+    </div>
+    <div class="images">
+      <div class="image-col">
+        <div class="label">Reference (Savvas)</div>
+        <img src="notebook-journal.png" alt="Reference: Notebook" loading="lazy">
+      </div>
+      <div class="image-col">
+        <div class="label">Current (Ours)</div>
+        <img src="current/notebook.png" alt="Current: Notebook" loading="lazy">
+      </div>
+    </div>
+  </div>
+  <div class="pair">
+    <div class="pair-header">
+      <h2>Connect</h2>
+      <span class="status both">Compare</span>
+    </div>
+    <div class="images">
+      <div class="image-col">
+        <div class="label">Reference (Savvas)</div>
+        <img src="connect-tab.png" alt="Reference: Connect" loading="lazy">
+      </div>
+      <div class="image-col">
+        <div class="label">Current (Ours)</div>
+        <img src="current/connect.png" alt="Current: Connect" loading="lazy">
+      </div>
+    </div>
+  </div>
+  <div class="pair">
+    <div class="pair-header">
+      <h2>Review</h2>
+      <span class="status cur-only">Current only</span>
+    </div>
+    <div class="images single">
+      
+      <div class="image-col">
+        <div class="label">Current (Ours)</div>
+        <img src="current/review.png" alt="Current: Review" loading="lazy">
+      </div>
+    </div>
+  </div>
+  <div class="pair">
+    <div class="pair-header">
+      <h2>IR: Bomb Dogs (Slide 1)</h2>
+      <span class="status both">Compare</span>
+    </div>
+    <div class="images">
+      <div class="image-col">
+        <div class="label">Reference (Savvas)</div>
+        <img src="interactive-reader-bombdogs-slide1.png" alt="Reference: IR: Bomb Dogs (Slide 1)" loading="lazy">
+      </div>
+      <div class="image-col">
+        <div class="label">Current (Ours)</div>
+        <img src="current/ir-bombdogs-slide1.png" alt="Current: IR: Bomb Dogs (Slide 1)" loading="lazy">
+      </div>
+    </div>
+  </div>
+  <div class="pair">
+    <div class="pair-header">
+      <h2>IR: Bomb Dogs (Slide 10)</h2>
+      <span class="status ref-only">Reference only</span>
+    </div>
+    <div class="images single">
+      <div class="image-col">
+        <div class="label">Reference (Savvas)</div>
+        <img src="interactive-reader-bombdogs-slide10.png" alt="Reference: IR: Bomb Dogs (Slide 10)" loading="lazy">
+      </div>
+      
+    </div>
+  </div>
+  <div class="pair">
+    <div class="pair-header">
+      <h2>IR: Bomb Dogs (Slide 2)</h2>
+      <span class="status ref-only">Reference only</span>
+    </div>
+    <div class="images single">
+      <div class="image-col">
+        <div class="label">Reference (Savvas)</div>
+        <img src="interactive-reader-bombdogs-slide2.png" alt="Reference: IR: Bomb Dogs (Slide 2)" loading="lazy">
+      </div>
+      
+    </div>
+  </div>
+  <div class="pair">
+    <div class="pair-header">
+      <h2>IR: Bomb Dogs (Slide 3)</h2>
+      <span class="status ref-only">Reference only</span>
+    </div>
+    <div class="images single">
+      <div class="image-col">
+        <div class="label">Reference (Savvas)</div>
+        <img src="interactive-reader-bombdogs-slide3.png" alt="Reference: IR: Bomb Dogs (Slide 3)" loading="lazy">
+      </div>
+      
+    </div>
+  </div>
+  <div class="pair">
+    <div class="pair-header">
+      <h2>IR: Bomb Dogs (Slide 4)</h2>
+      <span class="status ref-only">Reference only</span>
+    </div>
+    <div class="images single">
+      <div class="image-col">
+        <div class="label">Reference (Savvas)</div>
+        <img src="interactive-reader-bombdogs-slide4.png" alt="Reference: IR: Bomb Dogs (Slide 4)" loading="lazy">
+      </div>
+      
+    </div>
+  </div>
+  <div class="pair">
+    <div class="pair-header">
+      <h2>IR: Bomb Dogs (Slide 5)</h2>
+      <span class="status ref-only">Reference only</span>
+    </div>
+    <div class="images single">
+      <div class="image-col">
+        <div class="label">Reference (Savvas)</div>
+        <img src="interactive-reader-bombdogs-slide5.png" alt="Reference: IR: Bomb Dogs (Slide 5)" loading="lazy">
+      </div>
+      
+    </div>
+  </div>
+  <div class="pair">
+    <div class="pair-header">
+      <h2>IR: Bomb Dogs (Slide 6)</h2>
+      <span class="status ref-only">Reference only</span>
+    </div>
+    <div class="images single">
+      <div class="image-col">
+        <div class="label">Reference (Savvas)</div>
+        <img src="interactive-reader-bombdogs-slide6.png" alt="Reference: IR: Bomb Dogs (Slide 6)" loading="lazy">
+      </div>
+      
+    </div>
+  </div>
+  <div class="pair">
+    <div class="pair-header">
+      <h2>IR: Bomb Dogs (Slide 7)</h2>
+      <span class="status ref-only">Reference only</span>
+    </div>
+    <div class="images single">
+      <div class="image-col">
+        <div class="label">Reference (Savvas)</div>
+        <img src="interactive-reader-bombdogs-slide7.png" alt="Reference: IR: Bomb Dogs (Slide 7)" loading="lazy">
+      </div>
+      
+    </div>
+  </div>
+  <div class="pair">
+    <div class="pair-header">
+      <h2>IR: Bomb Dogs (Slide 8)</h2>
+      <span class="status ref-only">Reference only</span>
+    </div>
+    <div class="images single">
+      <div class="image-col">
+        <div class="label">Reference (Savvas)</div>
+        <img src="interactive-reader-bombdogs-slide8.png" alt="Reference: IR: Bomb Dogs (Slide 8)" loading="lazy">
+      </div>
+      
+    </div>
+  </div>
+  <div class="pair">
+    <div class="pair-header">
+      <h2>IR: Bomb Dogs (Slide 9)</h2>
+      <span class="status ref-only">Reference only</span>
+    </div>
+    <div class="images single">
+      <div class="image-col">
+        <div class="label">Reference (Savvas)</div>
+        <img src="interactive-reader-bombdogs-slide9.png" alt="Reference: IR: Bomb Dogs (Slide 9)" loading="lazy">
+      </div>
+      
+    </div>
+  </div>
+  <div class="summary">
+    5 comparisons &middot;
+    9 reference-only &middot;
+    1 current-only
+  </div>
+</body>
+</html>

@@ -89,7 +89,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
           <button className="w-8 h-8 flex items-center justify-center text-white/80 hover:text-white">
             <AccessibilityIcon />
           </button>
-          <AudioControls />
+          <AudioControls text={slide.text || slide.sentences?.join(" ") || ""} />
         </div>
       </div>
 
@@ -174,8 +174,15 @@ export default function InteractiveShell({ passage, onExit }: Props) {
   );
 }
 
-function AudioControls() {
+function AudioControls({ text }: { text: string }) {
   const [playing, setPlaying] = useState(false);
+
+  // Estimate duration from word count (~150 words per minute for TTS)
+  const wordCount = text.split(/\s+/).filter(Boolean).length;
+  const totalSeconds = Math.max(5, Math.round((wordCount / 150) * 60));
+  const mins = Math.floor(totalSeconds / 60);
+  const secs = totalSeconds % 60;
+  const duration = `${mins}:${secs.toString().padStart(2, "0")}`;
 
   return (
     <div className="flex items-center gap-2 bg-black/30 rounded-full px-3 py-1.5">
@@ -185,7 +192,7 @@ function AudioControls() {
       >
         {playing ? <PauseIcon /> : <PlayIcon />}
       </button>
-      <span className="text-white/70 text-xs font-mono">0:00 / 0:00</span>
+      <span className="text-white/70 text-xs font-mono">0:00 / {duration}</span>
       <button className="w-5 h-5 flex items-center justify-center text-white/70">
         <VolumeIcon />
       </button>

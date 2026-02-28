@@ -116,7 +116,7 @@ export default function LibraryPage() {
   }, [goTo]);
 
   return (
-    <div className="flex flex-col flex-1 bg-black">
+    <div className="flex flex-col flex-1 bg-black -mb-20 pb-20">
       {/* Filter bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 px-3 sm:px-4 pt-3 pb-2">
         <div className="flex gap-0.5">

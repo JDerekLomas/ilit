@@ -52,7 +52,7 @@ export default function DashboardLayout({
       </svg>
 
       {/* Main content */}
-      <main className="flex-1 relative z-10 pb-20 overflow-y-auto">
+      <main className="flex-1 relative z-10 pb-20 overflow-y-auto flex flex-col">
         {children}
       </main>
 

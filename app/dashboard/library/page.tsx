@@ -200,37 +200,31 @@ export default function LibraryPage() {
       ) : (
         <>
           <div
-            className="relative"
-            style={{ height: "clamp(240px, 50vh, 500px)" }}
+            className="relative border-b-[25px] border-[#222224]"
+            style={{ height: "clamp(220px, 40vh, 340px)" }}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
-            <div className="absolute inset-0 bg-black" />
-            {/* Bookshelf wood texture on sides */}
-            <div className="absolute left-0 top-0 bottom-0 w-[6vw] z-10 pointer-events-none"
-              style={{
-                background: "repeating-linear-gradient(90deg, #3d2b17 0px, #4e3820 4px, #33250f 8px, #2a1c0a 12px)",
-                maskImage: "linear-gradient(to right, rgba(0,0,0,0.85), transparent)",
-                WebkitMaskImage: "linear-gradient(to right, rgba(0,0,0,0.85), transparent)",
-              }}
-            />
-            <div className="absolute right-0 top-0 bottom-0 w-[6vw] z-10 pointer-events-none"
-              style={{
-                background: "repeating-linear-gradient(90deg, #3d2b17 0px, #4e3820 4px, #33250f 8px, #2a1c0a 12px)",
-                maskImage: "linear-gradient(to left, rgba(0,0,0,0.85), transparent)",
-                WebkitMaskImage: "linear-gradient(to left, rgba(0,0,0,0.85), transparent)",
-              }}
-            />
+            {/* Chalkboard background */}
+            <div className="absolute inset-0" style={{ background: "url(/images/textures/book_bg.jpg) repeat 0 bottom", backgroundSize: "cover" }} />
+            {/* Edge borders */}
+            <div className="absolute left-0 top-0 bottom-0 w-3 z-10 pointer-events-none" style={{ background: "url(/images/textures/left_border.png) repeat-y 0 0" }} />
+            <div className="absolute right-0 top-0 bottom-0 w-3 z-10 pointer-events-none" style={{ background: "url(/images/textures/right_border.png) repeat-y right 0" }} />
             <div
               ref={carouselRef}
               className="relative h-full flex items-center justify-center overflow-hidden"
-              style={{ perspective: "80vw" }}
+              style={{ perspective: 1500 }}
             >
               {filteredBooks.map((book, i) => {
                 const offset = i - selectedIndex;
                 const absOffset = Math.abs(offset);
                 const isSelected = offset === 0;
+                // easeInOutSine positioning: books bunch near center, spread at edges
+                const normalizedPos = offset / (filteredBooks.length || 1);
+                const sineX = Math.sin(normalizedPos * Math.PI * 0.5);
+                const xPx = sineX * 480;
+                const zPx = -5 * absOffset * 10;
 
                 return (
                   <button
@@ -238,38 +232,30 @@ export default function LibraryPage() {
                     onClick={() => setSelectedIndex(i)}
                     className="absolute transition-all duration-500 ease-out"
                     style={{
-                      width: "clamp(110px, 15vw, 200px)",
-                      height: "clamp(155px, 21vw, 280px)",
-                      transform: `translateX(calc(${offset} * clamp(40px, 5vw, 75px))) translateZ(${isSelected ? "clamp(20px, 3vw, 50px)" : `calc(${-absOffset} * clamp(10px, 1.5vw, 25px))`}) rotateY(${offset * -15}deg) scale(${isSelected ? 1.08 : Math.max(0.78, 1 - absOffset * 0.07)})`,
-                      zIndex: 10 - absOffset,
+                      width: "clamp(100px, 13vw, 160px)",
+                      height: "clamp(140px, 18vw, 220px)",
+                      transform: `translateX(${xPx}px) translateZ(${isSelected ? 40 : zPx}px) scale(${isSelected ? 1.05 : Math.max(0.8, 1 - absOffset * 0.05)})`,
+                      zIndex: 50 - absOffset * 10,
                       opacity: absOffset > 5 ? 0 : 1,
                     }}
                   >
-                    <div className="relative w-full h-full" style={{ transformStyle: "preserve-3d" }}>
-                      <div
-                        className={`w-full h-full rounded-sm overflow-hidden relative ${
-                          isSelected ? "ring-2 ring-yellow-400/60" : ""
-                        }`}
-                        style={{
-                          boxShadow: isSelected
-                            ? "0 0 30px rgba(255,255,255,0.15), 4px 4px 20px rgba(0,0,0,0.6)"
-                            : "4px 4px 15px rgba(0,0,0,0.5)",
-                        }}
-                      >
-                        <Image
-                          src={book.coverImage}
-                          alt={book.title}
-                          fill
-                          sizes="(max-width: 640px) 100px, 12vw"
-                          className="object-cover"
-                          draggable={false}
-                          priority={absOffset <= 2}
-                          loading={absOffset > 2 ? "lazy" : undefined}
-                        />
-                      </div>
-                      <div
-                        className="absolute top-0 w-[14px] bg-gradient-to-r from-gray-800 to-gray-600"
-                        style={{ left: -14, height: "100%", transform: "rotateY(-90deg)", transformOrigin: "right center" }}
+                    <div
+                      className="w-full h-full rounded-[5px] overflow-hidden relative"
+                      style={{
+                        border: "3px solid #fff",
+                        background: "#fff",
+                        boxShadow: "0px 2px 13px rgba(50, 50, 50, 0.86)",
+                      }}
+                    >
+                      <Image
+                        src={book.coverImage}
+                        alt={book.title}
+                        fill
+                        sizes="(max-width: 640px) 100px, 13vw"
+                        className="object-cover"
+                        draggable={false}
+                        priority={absOffset <= 2}
+                        loading={absOffset > 2 ? "lazy" : undefined}
                       />
                     </div>
                   </button>
@@ -307,7 +293,7 @@ export default function LibraryPage() {
           )}
 
           {/* Bottom cards */}
-          <div className="grid grid-cols-3 gap-px px-3 sm:px-4 pb-4">
+          <div className="grid grid-cols-3 gap-px px-3 sm:px-4 pb-4" style={{ background: "url(/images/textures/bgnn.png) repeat 0 0" }}>
             <div className="bg-[#1a1a1a] p-2 sm:p-3 flex flex-col items-center gap-1.5 sm:gap-2 rounded-l-md">
               <div className="w-16 h-22 sm:w-20 sm:h-28 rounded-sm overflow-hidden shadow-lg relative">
                 {selectedBook && (

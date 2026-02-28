@@ -39,6 +39,8 @@ export interface Checkpoint {
   options?: string[];
   /** Fill-in-the-blank template for drag-drop (use ___ for blanks) */
   template?: string;
+  /** Explanatory context shown above drag-drop exercises */
+  contextText?: string;
   feedback: {
     correct: string;
     incorrect: string;

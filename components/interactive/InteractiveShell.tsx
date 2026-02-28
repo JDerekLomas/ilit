@@ -121,7 +121,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: direction * -100 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="w-full max-w-5xl mx-auto h-full flex items-start justify-center"
+            className="w-full max-w-5xl mx-auto h-full flex items-start"
           >
             {slide.type === "reading" && !showingCheckpointOnReading && (
               <ReadingSlide

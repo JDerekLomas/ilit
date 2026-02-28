@@ -47,15 +47,13 @@ export default function DragDropCheckpoint({ checkpoint, onAnswer }: Props) {
   return (
     <div>
       {/* Context text if available */}
-      {"contextText" in checkpoint &&
-        typeof (checkpoint as Record<string, unknown>).contextText ===
-          "string" && (
-          <p className="text-sm text-gray-600 italic mb-4">
-            The word that completes the sentence is{" "}
-            <strong className="not-italic">{checkpoint.correctAnswer}</strong>.{" "}
-            {(checkpoint as Record<string, unknown>).contextText as string}
-          </p>
-        )}
+      {checkpoint.contextText && (
+        <p className="text-sm text-gray-600 italic mb-4">
+          The word that completes the sentence is{" "}
+          <strong className="not-italic">{checkpoint.correctAnswer}</strong>.{" "}
+          {checkpoint.contextText}
+        </p>
+      )}
 
       <h3 className="font-bold text-base mb-2">Check Your Understanding</h3>
       <p className="text-sm text-gray-700 mb-4">{checkpoint.prompt}</p>

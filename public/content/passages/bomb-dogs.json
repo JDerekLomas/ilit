@@ -140,7 +140,8 @@
         "feedback": {
           "correct": "Correct! The passage says that dogs find bombs on battlefields where soldiers might miss them.",
           "incorrect": "Read the section 'Bomb Dogs on the Battlefield' again. Where do soldiers use bomb dogs to find hidden bombs?"
-        }
+        },
+        "contextText": "Dogs help soldiers find bombs on battlefields, or in war zones. Because of their sharper sense of smell, dogs can locate bombs that soldiers can't find."
       }
     },
     {

@@ -5,23 +5,27 @@ import type { Checkpoint } from "@/lib/types";
 
 interface Props {
   sentences: string[];
+  paragraphBreaks?: number[];
   checkpoint: Checkpoint;
   onAnswer: (correct: boolean) => void;
   answered: boolean;
   isCorrect: boolean | null;
+  activeMarker: "yellow" | "pink";
 }
 
 export default function HighlightCheckpoint({
   sentences,
+  paragraphBreaks,
   checkpoint,
   onAnswer,
   answered,
   isCorrect,
+  activeMarker,
 }: Props) {
+  const breakSet = new Set(paragraphBreaks || []);
   const [selectedSentences, setSelectedSentences] = useState<Set<number>>(
     new Set()
   );
-  const [activeMarker, setActiveMarker] = useState<"yellow" | "pink">("yellow");
 
   const correctAnswers = Array.isArray(checkpoint.correctAnswer)
     ? checkpoint.correctAnswer
@@ -67,15 +71,16 @@ export default function HighlightCheckpoint({
 
   return (
     <div>
-      <div className="font-serif text-sm md:text-base leading-relaxed text-gray-800 space-y-0.5">
+      <div className="font-serif text-sm md:text-base leading-relaxed text-gray-800 space-y-3">
         {sentences.map((sentence, i) => {
           const isSelected = selectedSentences.has(i);
           const isCorrectHighlight = correctIndices.includes(i);
+          const isParagraphStart = i > 0 && breakSet.has(i);
 
           let className =
             "inline cursor-pointer rounded px-0.5 transition-colors ";
           if (isCorrectHighlight) {
-            className += "bg-yellow-200 font-semibold";
+            className += "bg-yellow-200 font-bold italic";
           } else if (isSelected) {
             className +=
               activeMarker === "yellow"
@@ -86,39 +91,21 @@ export default function HighlightCheckpoint({
           }
 
           return (
-            <span key={i} onClick={() => toggleSentence(i)} className={className}>
-              {sentence}{" "}
+            <span key={i}>
+              {isParagraphStart && <span className="block mb-3" />}
+              <span onClick={() => toggleSentence(i)} className={className}>
+                {sentence}{" "}
+              </span>
             </span>
           );
         })}
       </div>
 
-      {!answered && (
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex gap-2">
-            <button
-              onClick={() => setActiveMarker("yellow")}
-              className={`w-8 h-8 rounded-full border-2 ${
-                activeMarker === "yellow"
-                  ? "border-gray-800 ring-2 ring-gray-400"
-                  : "border-gray-300"
-              } bg-yellow-300`}
-              title="Yellow marker"
-            />
-            <button
-              onClick={() => setActiveMarker("pink")}
-              className={`w-8 h-8 rounded-full border-2 ${
-                activeMarker === "pink"
-                  ? "border-gray-800 ring-2 ring-gray-400"
-                  : "border-gray-300"
-              } bg-pink-300`}
-              title="Pink marker"
-            />
-          </div>
+      {!answered && selectedSentences.size > 0 && (
+        <div className="mt-4 flex justify-end">
           <button
             onClick={handleSubmit}
-            disabled={selectedSentences.size === 0}
-            className="px-5 py-2 bg-indigo-700 text-white text-sm font-medium rounded-full hover:bg-indigo-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="px-5 py-2 bg-indigo-700 text-white text-sm font-medium rounded-full hover:bg-indigo-800 transition-colors"
           >
             Save &amp; Continue
           </button>

@@ -54,6 +54,12 @@
         "Training takes about ten weeks of hard work.",
         "By the end of training, the dogs can find explosives that are hidden very well.",
         "Even tiny amounts of explosive material cannot fool a trained bomb dog."
+      ],
+      "paragraphBreaks": [
+        0,
+        6,
+        10,
+        18
       ]
     },
     {
@@ -105,6 +111,11 @@
         "The dogs help people feel safe wherever they go.",
         "A police officer carrying a gun may make some people nervous.",
         "But everyone likes a friendly dog."
+      ],
+      "paragraphBreaks": [
+        0,
+        7,
+        14
       ]
     },
     {

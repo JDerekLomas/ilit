@@ -12,14 +12,8 @@ const BOOK_IDS = [
   "prince-pauper",
 ];
 
-const FILTERS = [
-  "Titles",
-  "My Level",
-  "My Books",
-  "Recommended",
-  "Reviewed",
-  "Reserved",
-] as const;
+const FILTERS_LEFT = ["Titles", "My Level", "My Books"] as const;
+const FILTERS_RIGHT = ["Recommended", "Reviewed", "Reserved"] as const;
 
 export default function LibraryPage() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -47,7 +41,7 @@ export default function LibraryPage() {
       {/* Filter bar */}
       <div className="flex items-center justify-between px-4 pt-3 pb-2">
         <div className="flex gap-0.5">
-          {FILTERS.map((f) => (
+          {FILTERS_LEFT.map((f, i) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
@@ -55,18 +49,27 @@ export default function LibraryPage() {
                 filter === f
                   ? "bg-white text-black border-white"
                   : "bg-transparent text-white/70 border-white/30 hover:text-white hover:border-white/50"
-              } ${f === "Titles" ? "rounded-l-md" : ""} ${f === "Reserved" ? "rounded-r-md" : ""}`}
+              } ${i === 0 ? "rounded-l-md" : ""} ${i === FILTERS_LEFT.length - 1 ? "rounded-r-md" : ""}`}
             >
               {f}
             </button>
           ))}
         </div>
-        <button className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-        </button>
+        <div className="flex gap-0.5">
+          {FILTERS_RIGHT.map((f, i) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-3 py-1.5 text-xs font-medium transition-colors border ${
+                filter === f
+                  ? "bg-white text-black border-white"
+                  : "bg-transparent text-white/70 border-white/30 hover:text-white hover:border-white/50"
+              } ${i === 0 ? "rounded-l-md" : ""} ${i === FILTERS_RIGHT.length - 1 ? "rounded-r-md" : ""}`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* 3D Book Carousel */}
@@ -111,7 +114,7 @@ export default function LibraryPage() {
                 >
                   {/* Book cover */}
                   <div
-                    className={`w-[140px] h-[200px] rounded-sm overflow-hidden shadow-2xl ${
+                    className={`w-[140px] h-[200px] rounded-sm overflow-hidden shadow-2xl relative ${
                       isSelected ? "ring-2 ring-yellow-400/60" : ""
                     }`}
                     style={{
@@ -127,6 +130,14 @@ export default function LibraryPage() {
                       className="w-full h-full object-cover"
                       draggable={false}
                     />
+                    {/* Title overlay */}
+                    <div className="absolute inset-0 flex items-end">
+                      <div className="w-full bg-gradient-to-t from-black/80 via-black/50 to-transparent pt-8 pb-2 px-2">
+                        <p className="text-white text-xs font-bold leading-tight text-center drop-shadow-lg">
+                          {book.title}
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Spine edge (visible on angled books) */}

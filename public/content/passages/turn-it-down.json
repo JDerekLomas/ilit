@@ -27,7 +27,12 @@
         "skill": "Cause and Effect",
         "prompt": "Drag and drop the correct word to complete this cause-and-effect statement.",
         "template": "Loud sounds can damage the tiny ___ in your ears, causing permanent hearing loss.",
-        "options": ["hair cells", "decibels", "vibrations", "signals"],
+        "options": [
+          "hair cells",
+          "decibels",
+          "vibrations",
+          "signals"
+        ],
         "correctAnswer": "hair cells",
         "feedback": {
           "correct": "That's right! Loud sounds damage the tiny hair cells inside the cochlea. Once these cells are destroyed, they do not grow back, so the hearing loss is permanent.",
@@ -66,7 +71,11 @@
           "correct": "Great job! The 60/60 rule is a simple guideline: keep your volume at 60 percent or lower, and listen for no more than 60 minutes before taking a break.",
           "incorrect": "Try again. Look for the sentence that names a specific rule with numbers that tells you how loud and how long you should listen."
         }
-      }
+      },
+      "paragraphBreaks": [
+        0,
+        5
+      ]
     },
     {
       "type": "summary",

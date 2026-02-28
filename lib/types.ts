@@ -17,6 +17,8 @@ export interface Slide {
   text?: string;
   /** Pre-split sentences for highlight checkpoints — UI needs sentence boundaries */
   sentences?: string[];
+  /** Sentence indices where new paragraphs begin (for rendering paragraph breaks in highlight checkpoints) */
+  paragraphBreaks?: number[];
   /** Checkpoint data (only for type: "checkpoint") */
   checkpoint?: Checkpoint;
   /** Summary instructions (only for type: "summary") */

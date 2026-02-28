@@ -26,6 +26,7 @@ export default function CheckpointSlide({
   const [isCorrect, setIsCorrect] = useState<boolean | null>(
     completed ? true : null
   );
+  const [activeMarker, setActiveMarker] = useState<"yellow" | "pink">("yellow");
 
   const handleAnswer = (correct: boolean) => {
     setIsCorrect(correct);
@@ -47,10 +48,12 @@ export default function CheckpointSlide({
         {checkpoint.type === "highlight" ? (
           <HighlightCheckpoint
             sentences={sentences}
+            paragraphBreaks={slide.paragraphBreaks}
             checkpoint={checkpoint}
             onAnswer={handleAnswer}
             answered={answered}
             isCorrect={isCorrect}
+            activeMarker={activeMarker}
           />
         ) : (
           <div className="font-serif text-sm md:text-base leading-relaxed text-gray-800 space-y-4">
@@ -82,13 +85,34 @@ export default function CheckpointSlide({
             onAnswer={handleAnswer}
           />
         ) : checkpoint.type === "highlight" ? (
-          <div>
-            <div className="inline-block px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-semibold rounded-full mb-3">
+          <div className="flex flex-col h-full">
+            <h3 className="font-bold text-base text-gray-900 mb-2">
               {checkpoint.skill}
-            </div>
-            <p className="text-sm md:text-base text-gray-700 leading-relaxed">
+            </h3>
+            <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
               {checkpoint.prompt}
             </p>
+            <div className="mt-auto flex items-center gap-2 pt-4 border-t border-gray-100">
+              <span className="text-xs text-gray-500 mr-1">Marker:</span>
+              <button
+                onClick={() => setActiveMarker("yellow")}
+                className={`w-7 h-7 rounded-full border-2 ${
+                  activeMarker === "yellow"
+                    ? "border-gray-800 ring-2 ring-gray-400"
+                    : "border-gray-300"
+                } bg-yellow-300`}
+                title="Yellow marker"
+              />
+              <button
+                onClick={() => setActiveMarker("pink")}
+                className={`w-7 h-7 rounded-full border-2 ${
+                  activeMarker === "pink"
+                    ? "border-gray-800 ring-2 ring-gray-400"
+                    : "border-gray-300"
+                } bg-pink-300`}
+                title="Pink marker"
+              />
+            </div>
           </div>
         ) : (
           <div>

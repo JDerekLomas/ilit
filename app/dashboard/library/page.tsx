@@ -345,20 +345,12 @@ export default function LibraryPage() {
             />
           </div>
 
-          {/* Selected book title + genres */}
+          {/* Divider + Selected book title */}
+          <div className="h-px bg-white/10" />
           {selectedBook && (
             <div className="text-center py-2 sm:py-3">
               <h2 className="text-white text-lg sm:text-xl font-bold">{selectedBook.title}</h2>
               <p className="text-white/50 text-xs sm:text-sm">{selectedBook.author}</p>
-              {selectedBook.genres.length > 0 && (
-                <div className="flex justify-center gap-1 mt-1 flex-wrap px-4">
-                  {selectedBook.genres.slice(0, 4).map((g) => (
-                    <span key={g} className="text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-white/40">
-                      {g}
-                    </span>
-                  ))}
-                </div>
-              )}
             </div>
           )}
 
@@ -414,10 +406,9 @@ export default function LibraryPage() {
                 <div className="flex-1 flex flex-col justify-center px-3 sm:px-6 py-2">
                   <StatRow label="Total Words" value={studentData?.progress.totalWords.toLocaleString() ?? "—"} />
                   <StatRow label="Total Pages" value={studentData?.progress.totalPages.toString() ?? "—"} />
-                  <StatRow label="Total Books" value={studentData?.progress.totalBooks.toString() ?? "0"} />
+                  <StatRow label="Total Books" value={studentData?.progress.totalBooks.toString() ?? "-"} />
                   <div className="border-t border-white/10 mt-1 pt-1">
-                    <StatRow label="IR Level" value={studentData?.progress.irLevel ?? "L2"} />
-                    <StatRow label="Book Lexile" value={selectedBook?.lexileLevel ? `${selectedBook.lexileLevel}L` : "—"} />
+                    <StatRow label="IR Lexile Level" value={studentData?.progress.currentLexile.toString() ?? "900"} />
                   </div>
                 </div>
               </div>
@@ -452,14 +443,6 @@ export default function LibraryPage() {
             </div>
           </div>
 
-          {/* Description */}
-          {selectedBook?.description && (
-            <div className="px-3 sm:px-4 pb-4 flex justify-center">
-              <p className="text-white/40 text-xs sm:text-sm leading-relaxed max-w-[903px] line-clamp-3">
-                {selectedBook.description}
-              </p>
-            </div>
-          )}
         </>
       )}
     </div>

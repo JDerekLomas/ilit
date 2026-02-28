@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Slide, Checkpoint } from "@/lib/types";
 import HighlightCheckpoint from "./HighlightCheckpoint";
 
@@ -12,6 +13,19 @@ interface Props {
   onComplete: () => void;
   completed: boolean;
 }
+
+// Scoring constants from the reference spec
+const DND_FIRST_TRIAL_SCORE = 2.0;
+const DND_SECOND_TRIAL_SCORE = 1.5;
+const MAX_ATTEMPTS = 2;
+
+type DndState =
+  | "interacting"     // student is dragging/dropping
+  | "shaking"         // wrong answer animation playing
+  | "retryPrompt"     // wrong on attempt 1, showing fail text + retry
+  | "snapSuccess"     // correct answer, snap animation
+  | "finalCorrect"    // done, correct
+  | "finalIncorrect"; // done, both wrong, showing correct answer
 
 export default function CheckpointSlide({
   slide,
@@ -26,24 +40,30 @@ export default function CheckpointSlide({
     completed ? true : null
   );
   const [activeMarker, setActiveMarker] = useState<"yellow" | "pink">("yellow");
-  const [retryCount, setRetryCount] = useState(0);
+  const [attemptCount, setAttemptCount] = useState(0);
 
-  // Drag-drop state lifted here so left panel (word bank) and right panel (drop zone) share it
+  // Drag-drop state
   const [droppedWord, setDroppedWord] = useState<string | null>(null);
+  const [isDragOverDrop, setIsDragOverDrop] = useState(false);
+  const [dragActiveWord, setDragActiveWord] = useState<string | null>(null);
+  const [dndState, setDndState] = useState<DndState>(
+    completed && checkpoint.type === "drag-drop" ? "finalCorrect" : "interacting"
+  );
+  const [score, setScore] = useState<number | null>(null);
+  const dropZoneRef = useRef<HTMLDivElement>(null);
 
-  const handleAnswer = (correct: boolean) => {
+  const handleAnswer = useCallback((correct: boolean) => {
     setIsCorrect(correct);
     setAnswered(true);
     if (correct) {
       onComplete();
     }
-  };
+  }, [onComplete]);
 
   const handleRetry = () => {
-    setAnswered(false);
-    setIsCorrect(null);
-    setRetryCount((c) => c + 1);
+    setDndState("interacting");
     setDroppedWord(null);
+    setDragActiveWord(null);
   };
 
   const isDragDrop = checkpoint.type === "drag-drop";
@@ -53,15 +73,73 @@ export default function CheckpointSlide({
   const template = checkpoint.template || "";
   const templateParts = template.split("___");
 
+  const checkCorrect = useCallback((word: string): boolean => {
+    return Array.isArray(checkpoint.correctAnswer)
+      ? checkpoint.correctAnswer.includes(word)
+      : checkpoint.correctAnswer === word;
+  }, [checkpoint.correctAnswer]);
+
   const handleDragDropSubmit = () => {
     if (!droppedWord) return;
-    const correct = Array.isArray(checkpoint.correctAnswer)
-      ? checkpoint.correctAnswer.includes(droppedWord)
-      : checkpoint.correctAnswer === droppedWord;
-    handleAnswer(correct);
+    const correct = checkCorrect(droppedWord);
+    const newAttempt = attemptCount + 1;
+    setAttemptCount(newAttempt);
+
+    if (correct) {
+      const trialScore = newAttempt === 1 ? DND_FIRST_TRIAL_SCORE : DND_SECOND_TRIAL_SCORE;
+      setScore(trialScore);
+      setDndState("snapSuccess");
+      setTimeout(() => {
+        setDndState("finalCorrect");
+        handleAnswer(true);
+      }, 900);
+    } else {
+      setDndState("shaking");
+      setTimeout(() => {
+        if (newAttempt >= MAX_ATTEMPTS) {
+          // Show correct answer
+          const correctWord = Array.isArray(checkpoint.correctAnswer)
+            ? checkpoint.correctAnswer[0]
+            : checkpoint.correctAnswer;
+          setDroppedWord(correctWord);
+          setScore(0);
+          setDndState("finalIncorrect");
+          setTimeout(() => handleAnswer(false), 1000);
+        } else {
+          setDndState("retryPrompt");
+        }
+      }, 600);
+    }
+  };
+
+  // Handle drop via native drag events (desktop)
+  const handleNativeDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOverDrop(false);
+    const word = e.dataTransfer.getData("text/plain");
+    if (word) setDroppedWord(word);
+  };
+
+  // Handle touch-based placement (tap word, then tap drop zone or just tap word to place)
+  const handleWordTap = (word: string) => {
+    if (dndState !== "interacting") return;
+    setDragActiveWord(word);
+    setDroppedWord(word);
+  };
+
+  const handleDropZoneTap = () => {
+    if (dragActiveWord && dndState === "interacting") {
+      setDroppedWord(dragActiveWord);
+      setDragActiveWord(null);
+    }
   };
 
   const passageText = slide.text || sentences.join(" ") || precedingText || "";
+
+  const wordBankVisible = isDragDrop && (dndState === "interacting" || dndState === "retryPrompt");
+
+  // Right panel shows feedback when in a final state
+  const showFeedback = dndState === "finalCorrect" || dndState === "finalIncorrect";
 
   return (
     <div className="w-full h-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6 items-stretch min-h-0">
@@ -74,7 +152,7 @@ export default function CheckpointSlide({
         )}
         {isHighlight ? (
           <HighlightCheckpoint
-            key={retryCount}
+            key={attemptCount}
             sentences={sentences}
             paragraphBreaks={slide.paragraphBreaks}
             checkpoint={checkpoint}
@@ -91,33 +169,58 @@ export default function CheckpointSlide({
               ))}
             </div>
 
-            {/* Drag-drop: word bank lives here, in the text panel */}
-            {isDragDrop && !answered && (
-              <div className="border-t border-gray-200 pt-3 mt-4">
-                <p className="text-xs text-gray-500 mb-2 font-sans">
-                  Drag a word to complete the sentence:
+            {/* Drag-drop: word bank */}
+            {wordBankVisible && (
+              <motion.div
+                className="border-t border-gray-200 pt-4 mt-5"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.3 }}
+              >
+                <p className="text-xs text-gray-500 mb-3 font-sans uppercase tracking-wide">
+                  Word Bank
                 </p>
-                <div className="flex flex-wrap gap-2">
-                  {options.map((word) => (
-                    <button
-                      key={word}
-                      draggable
-                      onDragStart={(e) => {
-                        e.dataTransfer.setData("text/plain", word);
-                        e.dataTransfer.effectAllowed = "move";
-                      }}
-                      onClick={() => setDroppedWord(word)}
-                      className={`px-4 py-2 border-2 rounded-lg text-sm font-medium cursor-grab active:cursor-grabbing transition-colors ${
-                        droppedWord === word
-                          ? "border-indigo-400 bg-indigo-50 text-indigo-600 opacity-50"
-                          : "border-gray-300 bg-white text-gray-800 hover:border-indigo-400 hover:bg-indigo-50"
-                      }`}
-                    >
-                      {word}
-                    </button>
-                  ))}
+                <div className="flex flex-wrap gap-2.5">
+                  {options.map((word) => {
+                    const isPlaced = droppedWord === word;
+                    const isActive = dragActiveWord === word;
+                    return (
+                      <motion.button
+                        key={word}
+                        draggable
+                        onDragStart={(e) => {
+                          const de = e as unknown as React.DragEvent;
+                          if (de.dataTransfer) {
+                            de.dataTransfer.setData("text/plain", word);
+                            de.dataTransfer.effectAllowed = "move";
+                          }
+                          setDragActiveWord(word);
+                        }}
+                        onDragEnd={() => setDragActiveWord(null)}
+                        onClick={() => handleWordTap(word)}
+                        whileHover={{ scale: 1.05, boxShadow: "0 4px 15px rgba(0,0,0,0.12)" }}
+                        whileTap={{ scale: 0.95 }}
+                        animate={
+                          isPlaced
+                            ? { opacity: 0.4, scale: 0.95 }
+                            : isActive
+                            ? { scale: 1.08, boxShadow: "0 6px 20px rgba(99,102,241,0.3)" }
+                            : { opacity: 1, scale: 1 }
+                        }
+                        className={`px-5 py-2.5 border-2 rounded-xl text-sm font-semibold cursor-grab active:cursor-grabbing transition-colors select-none ${
+                          isPlaced
+                            ? "border-indigo-300 bg-indigo-50 text-indigo-400"
+                            : isActive
+                            ? "border-indigo-500 bg-indigo-50 text-indigo-700 shadow-lg"
+                            : "border-gray-200 bg-white text-gray-800 hover:border-indigo-400 hover:bg-indigo-50 shadow-sm"
+                        }`}
+                      >
+                        {word}
+                      </motion.button>
+                    );
+                  })}
                 </div>
-              </div>
+              </motion.div>
             )}
           </div>
         )}
@@ -125,106 +228,195 @@ export default function CheckpointSlide({
 
       {/* Right: Question / Feedback panel */}
       <div className="flex-1 bg-white rounded-xl shadow-2xl p-4 sm:p-6 overflow-y-auto w-full min-h-0">
-        {answered && isCorrect !== null ? (
-          <FeedbackPanel
-            isCorrect={isCorrect}
-            feedback={checkpoint.feedback}
-            onRetry={!isCorrect ? handleRetry : undefined}
-          />
-        ) : isDragDrop ? (
-          <div>
-            <h3 className="font-bold text-base text-gray-900 mb-2">
-              {checkpoint.skill}
-            </h3>
-            <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
-              {checkpoint.prompt}
-            </p>
-
-            {/* Template with drop zone */}
-            <div
-              className="bg-gray-50 rounded-lg p-4 mb-4 text-sm md:text-base leading-relaxed"
-              onDragOver={(e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = "move";
-              }}
-              onDrop={(e) => {
-                e.preventDefault();
-                const word = e.dataTransfer.getData("text/plain");
-                if (word) setDroppedWord(word);
-              }}
+        <AnimatePresence mode="wait">
+          {showFeedback && !isHighlight ? (
+            <motion.div
+              key="feedback"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
             >
-              {templateParts.map((part, i) => (
-                <span key={i}>
-                  {part}
-                  {i < templateParts.length - 1 && (
-                    <span
-                      className={`inline-block min-w-[100px] mx-1 px-3 py-1 rounded border-2 border-dashed text-center ${
-                        droppedWord
-                          ? "border-indigo-400 bg-indigo-50 text-indigo-800 font-medium"
-                          : "border-gray-400 bg-white text-gray-400"
-                      }`}
-                    >
-                      {droppedWord || "___________"}
-                    </span>
-                  )}
-                </span>
-              ))}
-            </div>
+              <FeedbackPanel
+                isCorrect={dndState === "finalCorrect"}
+                feedback={checkpoint.feedback}
+                score={score}
+                revealedAnswer={
+                  dndState === "finalIncorrect"
+                    ? (Array.isArray(checkpoint.correctAnswer)
+                        ? checkpoint.correctAnswer[0]
+                        : checkpoint.correctAnswer)
+                    : null
+                }
+              />
+            </motion.div>
+          ) : isDragDrop ? (
+            <motion.div
+              key="dragdrop"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 30 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h3 className="font-bold text-base text-gray-900 mb-1">
+                {checkpoint.skill}
+              </h3>
 
-            {/* Actions */}
-            <div className="flex gap-2 justify-end">
-              {droppedWord && (
-                <button
-                  onClick={() => setDroppedWord(null)}
-                  className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+              {/* Retry prompt after first wrong answer */}
+              {dndState === "retryPrompt" && (
+                <motion.div
+                  className="mb-3 p-3 bg-orange-50 border border-orange-200 rounded-lg"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
                 >
-                  Reset
-                </button>
+                  <p className="text-sm text-orange-800 font-medium mb-1">Not quite right.</p>
+                  <p className="text-xs text-orange-700">{checkpoint.feedback.incorrect}</p>
+                  <button
+                    onClick={handleRetry}
+                    className="mt-2 px-4 py-1.5 bg-orange-600 text-white text-xs font-semibold rounded-full hover:bg-orange-700 transition-colors"
+                  >
+                    Try Again (1 attempt remaining)
+                  </button>
+                </motion.div>
               )}
-              <button
-                onClick={handleDragDropSubmit}
-                disabled={!droppedWord}
-                className="px-5 py-2 bg-indigo-700 text-white text-sm font-medium rounded-full hover:bg-indigo-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+
+              <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-5">
+                {checkpoint.prompt}
+              </p>
+
+              {/* Template with drop zone */}
+              <div
+                ref={dropZoneRef}
+                className="bg-gray-50 rounded-xl p-5 mb-5 text-sm md:text-base leading-relaxed border border-gray-100"
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.dataTransfer.dropEffect = "move";
+                  setIsDragOverDrop(true);
+                }}
+                onDragLeave={() => setIsDragOverDrop(false)}
+                onDrop={handleNativeDrop}
+                onClick={handleDropZoneTap}
               >
-                Submit
-              </button>
+                {templateParts.map((part, i) => (
+                  <span key={i}>
+                    {part}
+                    {i < templateParts.length - 1 && (
+                      <motion.span
+                        className={`inline-block min-w-[120px] mx-1 px-4 py-1.5 rounded-lg border-2 text-center align-middle ${
+                          dndState === "snapSuccess"
+                            ? "border-green-400 bg-green-50 text-green-800 font-bold"
+                            : dndState === "finalIncorrect"
+                            ? "border-blue-400 bg-blue-50 text-blue-800 font-bold"
+                            : droppedWord
+                            ? "border-indigo-400 bg-indigo-50 text-indigo-800 font-semibold"
+                            : isDragOverDrop
+                            ? "border-indigo-500 bg-indigo-100 text-indigo-500 border-solid shadow-inner"
+                            : "border-gray-300 bg-white text-gray-400 border-dashed"
+                        }`}
+                        animate={
+                          dndState === "shaking"
+                            ? { x: [0, -8, 8, -6, 6, -3, 3, 0], borderColor: "#ef4444" }
+                            : dndState === "snapSuccess"
+                            ? { scale: [1, 1.1, 1], borderColor: "#22c55e" }
+                            : {}
+                        }
+                        transition={
+                          dndState === "shaking"
+                            ? { duration: 0.5, ease: "easeInOut" }
+                            : dndState === "snapSuccess"
+                            ? { duration: 0.4, ease: "easeOut" }
+                            : {}
+                        }
+                      >
+                        {dndState === "snapSuccess" && droppedWord && (
+                          <motion.span
+                            className="inline-block mr-1 text-green-600"
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ delay: 0.1, type: "spring", stiffness: 500 }}
+                          >
+                            &#10003;
+                          </motion.span>
+                        )}
+                        {dndState === "shaking" && droppedWord && (
+                          <motion.span
+                            className="inline-block mr-1 text-red-500"
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ delay: 0.05, type: "spring", stiffness: 500 }}
+                          >
+                            &#10007;
+                          </motion.span>
+                        )}
+                        {droppedWord || (isDragOverDrop ? "Drop here" : "Drag Word Here")}
+                      </motion.span>
+                    )}
+                  </span>
+                ))}
+              </div>
+
+              {/* Actions */}
+              {dndState === "interacting" && (
+                <div className="flex gap-3 justify-end items-center">
+                  {droppedWord && (
+                    <button
+                      onClick={() => {
+                        setDroppedWord(null);
+                        setDragActiveWord(null);
+                      }}
+                      className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                    >
+                      Reset
+                    </button>
+                  )}
+                  <motion.button
+                    onClick={handleDragDropSubmit}
+                    disabled={!droppedWord}
+                    whileHover={droppedWord ? { scale: 1.03 } : {}}
+                    whileTap={droppedWord ? { scale: 0.97 } : {}}
+                    className="px-6 py-2.5 bg-indigo-700 text-white text-sm font-semibold rounded-full hover:bg-indigo-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-md"
+                  >
+                    Save and Continue
+                  </motion.button>
+                </div>
+              )}
+            </motion.div>
+          ) : isHighlight ? (
+            <div className="flex flex-col h-full" key="highlight">
+              <h3 className="font-bold text-base text-gray-900 mb-2">
+                {checkpoint.skill}
+              </h3>
+              <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
+                {checkpoint.prompt}
+              </p>
+              <div className="mt-auto flex items-center gap-2 pt-4 border-t border-gray-100">
+                <span className="text-xs text-gray-500 mr-1">Marker:</span>
+                <button
+                  onClick={() => setActiveMarker("yellow")}
+                  className={`w-7 h-7 rounded-full border-2 ${
+                    activeMarker === "yellow"
+                      ? "border-gray-800 ring-2 ring-gray-400"
+                      : "border-gray-300"
+                  } bg-yellow-300`}
+                  title="Yellow marker"
+                />
+                <button
+                  onClick={() => setActiveMarker("pink")}
+                  className={`w-7 h-7 rounded-full border-2 ${
+                    activeMarker === "pink"
+                      ? "border-gray-800 ring-2 ring-gray-400"
+                      : "border-gray-300"
+                  } bg-pink-300`}
+                  title="Pink marker"
+                />
+              </div>
             </div>
-          </div>
-        ) : isHighlight ? (
-          <div className="flex flex-col h-full">
-            <h3 className="font-bold text-base text-gray-900 mb-2">
-              {checkpoint.skill}
-            </h3>
-            <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
-              {checkpoint.prompt}
-            </p>
-            <div className="mt-auto flex items-center gap-2 pt-4 border-t border-gray-100">
-              <span className="text-xs text-gray-500 mr-1">Marker:</span>
-              <button
-                onClick={() => setActiveMarker("yellow")}
-                className={`w-7 h-7 rounded-full border-2 ${
-                  activeMarker === "yellow"
-                    ? "border-gray-800 ring-2 ring-gray-400"
-                    : "border-gray-300"
-                } bg-yellow-300`}
-                title="Yellow marker"
-              />
-              <button
-                onClick={() => setActiveMarker("pink")}
-                className={`w-7 h-7 rounded-full border-2 ${
-                  activeMarker === "pink"
-                    ? "border-gray-800 ring-2 ring-gray-400"
-                    : "border-gray-300"
-                } bg-pink-300`}
-                title="Pink marker"
-              />
+          ) : (
+            <div key="generic">
+              <p className="text-sm text-gray-700">{checkpoint.prompt}</p>
             </div>
-          </div>
-        ) : (
-          <div>
-            <p className="text-sm text-gray-700">{checkpoint.prompt}</p>
-          </div>
-        )}
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
@@ -240,36 +432,72 @@ const CELEBRATION_MESSAGES = [
 function FeedbackPanel({
   isCorrect,
   feedback,
-  onRetry,
+  score,
+  revealedAnswer,
 }: {
   isCorrect: boolean;
   feedback: { correct: string; incorrect: string };
-  onRetry?: () => void;
+  score: number | null;
+  revealedAnswer: string | null;
 }) {
-  // Pick a random celebration message on mount
   const [celebrationMsg] = useState(
     () => CELEBRATION_MESSAGES[Math.floor(Math.random() * CELEBRATION_MESSAGES.length)]
   );
 
   return (
     <div>
-      <h3
-        className={`text-lg font-bold mb-3 ${
-          isCorrect ? "text-green-700" : "text-orange-700"
-        }`}
+      {/* Success/Failure icon */}
+      <motion.div
+        className="flex items-center gap-3 mb-4"
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
-        {isCorrect ? celebrationMsg : "Not quite."}
-      </h3>
+        {isCorrect ? (
+          <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+        ) : (
+          <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </div>
+        )}
+        <div>
+          <h3
+            className={`text-lg font-bold ${
+              isCorrect ? "text-green-700" : "text-red-600"
+            }`}
+          >
+            {isCorrect ? celebrationMsg : "Not quite."}
+          </h3>
+          {score !== null && (
+            <p className="text-xs text-gray-500">
+              Score: {score} / {DND_FIRST_TRIAL_SCORE} points
+            </p>
+          )}
+        </div>
+      </motion.div>
+
       <p className="text-sm md:text-base text-gray-700 leading-relaxed">
         {isCorrect ? feedback.correct : feedback.incorrect}
       </p>
-      {onRetry && (
-        <button
-          onClick={onRetry}
-          className="mt-4 px-6 py-2 bg-indigo-700 text-white text-sm font-medium rounded-full hover:bg-indigo-800 transition-colors"
+
+      {revealedAnswer && (
+        <motion.div
+          className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
         >
-          Try Again
-        </button>
+          <p className="text-sm text-blue-800">
+            The correct answer is: <strong>{revealedAnswer}</strong>
+          </p>
+        </motion.div>
       )}
     </div>
   );

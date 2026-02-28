@@ -6,7 +6,7 @@ import type { Book } from "@/lib/types";
 import type { FlatPage, BookAnnotations, AnnotationColor } from "./types";
 import BookPageView from "./BookPage";
 import ReaderToolbar, { type HighlightColor, type TranslateLanguage } from "./ReaderToolbar";
-import TableOfContents from "./TableOfContents";
+import TableOfContents, { type BookNote } from "./TableOfContents";
 import PageSlider from "./PageSlider";
 import CollectedHighlights from "./CollectedHighlights";
 
@@ -29,6 +29,44 @@ export default function ReaderShell({ book, onExit }: Props) {
   const [annotations, setAnnotations] = useState<BookAnnotations>({});
   const [showCollected, setShowCollected] = useState(false);
   const [translateLang, setTranslateLang] = useState<TranslateLanguage>(null);
+  const [bookNotes, setBookNotes] = useState<BookNote[]>([]);
+
+  // Load book notes from localStorage
+  useEffect(() => {
+    try {
+      const key = `ilit-notes-${book.id}`;
+      const saved = localStorage.getItem(key);
+      if (saved) setBookNotes(JSON.parse(saved));
+    } catch { /* ignore */ }
+  }, [book.id]);
+
+  const addBookNote = useCallback(
+    (pageNumber: number, text: string) => {
+      const note: BookNote = {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        pageNumber,
+        text,
+        createdAt: new Date().toISOString(),
+      };
+      setBookNotes((prev) => {
+        const next = [...prev, note];
+        try { localStorage.setItem(`ilit-notes-${book.id}`, JSON.stringify(next)); } catch { /* ignore */ }
+        return next;
+      });
+    },
+    [book.id]
+  );
+
+  const deleteBookNote = useCallback(
+    (noteId: string) => {
+      setBookNotes((prev) => {
+        const next = prev.filter((n) => n.id !== noteId);
+        try { localStorage.setItem(`ilit-notes-${book.id}`, JSON.stringify(next)); } catch { /* ignore */ }
+        return next;
+      });
+    },
+    [book.id]
+  );
 
   // Load annotations from localStorage on mount
   useEffect(() => {
@@ -325,6 +363,9 @@ export default function ReaderShell({ book, onExit }: Props) {
             setShowTOC(false);
           }}
           onClose={() => setShowTOC(false)}
+          bookNotes={bookNotes}
+          onAddNote={addBookNote}
+          onDeleteNote={deleteBookNote}
         />
       )}
 

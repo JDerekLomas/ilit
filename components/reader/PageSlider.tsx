@@ -16,41 +16,39 @@ export default function PageSlider({
   const leftPageNum = currentPage + 1;
   const rightPageNum = isWide ? Math.min(currentPage + 2, totalPages) : null;
 
-  const label =
+  const pageLabel =
     rightPageNum && rightPageNum !== leftPageNum
-      ? `Pages ${leftPageNum}–${rightPageNum}`
-      : `Page ${leftPageNum}`;
+      ? `${leftPageNum}-${rightPageNum}`
+      : `${leftPageNum}`;
 
   return (
-    <div className="flex items-center gap-3 px-4 md:px-16 py-2 border-t border-amber-200/40">
-      <span className="text-xs text-amber-800/70 font-sans whitespace-nowrap min-w-[5rem]">
-        {label}
-      </span>
+    <div className="relative px-4 md:px-8 py-3 border-t border-amber-200/30">
       <input
         type="range"
         min={0}
         max={totalPages - 1}
         value={currentPage}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="flex-1 h-1.5 appearance-none bg-amber-200 rounded-full cursor-pointer
+        className="w-full h-1 appearance-none bg-amber-300/50 rounded-full cursor-pointer
           [&::-webkit-slider-thumb]:appearance-none
-          [&::-webkit-slider-thumb]:w-4
-          [&::-webkit-slider-thumb]:h-4
+          [&::-webkit-slider-thumb]:w-5
+          [&::-webkit-slider-thumb]:h-5
           [&::-webkit-slider-thumb]:rounded-full
           [&::-webkit-slider-thumb]:bg-amber-700
           [&::-webkit-slider-thumb]:shadow-md
           [&::-webkit-slider-thumb]:cursor-pointer
-          [&::-moz-range-thumb]:w-4
-          [&::-moz-range-thumb]:h-4
+          [&::-moz-range-thumb]:w-5
+          [&::-moz-range-thumb]:h-5
           [&::-moz-range-thumb]:rounded-full
           [&::-moz-range-thumb]:bg-amber-700
           [&::-moz-range-thumb]:border-0
           [&::-moz-range-thumb]:shadow-md
           [&::-moz-range-thumb]:cursor-pointer"
       />
-      <span className="text-xs text-amber-800/70 font-sans whitespace-nowrap">
-        of {totalPages}
-      </span>
+      {/* Floating page pill */}
+      <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 px-3 py-0.5 bg-stone-700 text-white text-xs font-sans rounded-full shadow-md">
+        {pageLabel}
+      </div>
     </div>
   );
 }

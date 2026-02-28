@@ -161,73 +161,63 @@ export default function ReaderShell({ book, onExit }: Props) {
         onExit={onExit}
       />
 
-      {/* Book frame */}
-      <div className="flex-1 flex items-center justify-center p-2 md:p-6 min-h-0">
+      {/* Book frame + nav arrows */}
+      <div className="flex-1 flex items-center justify-center px-2 md:px-6 py-2 md:py-4 min-h-0 gap-2 md:gap-4">
+        {/* Left arrow — outside frame */}
+        <button
+          onClick={goPrev}
+          disabled={!canGoPrev}
+          className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-stone-800/70 text-white disabled:opacity-20 hover:bg-stone-700/80 transition-colors"
+        >
+          <ChevronLeft />
+        </button>
+
+        {/* Book frame */}
         <div
-          className="relative w-full max-w-6xl h-full rounded-lg border-2 border-amber-800/50 flex flex-col"
+          className="relative flex-1 max-w-6xl h-full rounded-lg flex flex-col min-w-0"
           style={{
             backgroundColor: "#fefaf0",
+            border: "4px solid #00b4d8",
             boxShadow:
-              "inset 0 0 30px rgba(0, 180, 200, 0.08), inset 0 0 60px rgba(0, 180, 200, 0.04), 0 8px 32px rgba(0,0,0,0.4)",
+              "0 0 20px rgba(0, 180, 216, 0.4), 0 0 40px rgba(0, 180, 216, 0.15), 0 8px 32px rgba(0,0,0,0.4)",
           }}
         >
           {/* Page content area */}
-          <div className="flex-1 flex items-stretch min-h-0 px-2 md:px-4 py-2 md:py-4">
-            {/* Left arrow */}
-            <button
-              onClick={goPrev}
-              disabled={!canGoPrev}
-              className="flex-shrink-0 w-8 md:w-12 flex items-center justify-center text-amber-800/60 disabled:opacity-20 hover:text-amber-900 transition-colors"
-            >
-              <ChevronLeft />
-            </button>
+          <div className="flex-1 flex min-h-0 overflow-hidden px-2 md:px-6 py-2 md:py-4">
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={currentPage}
+                custom={direction}
+                initial={{ opacity: 0, x: direction * 60 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: direction * -60 }}
+                transition={{ duration: 0.25, ease: "easeInOut" }}
+                className="w-full flex min-h-0"
+              >
+                {/* Left page */}
+                <div className={`${isWide ? "w-1/2 pr-2 md:pr-4" : "w-full"} min-h-0 overflow-y-auto`}>
+                  {leftPage && (
+                    <BookPageView page={leftPage} fontSize={fontSize} />
+                  )}
+                </div>
 
-            {/* Pages */}
-            <div className="flex-1 flex min-h-0 overflow-hidden">
-              <AnimatePresence mode="wait" custom={direction}>
-                <motion.div
-                  key={currentPage}
-                  custom={direction}
-                  initial={{ opacity: 0, x: direction * 60 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: direction * -60 }}
-                  transition={{ duration: 0.25, ease: "easeInOut" }}
-                  className="w-full flex min-h-0"
-                >
-                  {/* Left page */}
-                  <div className={`${isWide ? "w-1/2 pr-2 md:pr-4" : "w-full"} min-h-0 overflow-y-auto`}>
-                    {leftPage && (
-                      <BookPageView page={leftPage} fontSize={fontSize} />
+                {/* Spine divider */}
+                {isWide && (
+                  <div className="w-px bg-amber-300/40 flex-shrink-0 self-stretch" />
+                )}
+
+                {/* Right page */}
+                {isWide && (
+                  <div className="w-1/2 pl-2 md:pl-4 min-h-0 overflow-y-auto">
+                    {rightPage ? (
+                      <BookPageView page={rightPage} fontSize={fontSize} />
+                    ) : (
+                      <div className="h-full" />
                     )}
                   </div>
-
-                  {/* Spine divider */}
-                  {isWide && (
-                    <div className="w-px bg-amber-300/40 flex-shrink-0 self-stretch" />
-                  )}
-
-                  {/* Right page */}
-                  {isWide && (
-                    <div className="w-1/2 pl-2 md:pl-4 min-h-0 overflow-y-auto">
-                      {rightPage ? (
-                        <BookPageView page={rightPage} fontSize={fontSize} />
-                      ) : (
-                        <div className="h-full" />
-                      )}
-                    </div>
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Right arrow */}
-            <button
-              onClick={goNext}
-              disabled={!canGoNext}
-              className="flex-shrink-0 w-8 md:w-12 flex items-center justify-center text-amber-800/60 disabled:opacity-20 hover:text-amber-900 transition-colors"
-            >
-              <ChevronRight />
-            </button>
+                )}
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* Page slider */}
@@ -238,6 +228,15 @@ export default function ReaderShell({ book, onExit }: Props) {
             onChange={goToPage}
           />
         </div>
+
+        {/* Right arrow — outside frame */}
+        <button
+          onClick={goNext}
+          disabled={!canGoNext}
+          className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-stone-800/70 text-white disabled:opacity-20 hover:bg-stone-700/80 transition-colors"
+        >
+          <ChevronRight />
+        </button>
       </div>
 
       {/* Table of Contents overlay */}

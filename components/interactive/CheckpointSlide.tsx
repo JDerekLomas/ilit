@@ -4,6 +4,7 @@ import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Slide, Checkpoint } from "@/lib/types";
 import HighlightCheckpoint from "./HighlightCheckpoint";
+import MultipleChoiceCheckpoint, { type McState } from "./MultipleChoiceCheckpoint";
 
 interface Props {
   slide: Slide;
@@ -53,6 +54,11 @@ export default function CheckpointSlide({
     completed && checkpoint.type === "highlight" ? "correct" : "selecting"
   );
 
+  // Multiple-choice state
+  const [mcState, setMcState] = useState<McState>(
+    completed && checkpoint.type === "multiple-choice" ? "correct" : "selecting"
+  );
+
   // Drag-drop state
   const [droppedWord, setDroppedWord] = useState<string | null>(null);
   const [isDragOverDrop, setIsDragOverDrop] = useState(false);
@@ -88,6 +94,7 @@ export default function CheckpointSlide({
 
   const isDragDrop = checkpoint.type === "drag-drop";
   const isHighlight = checkpoint.type === "highlight";
+  const isMultipleChoice = checkpoint.type === "multiple-choice";
 
   const options = checkpoint.options || [];
   const template = checkpoint.template || "";
@@ -156,9 +163,20 @@ export default function CheckpointSlide({
 
   const wordBankVisible = isDragDrop && (dndState === "interacting" || dndState === "retryPrompt");
 
+  // MC answer handler
+  const handleMcAnswer = useCallback((correct: boolean, mcScore: number) => {
+    setScore(mcScore);
+    setIsCorrect(correct);
+    setAnswered(true);
+    if (correct) {
+      onComplete();
+    }
+  }, [onComplete]);
+
   // Right panel shows feedback when in a final state
   const showDndFeedback = dndState === "finalCorrect" || dndState === "finalIncorrect";
   const showHighlightFeedback = highlightState === "correct" || highlightState === "revealAnswer";
+  const showMcFeedback = mcState === "correct" || mcState === "revealAnswer";
   const highlightToolsDisabled = highlightState !== "selecting";
 
   return (
@@ -289,6 +307,54 @@ export default function CheckpointSlide({
                 feedback={checkpoint.feedback}
                 score={score}
                 revealedAnswer={null}
+              />
+            </motion.div>
+
+          /* MC feedback panel */
+          ) : showMcFeedback && isMultipleChoice ? (
+            <motion.div
+              key="mc-feedback"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <FeedbackPanel
+                isCorrect={mcState === "correct"}
+                feedback={checkpoint.feedback}
+                score={score}
+                revealedAnswer={
+                  mcState === "revealAnswer"
+                    ? (Array.isArray(checkpoint.correctAnswer)
+                        ? checkpoint.correctAnswer[0]
+                        : checkpoint.correctAnswer)
+                    : null
+                }
+              />
+            </motion.div>
+
+          /* MC interaction panel */
+          ) : isMultipleChoice ? (
+            <motion.div
+              key="mc-interaction"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 30 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h3 className="font-bold text-base text-gray-900 mb-1">
+                {checkpoint.skill}
+              </h3>
+              <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
+                {checkpoint.prompt}
+              </p>
+              <MultipleChoiceCheckpoint
+                checkpoint={checkpoint}
+                onAnswer={handleMcAnswer}
+                mcState={mcState}
+                onStateChange={setMcState}
+                attemptCount={attemptCount}
+                onAttemptChange={setAttemptCount}
               />
             </motion.div>
 

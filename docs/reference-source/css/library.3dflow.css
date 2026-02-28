@@ -1,0 +1,35 @@
+.swiper-container {
+    padding:10px 0;
+    width: 974px;       
+    position: relative;
+    bottom: 35px;
+}
+.swiper-slide {
+    width:auto;
+    background-size:cover;
+    background-repeat:no-repeat;
+    background-position:center;
+    border-radius:5px;
+    bottom: 10px;
+    left: -15px;
+}
+
+.swiper-slide .imageBox { width:105px; height:161px; border:1px solid #C7C8C8; background: #fff; padding:3px; }
+
+.curoselContainer{
+    height:190px;	
+    width:100%;
+/*    overflow:hidden;*/
+}
+
+
+.curoselContainer img{
+    height: 159px;
+}
+.swiper-wrapper{
+    left:66px;   
+}
+
+.swiper-slide-active img {
+    cursor: pointer;
+}

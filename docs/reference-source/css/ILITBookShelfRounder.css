@@ -1,0 +1,139 @@
+.ILITBookShelfRounderWrapper {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;    
+    -ms-touch-action: none;
+/*    overflow:hidden;
+    position:relative;
+    background-position: center;
+    width:960px;    
+    padding-bottom:35%;	
+    margin:0 auto;    
+    top:-200px;    */
+    background-position: center center;
+    height: 211px;
+    margin: 0 auto;
+    position: relative;
+    top: 0px;
+    width: 960px;
+}
+
+.flatRounderPosition{
+  top:-20px;   
+  padding-bottom: 38%;
+}
+
+.ILITBookShelfRounderWrapper h4{
+text-align:center;
+color:#87e0fd;
+font-size:25px;
+font-weight:normal;
+font-family:Arial;
+}
+
+/* For Ipad */
+/*@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : landscape)
+and (-webkit-min-device-pixel-ratio: 1) {
+    .ILITBookShelfRounderWrapper {
+        top:-95px;    
+        padding-bottom:30%;	
+    }
+}*/
+
+
+.hideBook{
+display:none;
+}
+
+.bookElement {
+    /*position:absolute;
+    width:160px;
+    visibility:hidden;
+    */
+    
+    position: absolute;
+    width: 160px;
+    height: 220px !important;
+    overflow: hidden;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    visibility: hidden;
+    border: 4px solid #fff;
+    background: #fff;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0px 2px 13px rgba(50, 50, 50, 0.86);
+    -moz-box-shadow: 0px 2px 13px rgba(50, 50, 50, 0.86);
+    box-shadow: 0px 2px 13px rgba(50, 50, 50, 0.86);
+}
+.bookElement.overshudle{
+    position:absolute;    
+    width:160px;    
+    visibility:hidden;
+    border: 0;
+    border-radius: 0px;
+    box-shadow:none;
+    overflow: inherit;
+    background: transparent;
+}
+.bookElement1 {
+    height: 206px !important;
+	overflow:hidden;
+    -webkit-tap-highlight-color:rgba(0,0,0,0); 
+	border:4px solid #fff;
+	background:#fff;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	border-radius:5px;
+	-webkit-box-shadow: 0px 2px 13px rgba(50, 50, 50, 0.86);
+	-moz-box-shadow:    0px 2px 13px rgba(50, 50, 50, 0.86);
+	box-shadow:         0px 2px 13px rgba(50, 50, 50, 0.86);
+}
+.bookElement  img{width:160px !important; height: auto !important; cursor:pointer;}
+
+#floatBookContainer{
+width:3500px;
+height:290px;
+position:absolute;
+left:0;
+top:0;
+}
+
+#floatBookContainer .bookElement {
+position:relative;
+float:left;
+margin-right:10px;
+}
+
+.libbook-rating .meter {
+    margin-top: .2em;
+    float: left;
+	margin-left:1em;
+    vertical-align: bottom;
+    width: 115px;
+    overflow: hidden;
+    height: 20px;
+    font-style: italic;
+    text-indent: -9999em;
+    background: url(../media/star.png) 0 100% repeat-x;
+}
+.libbook-rating .meter span[title="4.5"] {
+    width: 108px;
+}
+.libbook-rating .meter span {
+    overflow: hidden;
+    width: 115px;
+    height: 20px;
+    display: block;
+    background: url(../media/star.png) 0 0 repeat-x;
+}
+.libbook-title{ font-weight:bold; color:#fff; font-size:14px; padding:5px; text-align:center;}
+.review {
+    background: url(../media/book_bg.jpg) repeat 0 bottom;
+    border-bottom: #222224 50px solid !important;
+}

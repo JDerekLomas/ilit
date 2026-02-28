@@ -1,0 +1,4596 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<meta http-equiv='cache-control' content='no-cache'>
+		<meta http-equiv='expires' content='0'>
+		<meta http-equiv='pragma' content='no-cache'>
+        <title>iLiT</title>
+		<link href="css/jquery.mCustomScrollbar.css" rel="stylesheet" />
+		<script>
+			var cache_timestamp = (new Date()).getTime();
+			document.write('<link href="css/assignments.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+		</script>
+        <link href="css/jquery-ui.css" media="all" rel="stylesheet" />
+		<script>
+			document.write('<link href="css/assignment.swiper.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+		</script>
+        <link href="css/fonts/fonts.css" media="all" rel="stylesheet" />
+        <link href="css/video-js.css" type="text/css" rel="stylesheet" />
+		<script>
+			document.write('<link href="css/assignments_dev.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+			document.write('<link href="css/idangerous.swiper.scrollbar.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+			document.write('<link href="css/a11y.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+		</script>
+		<!--[if gte IE 9]>
+        <style type="text/css">
+            .gradient {
+				filter: none !important;
+			}
+        </style>
+        <![endif]-->
+
+        <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.js"></script>
+		<script type="text/javascript" src="js/promise.min.js"></script>
+        <script type="text/javascript" src="js/underscore-min.js"></script>
+        <script type="text/javascript" src="js/jquery.ui.touch-punch.min.js"></script>
+		<script type="text/javascript" src="js/swiper.min.js"></script>
+		<script type="text/javascript" src="js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+		<script type="text/javascript" src="ebookplayer/script/jquery.hammer-full.min.js"></script>		
+		<script>
+			document.write('<script type="text/javascript" src="js/util.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/constants.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/message_handler.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/application.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/iSeriesBase.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		</script>
+        <script type="text/javascript" src="js/video.js"></script>
+		<script>
+			document.write('<script type="text/javascript" src="js/globals.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/a11y.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/assignment_helper.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/assignments.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/assignment_accessibility.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/assignments_frs.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		</script>
+		<script type="text/javascript" src="js/idangerous.swiper-2.1.min.js"></script>
+		<script type="text/javascript" src="js/swipe.js"></script>
+		<script type="text/javascript" src="js/iscroll.js"></script>
+		<script>
+			document.write('<script type="text/javascript" src="js/chromeapp_communication.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/client_native_communication.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/assignment_wtw.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		</script>
+		
+        <script type="text/javascript">
+			var onPageLoadCompleteStatus = false;
+			$(document).ready(function () {
+				if (sAssignmentId = $_GET(POPUP_VIEW.c_s_QUERY_PARAM_ASSIGNMENT_ID)) {
+					showLoader();
+					if (oPlatform.isIOS()) {
+						loadJS('js/NativeBridge.js', function () {
+							loadAssignment();
+						});
+					}else if(location.hash === "#chromeApp") {     
+						if(window.top.appOrigin){
+							window.appOrigin = window.top.appOrigin;
+							 loadAssignment(); 
+							 return;
+						}
+							window.addEventListener('message', onMessage);
+							function onMessage(e) {
+								window.appWindow = e.source;
+								window.appOrigin = e.origin;
+								loadAssignment();  
+							}             
+							if(typeof chrome.runtime.id !== 'undefined'){
+								loadAssignment();
+							}
+					}
+					else {
+						loadAssignment();
+					}
+				}
+				else {
+					if (oPlatform.isIOS()) {
+						loadJS('js/NativeBridge.js', function () {
+							AssignmentsView.loadAssignmentList();
+						});
+					}else if(location.hash === "#chromeApp") {       
+                    	window.addEventListener('message', onMessage);
+						function onMessage(e) {
+							window.appWindow = e.source;
+							window.appOrigin = e.origin;
+							AssignmentsView.loadAssignmentList();  
+						}  
+						if(typeof chrome.runtime.id !== 'undefined'){
+							AssignmentsView.loadAssignmentList();  
+						}
+					}
+					else {
+						setTimeout(function () {
+							AssignmentsView.loadAssignmentList();
+						}, 400);	
+					}
+				}
+            });
+			
+            $(window).resize(function () {
+				if (
+					AssigmentSlides.assignmentType == ASSIGNMENTS.c_s_ASSIGNMENT_IWTS && 
+					oPlatform.isAndroid() && 
+					!AssignmentsView.isUserOnTOC
+				) {
+					return false;
+				}
+				AssignmentsView.resize();
+            });
+
+            window.onorientationchange = function () {
+				if (
+					AssigmentSlides.assignmentType == ASSIGNMENTS.c_s_ASSIGNMENT_IWTS &&
+					oPlatform.isAndroid() &&
+					!AssignmentsView.isUserOnTOC
+				) {
+					return false;
+				}
+				AssignmentsView.resize();
+            };
+
+			window.onload = function(){
+				//enable sentence wise speak
+				eba_break_list = "!z";
+				//enable speech stop button
+				eba_speech_started_callback = "textRead_speechStartedCallback()";
+				eba_speech_complete_callback = "textRead_completedCallback()";
+			}
+        </script>
+    </head>
+    <body style="-ms-touch-action: none;">
+    <div id="dynamicTextForSR" aria-hidden="true" aria-live="assertive" class="assistive-text"></div>
+	<div id="dynamicTextForAssignment" aria-hidden="true" aria-live="polite" class="assistive-text"></div>
+	<div id='assignmentBroadcastOverlay'></div>
+	<div id='assignmentBroadcastOverlayInstructor'></div>
+		<div id="loaderContainer"></div>
+        <div class="wrapper">
+			
+            <header role="heading" style="display:none;">
+                <div class="header_inner">
+                    <div class="header_innerin gradient no_select_please">
+					    <b id="beforeBackbtn" style="position:absolute;left:-100px;bottom:100px;border: none;opacity:0.1;width:0px;" tabindex="0" aria-hidden="false"></b>
+						<button class="sld_lft left backbutton valid-activity" type="button" title="Save and Exit button" tabindex="0" id="assignmentPrev"> <span class="contentsprite"></span></button>
+						<!-- <div id="ui-tooltip_phonic" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="top: 60px; left: 10px; display: none;">
+							<div class="ui-tooltip-content">Back button</div>
+						</div> -->
+
+						<!-- CLAS-60 -->
+						<!-- Text help view View Feedback -->
+						<button id="idViewFeedback" title="View Feedback button" tabindex = "0" aria-label="View Feedback" aria-haspopup="true" tabindex="0" class="left active" style="display: none; padding: 4px;margin-left: 10px;width: 130px;height: 35px;background-color: #4053d2;border-radius: 17px;color: white;border: 2px solid white;font-family: inherit;font-weight: bold;margin-top: 3px;">View Feedback</button>
+						<!-- End of CLAS-60 -->
+
+						<div id="myInfoPhonic">
+
+						</div>
+						<div id = "digraphViewInfo"></div>
+						<div id="myInfoIWT">
+
+						</div>
+						<div id="myInfoIpractice">
+
+						</div>
+						<div id="rotatingSlideInfo">
+
+						</div>
+				
+						<button class="sld_rgt sprite right" type="button" id="assignmentNext"></button>
+                        
+						<!-- Epic-3 -->
+						<!-- <button id="btn-show-audio" tabindex="0" class="sprite right" type="button"></button> -->
+						<audio aria-label="Play Audio" title="Play Audio"  controls="false" controlsList="nodownload noplaybackrate noremoteplayback nomute"  id="popupAudio_new" class="assignment_audio_control_lookNfeel">
+							<source type="audio/wav">
+						</audio>
+
+						<div aria-label="Mute" title="Mute" id="idMuteUnmuteControlForIOS" class="MuteUnmuteControlForIOS">
+							<a href="#" class="speakerForIOS"><span></span></a>  
+						</div>
+						<!-- End of Epic-3 -->
+
+						<div id="ui-tooltip_audio" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="top: 60px; right: 10px; display: none;">
+							<div class="ui-tooltip-content">Play Audio</div>
+						</div>
+						<div class="toc_toolls_2 right toc_panel_icons bookicon-container">
+							<button type="button" class="tocicons sprite right valid-activity" aria-label="Current book" aria-haspopup="true" aria-expanded="false" id="bookicon" style="display:none;" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"></button>
+							<div id="ui-tooltip_currentbook" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="display:none;top: 40px;right: 2px;">
+								<div class="ui-tooltip-content">Current Book</div>
+							</div>
+						<div style="display:none;" class="book-tooltip-container" id="currentBookTooltip"></div>
+						</div>
+						
+						<!-- Text help view note -->
+						<!-- CLAS-60 -->
+						<!-- <div id="imgNotes" role="button" aria-label="notes" aria-haspopup="true" tabindex="0" class="notesIcon left active txtHelpFeature"></div> -->
+						<div id="imgNotes" role="button" aria-label="notes" aria-haspopup="true" tabindex="0" style="margin-left: 10px;" class="notesIcon left active txtHelpFeature"></div>
+						<!-- End of CLAS-60 -->
+						<div id="ui-tooltip_imgnotes" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="display:none;top: 50px;left: 85px;">
+							<div class="ui-tooltip-content">Notes</div>
+						</div>
+						
+						<!-- Text help translate -->
+						<div class="right language active txtHelpFeature">
+							<button id="btnLanguage" class="button9 margin_none translate-btn valid-activity" aria-label="Translate" aria-haspopup="true" aria-expanded="false" tabindex="0" type="button" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">Translate</button>
+							<div id="ui-tooltip_btnlanguage" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="display:none;top: 40px;right: -21px;">
+								<div class="ui-tooltip-content">Translate button</div>
+							</div>
+							<div id="menuLanguage" class="tooltip_tools" style="display:none;">
+								<div class="tools_tooltip">
+									<div class="tooltip_arrow sprite"></div>
+									<div class="tooltip_wrap">
+										<div class="tooltip_wrap_inner">Select Language</div>
+									</div>
+									<div id = "languagesList" class="tooltip_wrap_language languagesList">
+										<ul id='translateMenu'>											
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="clear"></div>
+						</div>
+				
+						<!-- Text help font zoom -->
+						<div class="right pagezoom active txtHelpFeature">
+							<button id="btnFontResize" class="button9 right valid-activity" tabindex="0" aria-label="Aa Resize Font" aria-haspopup="true" aria-expanded="false" type="button"  data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">Aa</button>
+							<div id="ui-tooltip_btnfontresize" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="display:none;top: 40px;margin-left: -30px;">
+								<div class="ui-tooltip-content">Resize Font button</div>
+							</div>
+							<div id="menuFontResize" class="tooltip_tools" style="display:none;">
+								<div class="tools_tooltip">
+									<div class="tooltip_arrow sprite"></div>
+									<div class="tooltip_wrap_language">
+										<div class="zoom_container" role="menu">
+											<div class="zoom1 zooms" tabindex="-1" role="menuitem" aria-selected="false" aria-label="Small Font" cssPath="t1">A</div>
+											<div class="zoom2 zooms active" tabindex="-1" role="menuitem" aria-selected="true" aria-label="Medium Font" cssPath="t2">A</div>
+											<div class="zoom3 zooms" tabindex="-1" role="menuitem" aria-selected="false" aria-label="Large Font" cssPath="t3">A</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="clear"></div>
+						</div>
+						
+						<button id="view_all_answers" class="button9 right" tabindex="0" aria-label="View Answers" type="button" style="display:none;">View Answers</button>
+                        <button id="view_all_skills" class="button9 right" tabindex="0" aria-label="View Skills" type="button" style="display:none;">View Skills</button>
+                        <h1 class="middle" id="headerTitle"></h1>
+						<div class="mainheader_fulltext" style="display: none;"></div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </header>
+			<div id="rata_container" class="bookBoxNative pleft" style="display:none">
+				 <!-- rata book appears here -->
+			</div>
+            <div id="toc_container">
+                <div class="backgound_images bg13"></div>
+                <div id="toc_inner_container" class="main_wrapper"></div>
+                <div class="clear"></div>
+            </div>
+			<div id="cur_container" class="bookBoxNative pright" style="display:none">
+				<!-- current reading book appears here -->
+			</div>
+            <div id="slide_container" class="assignment_slider_wrapper"></div>
+        </div>
+        <!-- DIALOG BOX -->
+        <div id="dialog-message" title="Alert!" class="Ilit_alert_box"></div>
+		<div style="display:none;">
+			<audio id="audioPlayer" controls="false" autoplay="false" preload="true"></audio>
+		</div>
+		<!-- DIALOG BOX -->
+        <div id="dialog-message-network" title="Alert!" class="Ilit_alert_box"></div>
+		
+		<!-- DIALOG BOX -->
+        <div id="dialog-message-pkt" title="Alert!" class="Ilit_alert_box"></div>
+		<div style="display:none;">
+			<audio id="audioPlayer" controls="false" autoplay="false" preload="true"></audio>
+		</div>
+		
+    </body>
+    <!-- Templates Definition -->
+	
+	<!-- template for left RATA book on assignment TOC page -->
+	<script type="text/template" id="tpl_rata_book">
+	<% if(data.length > 0){ %>
+		<div class="book <%= BookDisableClass %>" 
+			data-id="<%=data[0].book_id%>" 
+			data-book_type="<%=data[0].book_type%>" 
+			data-word_count="<%=data[0].word_count%>" 
+			data-book_title="<%=data[0].book_title%>" 
+			data-file_type="<%=data[0].file_type%>" 
+			data-bookNumPage="<%=data[0].no_of_page%>" 
+			id="studentRataBook">
+			<div class="bookMainImg">
+				<div class="book-placeholder" id="wrapperRATA">    
+					<% if(data[0].book_image != '') { %>
+					<img src="<%=  objLibraryJsonData.mediaPath+data[0].book_image %>" alt="Book" />                        
+					<% } %>
+				</div>
+			</div>
+			<button class="bookTitle btn" type="button"><%= LIBRARY.c_s_STATIC_TEXT.c_s_DEMO_BOOK_BTN_TEXT %></button>
+		</div>
+	<% } %>
+	</script>
+	
+	<!-- template for right current book on assignment TOC page -->
+	<script type="text/template" id="tpl_current_book">
+	<% if(data.length > 0){ %>
+		<div class="book  <%= BookDisableClass %>" 
+			data-id="<%=data[0].book_id%>" 
+			data-book_type="<%=data[0].book_type%>" 
+			data-word_count="<%=data[0].word_count%>" 
+			data-book_title="<%=data[0].book_title%>" 
+			data-file_type="<%=data[0].file_type%>" 
+			data-bookNumPage="<%=data[0].no_of_page%>" 
+			id="currentReadingWrapper">
+			
+			<div class="bookMainImg" id="activeItem">
+				<div class="currentReadingWrapper" >    
+					<% if(data[0].book_image != '') { %>
+					<img src="<%= objLibraryJsonData.mediaPath+data[0].book_image %>" alt="Book" />     
+					<% } %>
+				</div>
+			</div>
+			<button class="bookTitle btn" type="button" aria-label="<%= (BookDisableClass == "disable_book") ? 'disabled '+LIBRARY.c_s_STATIC_TEXT.c_s_DEMO_BOOK_BTN_TEXT2 : LIBRARY.c_s_STATIC_TEXT.c_s_DEMO_BOOK_BTN_TEXT2 %>"><%= LIBRARY.c_s_STATIC_TEXT.c_s_DEMO_BOOK_BTN_TEXT2 %></button>
+		</div>
+	<% } %>
+	</script>
+				
+	
+	<!-- Note Popup Template -->
+	<script type="text/template" id="AddNoteTemplate">
+		<!-- Add Note Popup -->
+		<div class="overley" style="z-index:5555;"></div>
+		<div id="notesModal" class="modal" aria-labelledby="modal-title" style="z-index:5556;" role="dialog">
+			<div class="actiavtion_wrapper">
+				<div id="modal-title" class="acces_top_nav">
+					Notes
+					<div class="clear"></div>
+				</div>
+
+				<div class="inside_access">
+					<div class="textarea_content">
+						<textarea id="txtAreaCreateNote" autocorrect="off" name="" maxlength="1500"></textarea>
+						<div id="txtAreaListNote" name="" style="display:none;"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+
+				<div class="btm_navs" style="text-align: right;">
+					<button id="btnCancelNote" class="button7 btn margin_gap_right" aria-label="cancel note" onClick="hideAddNotes();">Cancel</button>
+					<button id="btnSaveNote" class="button7 btn" aria-label="save note" onClick="saveNewNotes();">Save Note</button>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</script>
+	
+	<!-- Current Book Tooltip -->
+	<script type="text/template" id="BookTooltipTemplate">
+<%  
+		if (objCurrentBook.Content != null) {
+			var currentReadingBookId = "",
+				rataBookId = "",
+				selectedCurrentReadingBook = [],
+				selectedRataBook = [];
+			 
+			if (
+				(objCurrentBook.Content.mycurrent_book_item_Id != "") &&
+				(objCurrentBook.Content.mycurrent_book_item_Id != null)
+			) {				
+				currentReadingBookId = objCurrentBook.Content.mycurrent_book_item_Id;				
+			}
+			 
+			if (
+				(objCurrentBook.Content.Ratabook_ItemID != null) &&
+				(objCurrentBook.Content.Ratabook_ItemID != "" )
+			) { 
+				rataBookId =  objCurrentBook.Content.Ratabook_ItemID;				
+			}						
+
+			/*
+			selectedCurrentReadingBook = _.where(
+				objBookList.bookset[0], {
+					book_id: currentReadingBookId
+				}
+			);
+			*/
+			for(var k in objBookList.bookset[0]){
+				if(objBookList.bookset[0][k] && objBookList.bookset[0][k].book_id == currentReadingBookId){	      selectedCurrentReadingBook.push(objBookList.bookset[0][k]);				   
+				}
+			}
+			/*
+			selectedRataBook = _.where(
+				objBookList.bookset[0], {
+					book_id: rataBookId
+				}
+			);
+			*/			
+			for(var m in objBookList.bookset[0]){
+				if(objBookList.bookset[0][m] && objBookList.bookset[0][m].book_id == rataBookId){	      selectedRataBook.push(objBookList.bookset[0][m]);				   
+				}
+			}
+
+		}
+		if (
+			typeof selectedCurrentReadingBook != 'undefined' &&  
+			(
+				(selectedCurrentReadingBook.length > 0) ||
+				(selectedRataBook.length > 0)
+			)
+		) {
+%>	
+		<div style="display:block;" class="currentbook_tooltip">
+			<div class="currentbookpage_arrow sprite"></div>
+			<div class="Tooltip_title_wrap">
+				<div class="notes_icn_cont">
+					<ul class="oragnic_tooltip">
+<%
+					if(selectedCurrentReadingBook.length > 0) {
+						var currentBookTitle = selectedCurrentReadingBook[0].book_title,
+							_BookType = (selectedCurrentReadingBook[0]["book_type"] == "R") ? "rata" : "time_to_read",
+							_wordCount = (
+								(
+									selectedCurrentReadingBook[0]["word_count"] == null ||
+									typeof selectedCurrentReadingBook[0]["word_count"] == "undefined"
+								)?
+								0:
+								selectedCurrentReadingBook[0]["word_count"]
+							),
+							_fileType = selectedCurrentReadingBook[0]["file_type"],
+							_BookNumPage = (
+								(
+									selectedCurrentReadingBook[0][LIBRARY.c_s_BOOK_LIST_JSON_KEY.NUM_PAGE] == '' || selectedCurrentReadingBook[0][LIBRARY.c_s_BOOK_LIST_JSON_KEY.NUM_PAGE] == null ||
+									typeof selectedCurrentReadingBook[0][LIBRARY.c_s_BOOK_LIST_JSON_KEY.NUM_PAGE] == "undefined"
+								)?
+								0:
+								selectedCurrentReadingBook[0][LIBRARY.c_s_BOOK_LIST_JSON_KEY.NUM_PAGE]
+							);
+%>
+						<li class="cause valid-activity" id="<%=ASSIGNMENTS.c_s_ASSIGNMENT_VIEW_CURRENTREADING%>_1" book_id="<%=currentReadingBookId%>" book_type="<%=_BookType%>" bookNumPage="<%= _BookNumPage %>" word_count="<%=_wordCount%>" book_title="<%=currentBookTitle%>" file_type="<%=_fileType%>">
+							<a href="#" aria-label="<%=ASSIGNMENTS.c_s_ASSIGNMENT_CURRENT_BOOK_LABEL%>">
+								<span class="middle"> <%=ASSIGNMENTS.c_s_ASSIGNMENT_CURRENT_BOOK_LABEL%> </span>
+								<div class="clear"></div>
+							</a>
+						</li>
+<%
+					}
+					if (selectedRataBook.length > 0) {
+						var currentRataBookTitle = selectedRataBook[0].book_title,
+							_rataBookType = (
+								(selectedRataBook[0]["book_type"] == "R")?
+								"rata":
+								"time_to_read"
+							),
+							_ratawordCount = (
+								(
+									selectedRataBook[0]["word_count"] == null ||
+									typeof selectedRataBook[0]["word_count"] == "undefined"
+								)?
+								0:
+								selectedRataBook[0]["word_count"]
+							),
+							_ratafileType = selectedRataBook[0]["file_type"];
+							_rataBookNumPage = (
+								(
+									selectedRataBook[0][LIBRARY.c_s_BOOK_LIST_JSON_KEY.NUM_PAGE] == '' || selectedRataBook[0][LIBRARY.c_s_BOOK_LIST_JSON_KEY.NUM_PAGE] == null ||
+									typeof selectedRataBook[0][LIBRARY.c_s_BOOK_LIST_JSON_KEY.NUM_PAGE] == "undefined"
+								)?
+								0:
+								selectedRataBook[0][LIBRARY.c_s_BOOK_LIST_JSON_KEY.NUM_PAGE]
+							);
+%>
+						<li class="cause valid-activity" id="<%=ASSIGNMENTS.c_s_ASSIGNMENT_VIEW_CURRENTREADING%>_2" book_id="<%=rataBookId%>" book_type="<%=_rataBookType%>" bookNumPage="<%= _rataBookNumPage %>" word_count="<%=_ratawordCount%>" book_title="<%=currentRataBookTitle%>" file_type="<%=_ratafileType%>">
+							<a href="#" aria-label="<%=ASSIGNMENTS.c_s_ASSIGNMENT_CURRENT_RATA_LABEL%>">
+								<span class="middle" ><%=ASSIGNMENTS.c_s_ASSIGNMENT_CURRENT_RATA_LABEL%></span>
+								<div class="clear"></div>
+							</a>
+						</li>
+<%
+					}
+%>						
+						<li class="clear"></li>
+					</ul>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>			
+		</div>
+<%
+		}
+%>
+	</script>
+	<!-- Current Book Tooltip Ends -->	
+	
+    <!-- Assignment TOC -->
+    <script type="text/template" id="assignTOCTemplate">
+        <div class="assignments_wrapper assignments_wrapper_native">
+            <div class="assignments_wrapper_inner" role="main">
+                <div class="assignment_title" tabindex="0" >Assignments</div>
+                <div id="_menubar" class="assignments_container" role="menubar" aria-label="assignments" style="overflow:auto;">
+                    <%=data%>
+                </div>
+            </div>
+        </div>
+    </script>
+    <!-- fillableworksheet Template -->
+    <script type="text/template" id="old_fillableworksheet">
+<%
+		var backgroundStyle = "";
+		if (data.background_image != "" && typeof data.background_image != "undefined") {
+			backgroundStyle = 'style="background-image: url(\''+mediaPath  + data.background_image +'\'); background-size:cover; background-repeat:repeat; height:100%"';
+		}
+%>
+		<div class="swiper-slide backgound_images bg15" reference-key="<%= referenceKey %>" id="<%= referenceKey %>" <%= backgroundStyle %> data-slide-type="<%= slideType %>">
+			<!-- <div class="" ></div> -->
+            <div class="main_wrapper">
+                <div class="bookBoxWrap gradient">
+                    <div class="slider_swiper_inner without_sliding_top">
+                        <section class="container_space addclass_for_padd"> 
+                            <div class="box_outer_space">
+								<div class="continent_box_space left">
+									<div class="continent_box_inner">
+										<!--
+										<div class="direction_title">
+											<strong>Direction:</strong> Read the folowing entences from Saint Louis Armstrong Beach. Think about the two words in bold type. Then answer to question 1 with number 1 and your answer to question 2 with number 2.
+										</div>
+										-->
+										<div class="scroll_padding">
+											<div class="continent_content_inner">  
+												<%=data%> 
+												<div class="clear"></div>
+											</div>
+										</div>
+										<div class="edit_box_title">
+											<button class="slideCommonSubmitButton button7 btn <%=ASSIGNMENTS.c_s_ASSIGN_READ_CHKPNT_BTN_SELECTOR%>" id="btnInput">
+												<%=$.trim(ASSIGNMENTS.c_s_INPUT_ANSWER_BTTN)%>
+											</button>
+											<div class="clear"></div>
+										</div>
+										<div class="clear"></div>
+									</div>
+								</div>
+								<div class="continent_edit_box hidden left" id="<%= ASSIGNMENTS.c_s_TYPEIN_ANSWER_SUBMIT_CONTAINER_SELECTOR %>" style="display:block;">
+									<div class="middle">
+										<div class="continent_wrap_box addwrap_box_padding">
+											<div class="continent_conts">
+												<div class="text_content"><%=$.trim(ASSIGNMENTS.c_s_HEADER_RESPONSE_TXT)%></div>
+												<div class="text_box_area">
+													<textarea autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="" id="textTypeArea"></textarea>
+												</div>
+												<div class="clear"></div>
+											</div>
+										</div>
+										<div class="edit_box_title">
+											<button class="right button7 btn btndisabled" id="btnSubmit"><%=$.trim(ASSIGNMENTS.c_s_SUBMIT_ANSWER_BTTN)%></button>
+											<button class="right button7 btn" id="btnPrint" style="display:none;"><%=$.trim(ASSIGNMENTS.c_s_PRINT_BTTN)%></button>
+											<div class="clear"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </script>
+    
+	<script type="text/template" id="iwt_video_intro_slide">
+		<% 
+		var _sVideo = mediaPath + data
+		/*var _sVideo = "http://vjs.zencdn.net/v/oceans.mp4";;*/
+		%>
+		<div class="videocontent">
+			<video id="video___0" class="video-js vjs-default-skin" controls=false >
+				<source type="video/mp4;" src="<%= _sVideo %>" />
+			</video>              
+		</div>
+	</script>
+    <!-- IWTS Summary Slide Starts -->
+    <script type="text/template" id="iwtsummaryslide">
+<%
+			var backgroundStyle = "";
+			if (
+				data.background_image != "" &&
+				typeof data.background_image != "undefined"
+			) {
+				backgroundStyle = 'style="background-image: url(\''+mediaPath  + data.background_image +'\'); background-size:cover;background-repeat:repeat;height:100%"';
+			}
+			var slideId = IwtsSummaryView.slideIdx;
+			var summaryTxt = "";
+			if (studentAttemptData) {
+				var summaryObj = _.where(studentAttemptData.itemSlides, {"slideID": slideId});
+				if (summaryObj.length) {
+					summaryTxt = (summaryObj[0].slideInputData.summary) ? decodeURIComponent(summaryObj[0].slideInputData.summary) : '';
+				}
+			}
+%>
+		<div class="swiper-slide backgound_images bg15" reference-key="<%=referenceKey%>" id="<%=referenceKey%>" data-slide-type="<%= slideType %>" <%= backgroundStyle%>>
+            <div class="main_wrapper">
+                <div class="slider_swiper_inner parallexIwt summary_div_conts feedback_summary_div_conts">
+                    <section class="container_space addclass_for_padd">
+                        <div class="box_outer_space">
+                            <div class="continent_box_space left_conts_place new_tab_space left">
+                                <div class="continent_box_inner">
+                                    <div class="scroll_padding">
+										<div class="continent_content_inner">  
+											<div class="text_container"> <%= $.trim(data.question) %> </div>
+											<div class="clear"></div>
+											<br/>
+											<div class="text_box_area">
+												<textarea class="valid-activity" data-verbid="<%= TRACK_EVENT[5]["Assignment"].Typing.c_s_VERBID%>" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="" id="txtSummary" disabled><%= $.trim(summaryTxt) %></textarea>
+
+											</div>
+											<div class="feedbackBttn">
+												<button class="button7 btn get_feedback<%= ($.trim(summaryTxt).length != 0)? '': ' btndisabled disabled' %> right valid-activity" data-verbid="<%= TRACK_EVENT[5]["Assignment"].AssignmentButtonClick.c_s_VERBID%>"id="getFeedback">
+													Get Feedback
+												</button>
+											</div>
+											<div class="clear"></div>
+										</div>
+                                    </div>
+
+                                    <div class="edit_box_title paddright">
+                                        <button class="slideCommonSubmitButton button7 btn right<% if (!enableSubmit) { %> btndisabled disabled<% } %> valid-activity"  data-verbid="<%=TRACK_EVENT[5]["Assignment"].AssignmentButtonClick.c_s_VERBID%>" id="btnsubmit_summary">
+											<%=$.trim(ASSIGNMENTS.c_s_SUBMIT_SUMMARY_BTTN)%>
+										</button>
+                                        <button class="button7 btn right" id="btnemail_summary" style="display:none;">
+											<%= $.trim(ASSIGNMENTS.c_s_EMAIL_BTTN) %>
+										</button>
+                                        <button class="button7 btn right" id="btnprint_summary" style="display:none;">
+											<%= $.trim(ASSIGNMENTS.c_s_PRINT_BTTN) %>
+										</button>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="continent_edit_box new_tab_space left_conts_place left summary_right_box">
+                                <div class="middle">
+                                    <div class="continent_wrap_box">
+                                        <div class="continent_conts right_conts_element">
+
+                                            <div class="new_tab_space_title no_select_please"> 
+                                                <div class="right tabbing">
+                                                    <div class="button8 left active" id="instruction_tab"><%=$.trim(ASSIGNMENTS.c_s_INSTRUCTION_TAB_TITLE)%></div>
+                                                    <div class="button8 left" id="feedback_tab" ><%=$.trim(ASSIGNMENTS.c_s_FEEDBACK_TAB_TITLE)%></div>
+                                                    <div class="clear"></div>
+                                                </div>
+                                                <div class="clear"></div>
+                                            </div>
+                                            <div class="new_tab_space_title_tab no_select_please"> 
+                                                    <div class="back_bttn sprite backtoinst" style="display:none;"></div>
+													<div class="back_bttn sprite backtofeedbck" style="display:none;"></div>
+													<div class="back_bttn sprite backtodrill" style="display:none;"></div>
+                                                    <h3 class=""><%=$.trim(ASSIGNMENTS.c_s_INSTRUCTION_TAB_TITLE)%></h3>
+                                                <div class="clear"></div>
+                                            </div>
+                                            <div id="feedback_content" class="no_select_please">
+                                                <div class="new_tab_space_inner"> 
+                                                    <div class="scroller_panel" id="instructionText"><p><%= $.trim(data.text.text) %></p></div>
+                                                </div>
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+                                    </div>
+                                </div>
+								<div class="summaryLoader">
+									<img src="media/loader.gif"/>
+								</div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </section>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </script>
+    <!-- IWTS Summary Slide Ends -->
+    
+    <!-- IWTS Summary Slide Instruction Starts -->
+    <script type="text/template" id="iwtsummaryinstruction">
+    <div class="new_tab_space_inner"> 
+        <div class="scroller_panel" id="instructionText"><p><%= $.trim(data) %></p></div>                                              
+    </div>
+    </script>
+    <!-- IWTS Summary Slide Instruction Ends -->
+    
+    <!-- IWTS Summary Slide Feedback Starts -->
+    <script type="text/template" id="iwtsummaryfeedback">
+		<div id="score_container">
+        <div class="sub_title_space">Overall</div>
+        <div class="feedboxes_spaces">
+			<div class="feedboxes_spaces_rate">
+				<%
+					var score = data.summaryScore.overallScore;					
+					
+					for(var i=1; i<=4; i++)
+					{	
+				%>
+					<div class="scrore<%=i%>"><%=i%></div>
+				<%  
+					}
+				%>                               
+				<div class="clear"></div>
+			</div>
+			<div class="row_boxes_space">
+				<% 
+					for(var b=1; b <= 13; b++)
+					{
+						if(score == 1 && b == 1)
+						{
+							var active = 'active';
+						}
+						else if(score == 2 && b <= 5)
+						{
+							var active = 'active';
+						}
+						else if(score == 3 && b <= 9)
+						{
+							var active = 'active';
+						}
+						else if(score == 4 && b <= 13)
+						{
+							var active = 'active';
+						}
+						else
+						{
+							var active = '';
+						}
+						
+						if(b == 13)
+						{
+							var last = 'last';
+						}
+						else
+						{
+							var last = '';
+						}
+					%>
+						<div class="box_over color_<%= b %> <%= active %> <%= last %>"></div>
+					<%
+					}
+					%>
+				<div class="clear"></div>
+			</div> 
+			<div class="clear"></div>
+		</div>
+		<% if(_.size(data.summaryScore.sections) > 0) {%>
+		<div class="sub_title_space2">
+			<div class="right">Excellent</div>
+			<div class="right catagory_tilt">Fair</div>
+			<div class="right catagory_tilt">Poor</div>
+			<div class="clear"></div>
+		</div>
+		
+		<div class="catagory_section">
+		<% _.each(data.summaryScore.sections, function(section, k){
+			var cnt = k+1;
+			var last = (cnt == _.size(data.summaryScore.sections))?'last':'';			
+		%>
+			<div class="catagory_row <%= last %>">
+				<div class="cat_section left">                                	
+						<%= $.trim(ASSIGNMENTS.c_s_FEEDBACK_SECTION_TXT)+' '+cnt %>
+					<div class="clear"></div>
+				</div>
+				<div class="cat_sound section_<%= k %>">
+					<div class="right"><img src="media/paly_btn.png" class="section_drill img_link" data-val="<%= k %>" data-title="<%= ASSIGNMENTS.c_s_FEEDBACK_SECTION_TXT+' '+cnt %>" width="23" height="23" alt=""></div>
+					<div class="row_boxes_space left">
+						<%
+						for(var b=1; b <= 13; b++)
+						{
+							<!-- CLAS-774 - Summary -->
+							if(typeof section.score === 'undefined') {
+								section.score = section.value;
+							}
+							<!-- End of CLAS-774 - Summary -->
+
+							if(section.score == 1 && b == 1)
+							{
+								var active = 'active';
+							}
+							else if((section.score == 2 || section.score == 3) && b <= 7)
+							{
+								var active = 'active';
+							}
+							else if((section.score == 4 || section.score > 4) && b <= 13)
+							{
+								var active = 'active';
+							}									
+							else
+							{
+								var active = '';
+							}
+							
+							if(b == 13)
+							{
+								var last = 'last';
+							}
+							else
+							{
+								var last = '';
+							}
+						%>
+							<div class="box_over color_<%= b %> <%= active %> <%= last %>"></div>
+						<%
+						}
+						%>					
+						
+						<div class="clear"></div>
+					</div>
+					
+				</div>
+				<div class="clear"></div>
+			</div>
+			
+		<% }); %>
+		<div class="clear"></div>
+		</div>
+		<% } %>
+		<div class="catagory_section">
+			<%
+			var summary = checkData.summary;
+			var sentence = checkData.sentences;
+			
+			if(_.size(checkData.redundancyFeedback) > 0 || IwtsSummaryView.savedDataLoaded == true)
+			{	
+			%>
+			<div class="catagory_row <%= (IwtsSummaryView.savedDataLoaded == true)?'disable-controls':'' %>">
+				<div class="cat_section left"><%=$.trim(ASSIGNMENTS.c_s_REPEATED_IDEAS_TXT)%><div class="clear"></div></div>
+				<div class="cat_sound">
+					<div class="right"><img src="media/paly_btn.png" class="redundancy_drill img_link" width="23" height="23" alt=""></div>
+					<div class="row_boxes_space check left"><%= (IwtsSummaryView.savedDataLoaded == true)?'':ASSIGNMENTS.c_s_CHECK_WORK_TXT %><div class="clear"></div></div>					
+			  </div>
+				<div class="clear"></div>
+			</div>
+			<% }
+			
+			if(_.size(checkData.irrelevancyFeedback) > 0 || IwtsSummaryView.savedDataLoaded == true)
+			{				
+			%>
+			<div class="catagory_row <%= (IwtsSummaryView.savedDataLoaded == true)?'disable-controls':'' %>">
+				<div class="cat_section left"><%=$.trim(ASSIGNMENTS.c_s_UNRELATED_IDEAS_TXT)%><div class="clear"></div></div>
+				<div class="cat_sound">					
+					<div class="right"><img src="media/paly_btn.png" class="irrelevant_drill img_link" width="23" height="23" alt=""></div>
+					<div class="row_boxes_space check left"><%= (IwtsSummaryView.savedDataLoaded == true)?'':ASSIGNMENTS.c_s_CHECK_WORK_TXT %><div class="clear"></div></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<% } 
+			
+			if(_.size(checkData.copyingFeedback) > 0 || IwtsSummaryView.savedDataLoaded == true)
+			{	
+			%>
+			
+			<div class="catagory_row <%= (IwtsSummaryView.savedDataLoaded == true)?'disable-controls':'' %>">
+				<div class="cat_section left"><%=$.trim(ASSIGNMENTS.c_s_COPYING_TXT)%><div class="clear"></div></div>
+				<div class="cat_sound">					
+					<div class="right"><img src="media/paly_btn.png" class="copying_drill img_link"  width="23" height="23" alt=""></div>
+					<div class="row_boxes_space check left"><%= (IwtsSummaryView.savedDataLoaded == true)?'':ASSIGNMENTS.c_s_CHECK_WORK_TXT %><div class="clear"></div></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<% } 
+			
+			if(_.size(checkData.spellingFeedback) > 0 || IwtsSummaryView.savedDataLoaded == true)
+			{				
+			%>			
+			<div class="catagory_row last <%= (IwtsSummaryView.savedDataLoaded == true)?'disable-controls':'' %>">
+				<div class="cat_section left"><%=$.trim(ASSIGNMENTS.c_s_SPELLING_TXT)%><div class="clear"></div></div>
+				<div class="cat_sound">					
+					<div class="right"><img src="media/paly_btn.png" class="spell_drill img_link" width="23" height="23" alt=""></div>
+					<div class="row_boxes_space check left"><%= (IwtsSummaryView.savedDataLoaded == true)?'':ASSIGNMENTS.c_s_CHECK_WORK_TXT %><div class="clear"></div></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<% } %>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+		</div>
+		
+		<% _.each(data.summaryScore.sections, function(section, k){ %>
+		<div class="drill_container" id="drill_container<%=k%>" style="display:none;"> 
+			<div class="hint_tab_space_inner">
+				<div id="drill_hint_txt" class="hint_text_div">
+				<% _.each(section.hints, function(hint, hint_cnt){ 
+					%>
+					<%= hint %><br>
+					<%
+				});
+				%>				
+				<%= (typeof section.hints == 'undefined' || section.hints.length == 0) ? ASSIGNMENTS.c_s_GOOD_JOB_MSG : '' %>				
+				
+				</div>
+			</div>
+			<div class="new_tab_space_inner">
+			<div class="scroller_panel" id="drill_text<%=k%>"><p>&nbsp;</p></div>  
+			</div>
+		</div>
+		<% }); %>
+		
+		<div class="drill_container check_work_drill_container" style="display:none;"> 
+			<div class="hint_tab_space_inner">
+				<div id="chckwrk_drill_hint_txt" class="hint_text_div"></div>
+			</div>
+			<div class="new_tab_space_inner">
+			<div class="scroller_panel" id="chckwrk_drill_text"><p></p></div>
+			<div class="scroller_panel" id="link_text" style="display:none;"><p></p></div>
+			</div>
+		</div>
+    </script>
+    <!-- IWTS Summary Slide Feedback Ends -->
+	
+	<!-- Paragraph Slide Starts -->
+    <script type="text/template" id="paragraphslide">        
+		<%
+		var backgroundStyle = "";
+		if(data.background_image != "" && typeof data.background_image != "undefined"  ){
+			backgroundStyle = 'style="background-image: url(\''+mediaPath  + data.background_image +'\'); background-size:cover;background-repeat:repeat;height:100%"';
+		}
+		
+		var para = "";
+		if(studentAttemptData){			
+			para = (studentAttemptData.itemSlides[0].slideInputData.para) ? decodeURIComponent(studentAttemptData.itemSlides[0].slideInputData.para) : ''; 
+			
+		}
+		%>
+		<div class="swiper-slide backgound_images bg15" reference-key="<%=referenceKey%>" id="<%=referenceKey%>" <%= backgroundStyle%> data-slide-type="<%= slideType %>">
+            <div class="main_wrapper">
+                <div class="slider_swiper_inner summary_div_conts feedback_summary_div_conts without_sliding_top">
+                    <section class="container_space addclass_for_padd">
+                        <div class="box_outer_space">
+                            <div class="continent_box_space left_conts_place new_tab_space left">
+                                <div class="continent_box_inner  paragraph_prompt_slide">
+                                    <div class="scroll_padding">
+                                    <div class="continent_content_inner">
+										<div class="prompt_container">
+											<div class="prompt_text_heading">
+												<div class="cnt_sld left"><%= $.trim(ASSIGNMENTS.c_s_PARAGRAPH_PROMPT_HEADING) %></div>
+												<div class="arrow_pd left"></div>
+												<div class="clear"></div>
+											</div>
+											<div class="clear"></div>
+											<div class="prompt_text_container"><%= $.trim(data.prompt) %></div>
+										</div>
+                                        <div class="clear"></div>
+                                        <div class="text_box_area accordin_slide_open"><textarea autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="" id="txtParagraph" class="valid-activity"><%= $.trim(para) %></textarea></div>
+                                        <div class="feedbackBttn"><button class="button7 btn get_feedback 
+										<%= ($.trim(para) == '')?'btndisabled disabled':'' %> right valid-activity" data-verbid="<%= TRACK_EVENT[5]["Assignment"].AssignmentButtonClick.c_s_VERBID%>" id="getFeedback">Get Feedback</button></div>
+                                        <div class="clear"></div>
+                                    </div>
+                                    </div>
+                                    <div class="edit_box_title paddright">
+                                        <button class="slideCommonSubmitButton button7 btn right <% if (!enableSubmit) { %> btndisabled disabled<% } %> valid-activity" id="btnsubmit_paragraph"><%=$.trim(ASSIGNMENTS.c_s_SUBMIT_GRADING_BTTN)%></button>
+                                        <button class="button7 btn right" id="btnemail_paragraph" style="display:none;"><%=$.trim(ASSIGNMENTS.c_s_EMAIL_PARAGRAPH_BTTN)%></button>
+                                        <button class="button7 btn right" id="btnprint_paragraph" style="display:none;"><%=$.trim(ASSIGNMENTS.c_s_PRINT_ASSIGNMENT_BTTN)%></button>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="continent_edit_box new_tab_space left_conts_place left summary_right_box">
+                                <div class="middle">
+                                    <div class="continent_wrap_box">
+                                        <div class="continent_conts right_conts_element">
+                                            <div class="new_tab_space_title"> 
+                                                <div class="right tabbing">
+                                                    <div class="button8 left active" id="instruction_tab"><%=$.trim(ASSIGNMENTS.c_s_INSTRUCTION_TAB_TITLE)%></div>
+                                                    <div class="button8 left" id="feedback_tab" ><%=$.trim(ASSIGNMENTS.c_s_FEEDBACK_TAB_TITLE)%></div>
+                                                    <div class="clear"></div>
+                                                </div>
+                                                <div class="clear"></div>
+                                            </div>
+                                            <div class="new_tab_space_title_tab"> 
+												<div class="back_bttn sprite backtoinst" style="display:none;"></div>
+												<div class="back_bttn sprite backtofeedbck" style="display:none;"></div>
+												<div class="back_bttn sprite backtodrill" style="display:none;"></div>
+												<h3 class=""><%=$.trim(ASSIGNMENTS.c_s_INSTRUCTION_TAB_TITLE)%></h3>
+                                                <div class="clear"></div>
+                                            </div>
+                                            <div id="feedback_content">
+                                                <div class="new_tab_space_inner"> 
+                                                    <div class="scroller_panel" id="instructionText"><p><%= $.trim(data.text) %></p></div>
+                                                </div>
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+                                    </div>
+                                </div>
+								<div class="summaryLoader">
+									<img src="media/loader.gif"/>
+								</div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </section>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </script>
+    <!-- Paragraph Slide Ends -->
+    
+    <!-- Paragraph Slide Instruction Starts -->
+    <script type="text/template" id="paragraphinstruction">
+    <div class="new_tab_space_inner"> 
+        <div class="scroller_panel paragraph_instructionText" id="instructionText"><p><%= $.trim(data) %></p></div>
+
+    </div>
+    </script>
+    <!-- Paragraph Slide Instruction Ends -->
+    
+    <!-- Paragraph Slide Feedback Starts -->
+    <script type="text/template" id="paragraphfeedback">
+        
+		<div id="score_container">
+			<!--- Overall Starts-->
+			<div class="sub_title_space">Overall</div>
+			<div class="feedboxes_spaces">
+				<div class="feedboxes_spaces_rate">
+<%
+				var score = data.paragraphFeedback.score;
+				for (var i = 1; i <= 4; i++) {	
+%>
+					<div class="scrore<%= i %>"><%= i %></div>
+				<% } %>
+					<div class="clear"></div>
+				</div>
+				<div class="row_boxes_space">
+<% 
+				for (var b = 1; b <= 13; b++) {
+					var last = '',
+						active = '';
+					if (score == 1 && b == 1) {
+						active = 'active';
+					}
+					else if (score == 2 && b <= 5) {
+						active = 'active';
+					}
+					else if (score == 3 && b <= 9) {
+						active = 'active';
+					}
+					else if (score == 4 && b <= 13) {
+						active = 'active';
+					}
+					
+					if (b == 13) {
+						last = 'last';
+					}
+%>
+					<div class="box_over color_<%= b %> <%= active %> <%= last %>"></div>
+				<% } %>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!--- Overall Ends -->
+			
+			<div id="paragraph-score-container">
+				<div class="sub_title_space"><%= ASSIGNMENTS.c_s_PARAGRAPH_TXT %></div>
+				<div class="catagory_section">
+					<!--- Topic Focus -->
+					<div id="topic_focus"></div>
+					
+					<!--- Topic Development -->
+					<div id="topic_development"></div>
+					
+					<!--- Organization -->
+					<div id="organization"></div>	
+				</div>
+				<div class="sub_title_space"><%= ASSIGNMENTS.c_s_SENTENCE_VARIETY_TXT %></div>
+				<div class="catagory_section">
+					<!--- Length -->
+					<div id="length_div"></div>
+					
+					<!--- Beginnings -->
+					<div id="beginnings"></div>
+					
+					<!--- Structure -->
+					<div id="structure"></div>
+				</div>
+				<div class="sub_title_space"><%= ASSIGNMENTS.c_s_WORD_CHOICE_TXT %></div>
+				<div class="catagory_section">
+					<!--- Vague Adjectives -->
+					<div id="vague_adj"></div>
+					
+					<!--- Repeated Words -->
+					<div id="repeated_words"></div>
+					
+					<!--- Pronounce -->
+					<div id="pronounce"></div>
+				</div>
+				<div class="sub_title_space"><%= ASSIGNMENTS.c_s_EDITING_TOOL_TXT %></div>
+				<div class="catagory_section">
+					<!--- Spelling -->
+					<div id="spelling"></div>
+					
+					<!--- Grammar -->
+					<div id="grammar"></div>
+					
+					<!--- Repeated Ideas -->
+					<div id="repeated_ideas"></div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="drill_container" style="display:none;"> 
+			<div class="hint_tab_space_inner">
+				<div id="drill_hint_txt" class="hint_text_div">
+				</div>
+			</div>
+			<div class="new_tab_space_inner">
+				<div class="scroller_panel" id="drill_text"><p></p></div>
+				<div class="scroller_panel" id="link_text" style="display:none;"><p></p></div>
+			</div>
+		</div>
+			
+    </script>
+    <!-- Paragraph Slide Feedback Ends -->
+	
+	<!--- Paragraph Feedback Check Work Template -->
+	<script type="text/template" id="paragraphfeedbackCheck">
+		<% if(_.size(data) > 0){ %>
+		<div class="catagory_row <%= last %>">
+			<div class="cat_section left">
+				<%=$.trim(title)%>
+				<div class="clear"></div>
+			</div>
+			<div class="cat_sound">
+				<div class="right"><img class="<%= drill_class %> img_link" src="media/paly_btn.png" width="23" height="23" alt=""></div>
+				<div class="row_boxes_space check left">
+					<%= msg %>
+				<div class="clear"></div>
+			</div>
+				
+		  </div>
+			<div class="clear"></div>
+		</div>
+		<% } %>
+	</script>
+	
+	<!--- Paragraph Feedback Sub Score Template-->
+	<script type="text/template" id="paragraphfeedbackScore">
+	
+		<% if(_.size(data) > 0){
+			
+			if(rating == ASSIGNMENTS.c_s_FEEDBACK_GOOD || rating == ASSIGNMENTS.c_s_FEEDBACK_RIGHT_IDEAS)
+			{
+				var topic_score = 3;
+			}
+			else if(rating == ASSIGNMENTS.c_s_FEEDBACK_FAIR || rating == ASSIGNMENTS.c_s_FEEDBACK_MANY_IDEAS 
+			|| rating == ASSIGNMENTS.c_s_FEEDBACK_GOOD_VARIETY)
+			{
+				var topic_score = 2;
+			}
+			else if(rating == ASSIGNMENTS.c_s_FEEDBACK_POOR || rating == ASSIGNMENTS.c_s_FEEDBACK_FEW_IDEAS 
+			|| rating == ASSIGNMENTS.c_s_FEEDBACK_POOR_VARIETY)
+			{
+				var topic_score = 1;
+			}
+			
+		%>
+			<div class="catagory_row <%= (rating != "tooFewSentences")?'new_features_numbers':'' %> <%= last %>">
+				<div class="cat_section left">                                	
+						<%= $.trim(title) %>
+					<div class="clear"></div>
+				</div>
+				<div class="cat_sound">
+					<% if(rating != "tooFewSentences")
+					{%>
+					<div class="feedboxes_spaces_rate" style="display: block;">				
+							<div class="scrore1 active">1</div>	
+							<% if(limit == 3) {%>
+							<div class="score_mid active">2</div>						
+							<div class="scrore4 active">3</div>
+							<% }
+							else if(limit == 2)
+							{ %>
+							<div class="scrore4 active">2</div>
+							<%}%>
+						<div class="clear"></div>
+					</div>
+					<% } %>
+					<div class="right"><img src="media/paly_btn.png" class="<%= drill_class %> img_link" width="23" height="23" alt=""></div>
+					<div class="row_boxes_space <%= (rating == "tooFewSentences")?'check':'' %> left">
+					
+						<% 
+							if(rating != "tooFewSentences")
+							{
+								for(var b=1; b <= 13; b++)
+								{
+									if(topic_score == 1 && b == 1)
+									{
+										var active = 'active';
+									}
+									else if(topic_score == 2 && b <= 7 && limit == 3)
+									{
+										var active = 'active';
+									}
+									else if(topic_score == limit && b <= 13)
+									{
+										var active = 'active';
+									}									
+									else
+									{
+										var active = '';
+									}
+									
+									if(b == 13)
+									{
+										var last = 'last';
+									}
+									else
+									{
+										var last = '';
+									}
+								%>
+									<div class="box_over color_<%= b %> <%= active %> <%= last %>"></div>
+								<%
+								}
+							}
+							else
+							{
+							%>
+								<span class="span_red"><%= ASSIGNMENTS.c_s_FEEDBACK_FEW_SENTENCES_LBL %></span>
+							<% } %>							
+					
+						<div class="clear"></div>
+					</div>
+					
+				</div>
+				<div class="clear"></div>
+			</div>
+			
+		<% } %>
+		<div class="clear"></div>						
+	</script>
+	
+    <!-- iwthighlightslide Template -->
+	<script type="text/template" id="iwthighlightslide">
+<%
+			var backgroundStyle = "";
+			if(data.background_image != "" && typeof data.background_image != "undefined"  ){
+				backgroundStyle = 'style="background-image: url(\''+mediaPath  + data.background_image +'\'); background-size:cover;background-repeat:no-repeat;height:100%"';
+			}
+			var hightlightHTMLContent = null;
+			if (data.single_word_highlight == true) {
+				hightlightHTMLContent = returnWordSelectionTxt(data.interactive_text);
+			}
+			else {
+				hightlightHTMLContent = returnSentenceSelectionTxt(data.interactive_text);
+			}
+			
+%>
+			<div class="swiper-slide backgound_images bg15" reference-key="<%= referenceKey %>" data-slide-type="<%= slideType %>" id="<%= referenceKey %>" <%= backgroundStyle %>>
+            <div class="main_wrapper no_select_please">
+                <div class="slider_swiper_inner parallexIwt slide_with_bg_image">
+                    <section class="container_space addclass_for_padd">
+                        <div class="box_outer_space">
+                            <div class="continent_box_space left  swiper-no-swiping">
+                                <div class="continent_box_inner">
+                                    <div class="scroll_padding">
+										<div class="continent_content_inner rangySelection">
+											<%= hightlightHTMLContent%>
+											<div class="clear"></div>
+										</div>
+                                    </div>
+									<div class="clear"></div>
+                                    <div class="edit_box_title">
+                                        <button class="button7 btn <%=ASSIGNMENTS.c_s_ASSIGN_READ_CHKPNT_BTN_SELECTOR%> valid-activity" data-verbid="<%=TRACK_EVENT[5]["Assignment"].AssignmentButtonClick.c_s_VERBID%>" id="<%= readingCheckPointButtonId %>"><%=$.trim(ASSIGNMENTS.c_s_READ_CHECKPOINT_BTN_TXT)%></button>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="continent_edit_box hidden left">
+                                <div class="middle">
+                                    <div class="continent_wrap_box">
+                                        <div class="continent_conts no_select_please">
+                                            <div class="highlight_fail_again_text"><%=data.fail_again_text%></div>
+                                            <div class="highlight_fail_text"><%=data.fail_text%></div>
+                                            <div class="highlight_pass_text"><%=data.pass_text%></div>
+                                            <div class="highlight_instrction"><%=data.question%></div>
+                                            
+                                            <div class="clear"></div>
+                                        </div>
+                                    </div>
+                                    <div class="edit_box_title">                                        
+                                        
+                                        <div class="edit_icon_space right">
+                                            <%
+											
+											$.each(data.highlights, function(idx, val){
+												
+												if(val.color.toLowerCase() == 'y'){
+													var colorBtn = ASSIGNMENTS.c_s_RANGY_YELLOW_COLOR;
+													var colorMarker = ASSIGNMENTS.c_s_RANGY_YELLOW_MARKER;
+													correctIndex = val.color.toLowerCase()+"-"+val.index+"-"+val.length;
+												}else{
+													var colorBtn = ASSIGNMENTS.c_s_RANGY_RED_COLOR;
+													var colorMarker = ASSIGNMENTS.c_s_RANGY_RED_MARKER;
+													correctIndex = val.color.toLowerCase()+"-"+val.index+"-"+val.length;
+												}
+												/*
+												var correctAnswer = getParticularString(stripHtmlTagsFromString(data.interactive_text), val.index, (parseInt(val.index)+parseInt(val.length)));*/
+												
+												
+												
+											%>
+											<button correct-answer="<%=correctIndex%>" class="icon_edit left <%=colorBtn + " " + colorMarker%> sprite2 btn valid-activity" data-verbid="<%=TRACK_EVENT[5]["Assignment"].AssignmentButtonClick.c_s_VERBID%>"></button>
+											<%
+											
+											});
+											%>
+                                            <!-- <button class="icon_edit left yellow yellowMarkar sprite2 btn"></button> -->
+											<button class="icon_edit left eraser markarEraser sprite2 btn valid-activity" data-verbid="<%=TRACK_EVENT[5]["Assignment"].AssignmentButtonClick.c_s_VERBID%>"></button>
+											<button class="slideCommonSubmitButton button7 btn <%= ASSIGNMENTS.c_s_HIGHLIGHT_SUBMIT_BTN_SELECTOR %> valid-activity" data-verbid="<%=TRACK_EVENT[5]["Assignment"].AssignmentButtonClick.c_s_VERBID%>" ><%=ASSIGNMENTS.c_s_SAVE_N_CONT_BTTN%></button>
+										</div>
+										
+                                        <div class="clear"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </section>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </script>
+    <!-- End of iwthighlightslide Template -->
+
+    <!-- iwttextanswerslide Template -->
+    <script type="text/template" id="iwttextanswerslide">
+            <%
+			var backgroundStyle = "";
+			if(data.background_image != "" && typeof data.background_image != "undefined"  ){
+				backgroundStyle = 'style="background-image: url(\''+mediaPath  + data.background_image +'\'); background-size:cover;background-repeat:no-repeat;height:100%"';
+			}
+			%>
+            <div class="swiper-slide backgound_images bg14" data-slide-type="<%= slideType %>" reference-key="<%=referenceKey%>" id="<%=referenceKey%>" <%=backgroundStyle%>>
+			<div class="main_wrapper">
+                <div class="slider_swiper_inner parallexIwt <%= (data.static_text != "")?'slide_with_bg_image':'' %>">
+                    <section class="container_space addclass_for_padd">
+                        <div class="box_outer_space">
+                            <div class="continent_box_space left">
+                                
+                                <div class="continent_box_inner">
+                                    <div class="scroll_padding">
+										<% if(stripHtmlTagsFromString(data.static_text) != ""){ %>
+										<div class="continent_content_inner">
+											<%= data.static_text %>
+											<div class="clear"></div>
+										</div>
+										<% }else if(stripHtmlTagsFromString(data.interactive_text) != ""){ %>
+										<div class="continent_content_inner">
+											<%= data.interactive_text %>
+											<div class="clear"></div>
+										</div>
+										<% }else{ %>
+										<div class="continent_content_inner input_type_text_slide_left_container">
+											<div class="question_area_div"><%= data.question %></div>
+											<div class="text_box_area"><textarea class=" input_type_text_slide_left_txtarea valid-activity" data-verbid="<%=TRACK_EVENT[5]["Assignment"].Typing.c_s_VERBID%>" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="" class="input_type_text_slide_left_txtarea" disabled></textarea></div>
+											<div class="clear"></div>
+										</div>
+										<div class="edit_box_title">
+											<button data-verbid="<%=TRACK_EVENT[5]["Assignment"].AssignmentButtonClick.c_s_VERBID%>" class="button7 btn <%=ASSIGNMENTS.c_s_ASSIGN_IWT_TXT_ANSWER_SUBMIT_BTN_SELECTOR%> valid-activity"><%=ASSIGNMENTS.c_s_SUBMIT_IWT_BTTN%></button>
+											<div class="clear"></div>
+										</div>
+										<% }%>
+                                    </div>
+                                    <div class="clear"></div>
+                               </div>
+                            </div>
+                            <% if(data.static_text == ""){ %>
+                            <div class="continent_edit_box hidden left">
+                                <div class="middle">
+                                    <div class="continent_wrap_box">
+                                        <div class="continent_conts">
+                                            <p>
+<%
+												if (
+													typeof data.pass_text == 'undefined' ||
+													data.pass_text == null ||
+													data.pass_text.trim().length == 0
+												) {
+%>
+												<%= ASSIGNMENTS.c_s_SUBMIT_SUCCESS_MSG %>
+<%													
+												}
+												else {
+%>
+												<%= data.pass_text %>
+<%												
+												}
+%>
+											</p>
+                                            <div class="clear"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }%>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </section>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </script>
+    <!-- End of iwttextanswerslide Template -->
+	
+	<script type="text/template" id="infoPhonicData">
+	<%=data%>
+
+	</script>
+	
+	<script type="text/template" id="infoIWTData">
+	<%=data%>
+
+	</script>
+
+	<script type="text/template" id="infoRotatingTemplate">
+		<%=data%>	
+	</script>
+	
+	<!-- iwtdndslide Template -->
+    <script type="text/template" id="iwtdndslide">        
+<%
+			var backgroundStyle = "";
+			if(data.background_image != "" && typeof data.background_image != "undefined"  ){
+				backgroundStyle = 'style="background-image: url(\''+mediaPath  + data.background_image +'\'); background-size:cover;background-repeat:no-repeat;height:100%"';
+			}
+%>
+		<div class="swiper-slide backgound_images bg14" data-slide-type="<%= slideType %>" reference-key="<%=referenceKey%>" id="<%=referenceKey%>" <%=backgroundStyle%>>
+			<div class="main_wrapper no_select_please">
+                <div class="slider_swiper_inner parallexIwt slide_with_bg_image"><!--  style="width:752px;left:43%" -->
+                    <section class="container_space addclass_for_padd">
+                        <div class="box_outer_space">
+                            <div class="continent_box_space left swiper-no-swiping"><!--  style="width:400px;" -->
+								<div class="continent_box_inner">
+									<div class="continent_content_inner draggable_area">
+										<%= data.interactive_text %>
+										<div class="clear"></div>
+									</div>
+									<div class="edit_box_title">
+										<button class="button7 btn <%=ASSIGNMENTS.c_s_ASSIGN_READ_CHKPNT_BTN_SELECTOR%> valid-activity"><%=$.trim(ASSIGNMENTS.c_s_READ_CHECKPOINT_BTN_TXT)%></button>
+										<div class="clear"></div>
+									</div>
+								</div>                
+								<div class="clear"></div>
+							</div>
+							<div class="continent_edit_box hidden left"><!--  style="width:355px;" -->
+								<div class="middle">
+									<div class="continent_wrap_box">
+										<div class="continent_conts no_select_please">
+											<div class="drag_text_area_container">
+												<div class="overflow-auto">
+													<div class="dropbox_fail_again_text no_select_please"><%= data.fail_again_text %></div>
+													<div class="dropbox_fail_text no_select_please"><%= data.fail_text %></div>
+													<div class="dropbox_pass_text no_select_please"><%= data.pass_text %></div>
+													<div class="dropbox_instrction no_select_please">
+<%
+														if (
+															typeof data.questions == 'object' &&
+															data.questions instanceof Array &&
+															data.questions.length > 0
+														) {
+%>														
+															<%= data.questions[0].question %>
+														<% } %>
+													</div>
+												</div>
+												<div class="dropbox"><%= ASSIGNMENTS.c_s_DND_DROPPABLE_DEFAULT_TEXT %></div>
+											</div>                    
+											<div class="clear"></div>
+										</div>
+									</div>
+									<div class="edit_box_title">
+<%
+										var iIndex = 0, iLength = 0;
+										if (
+											typeof data.questions == 'object' &&
+											data.questions instanceof Array &&
+											data.questions.length > 0
+										) {
+											iIndex = data.questions[0].index;
+											iLength = data.questions[0].length;
+										}
+%>									
+										<button data-verbid="<%=TRACK_EVENT[5]["Assignment"].AssignmentButtonClick.c_s_VERBID%>" class="slideCommonSubmitButton button7 btn dndSubmitButton valid-activity" <%= ASSIGNMENTS.c_s_SLIDE_SUBMIT_BTN_CORRECT_ANS_IDX%>="<%= iIndex + "|" + iLength %>" <%= ASSIGNMENTS.c_s_SLIDE_SUBMIT_BTN_CNT_CHK_ATTR%>="<%= ASSIGNMENTS.c_s_DND_SUBMIT_COUNTER_CHECK%>"><%=$.trim(ASSIGNMENTS.c_s_SAVE_N_CONT_BTTN)%></button>
+                                        <div class="clear"></div>
+                                    </div>
+								</div>
+							</div>
+							<div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </section>
+					<div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </script>
+    <!-- End of iwtdndslide Template -->
+	
+	<!-- multiplechoiceslide Template -->
+    <script type="text/template" id="multiplechoiceslide">
+		
+		<div class="swiper-slide backgound_images assignment_slider_wrapper" reference-key="<%= referenceKey %>" id="<%= referenceKey %>" data-slide-type="<%= data.type %>">
+            <div class="main_wrapper">
+                <div class="gradient new_assignment_view multiple_choice_questions">
+                    <div class="slider_swiper_inner">
+                        <section class="container_space addclass_for_padd" role="tabpanel">
+							<div class="study_plain_title"> <%= data.page_title %></div>
+								<div class="multiplechoiceslide media_content" >
+								<!-- display new content audio and text -->
+								<% if(data.instructional_audio){ %>
+								<div class="audioPlayer outer">
+									 <audio id="player_<%= partIdx %>" class="player valid-activity" controls="false" data-verbid="<%=TRACK_EVENT[5].Assignment['Audioplayed'].c_s_VERBID%>">
+									  <!-- Your browser does not support the <code>audio</code> element. -->
+									  <source src="<%= mediaPath+data.instructional_audio %>" type="audio/mp3">
+									 </audio>
+									 <span data-slide-idx="<%= partIdx %>" class="playPauseButton sprite2"></span>
+								 </div>
+								 <% } %>
+								 
+								 <% if(data.instructional_text){ %>
+								<p><%=data.instructional_text%></p>
+								<% } %>
+								</div>
+								<!-- end display new content audio and text -->
+							
+							<div class="qurstion_group multiple_choice_questions_container">
+								<div class="swiper-scrollbar">
+<%
+									$.each(data.questions, function(quesIdx, quesVal) {
+										var iAnswerIndex = -1,
+											sQuestionId = quesVal.question_id;
+										if (typeof savedData[sQuestionId] != "undefined") {
+											iAnswerIndex = savedData[sQuestionId]["answerIndex"];
+										}
+%>								
+									<div class="natural_box_space margin_top">
+										<!-- CLAS-99 -->
+										<!-- <div class="question_box_space"> -->
+										<div id="<%= sQuestionId %>" class="question_box_space" >
+										<!-- End of CLAS-99 -->
+											<div class="new_assignment_title">
+													<!-- <div class="correct sprite" style="display:none;"></div>
+													<div class="incorrect sprite" style="display:none;"></div> -->
+												
+<%
+												var sQuestionText = $.trim($("<div/>").html(quesVal.content).text());
+												if (sQuestionText.match(/^[0-9]+\./)) {
+%>
+													<%= quesVal.content %>
+													
+													<!-- display new content audio and image -->
+													<div class="multiplechoiceslide media_content inner" >
+													<% 
+													function displayData(exclusiveToIlit20){
+														if(exclusiveToIlit20){
+															if(isIlit20 || ShowGradeExamWithAllMedia){
+																return true;
+															}		
+															return false;
+														}	
+														return true;	
+													}
+													
+													if(displayData((typeof quesVal.instructional_audio_exclusive_to_ilit20 != 'undefined') ? quesVal.instructional_audio_exclusive_to_ilit20 : false)){
+														if(quesVal.instructional_audio){ 
+														
+														%>
+														<div class="audioPlayer">
+															 <audio id="player_<%= partIdx %>" class="player valid-activity" controls="false" data-verbid="<%=TRACK_EVENT[5].Assignment['Audioplayed'].c_s_VERBID%>">
+															  <!-- Your browser does not support the <code>audio</code> element. -->
+															  <source src="<%= mediaPath+quesVal.instructional_audio %>" type="audio/mp3">
+															 <% 
+																if(quesVal.instructional_audio_description_file){		
+															  %>
+															  <!-- src="<%= mediaPath+quesVal.instructional_audio_description_file %>" -->
+															  <track   id="track_<%= partIdx %>"   src="<%= mediaPath+quesVal.instructional_audio_description_file %>"  label="English Captions" kind="subtitles" srclang="en-us" default="">		
+															<% } %>
+															 </audio>
+															 <span data-slide-idx="<%= partIdx %>" class="playPauseButton sprite2"></span>
+															 <%
+															 if(quesVal.instructional_audio_description_file){
+															 %>
+															 <p id="showText_<%= partIdx %>" style="display:none" class="transcript"></p>
+															 <% } %>
+														 </div>
+														 
+														 <% 
+														   
+														 } 
+													 }
+													 %>
+													 
+													 <% 
+													 if(displayData((typeof quesVal.image_exclusive_to_ilit20 != 'undefined') ? quesVal.image_exclusive_to_ilit20 : false)){
+														if(quesVal.image){ 
+														%>
+														<img src="<%= mediaPath+quesVal.image %>" alt="<%= quesVal.image_alternative_text != null ? quesVal.image_alternative_text : 'No Alt Text'%>"/>
+														<% 
+														} 
+													}
+													%>
+													</div>
+													<!-- end display new content audio and image -->
+												<%
+												}
+												else {
+													quesVal.content = chopEmptyElements(quesVal.content);
+													var s1stTag = get1stHTMLTag(quesVal.content),
+														sHtml = quesVal.content.replace(s1stTag, s1stTag + quesIdx + ". ");
+	%>
+													<%= sHtml %>
+	<%
+												}
+	%>
+												<div class="correct sprite" style="display:none;"></div>
+												<div class="incorrect sprite" style="display:none;"></div>
+												<!-- Change By Sourish -->
+											</div>
+											<div class="new_assignment_irr">
+												<ul class="question_part multiple_choice_ul" data-question-id="<%= sQuestionId %>">
+													<% $.each(quesVal.answers, function(ansIdx, ansVal) { %>
+													<li data-is-correct="<%= ansVal.is_correct %>"<% if (ansIdx == iAnswerIndex) { %> class="active valid-activity"<% } else { %> class="valid-activity" <% } %> id="<%= sQuestionId %>-<%= ansIdx %>" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentAnswerSelect'].c_s_VERBID%>">
+														<div style="display:none;" class="correct sprite"></div>
+														<div style="display:none;" class="incorrect sprite"></div>
+														<div class="answer_key left"><%= GENERAL.c_s_ALPHABET_ORDER[ansIdx] %></div>
+														<div class="middle"><%= ansVal.answer_text_html%></div>
+														<div class="clear"></div>
+													</li>
+													<% }); %>
+												</ul>
+												<div class="clear"> </div>
+											</div>
+											<div class="assignment_report_box" style="display:none;"><%= quesVal.subskill %></div>
+											<div class="clear"> </div>
+										</div>
+									</div>								
+									<div class="clear"> </div>
+									<% });%>
+								</div>
+							</div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </script>
+	<!-- End of multiplechoiceslide Template -->
+	
+	
+	<!-- Start of multichoicepassageslide slide -->
+	<script type="text/template" id="multichoicepassageslide">
+		<div class="swiper-slide backgound_images assignment_slider_wrapper" reference-key="<%=referenceKey%>" id="<%=referenceKey%>" data-slide-type="<%= data.type %>">
+            <div class="main_wrapper">
+                <div class="gradient multiple_choice_questions new_assignment_view">
+                    <div class="slider_swiper_inner">
+                        <section class="container_space addclass_for_padd" role="tabpanel">
+                            <div class="study_plain_title"><%= data.page_title%></div>
+								<div class="multichoicepassageslide media_content" >
+									<% if(instructional_audio){ %>
+										<div class="audioPlayer">
+										 <audio id="player_<%= partIdx %>" class="player" controls="false" >
+										  <!-- Your browser does not support the <code>audio</code> element. -->
+										  <source src="<%= mediaPath+instructional_audio %>" type="audio/mp3">
+										 </audio>
+										 <span data-slide-idx="<%= partIdx %>" class="playPauseButton sprite2"></span>
+										</div>
+									<% } %>
+								</div>
+							<!-- <div class="view_place_scd">what you are reading better to understand what you are reading better</div> -->
+							<div class="assignment_guide_unit passage_slide_padding">
+								<div class="vocabillery_view_page">
+									<div class="vocabillery_view_page_content assessment_multi_passage">
+										<div class="theme_content assessment_multi_passage study_plan_practice_ques_container">
+											<%= data.passage %>
+										</div>
+									</div>
+									<div class="clear"></div>	
+								</div>
+								<div class="natural_box_space natural_box_space_right_group assessment_multi_passage">
+									<div class="swiper-scrollbar">
+<%
+										$.each(data.multi_slide.questions , function(quesIdx, quesVal) {
+											var iAnswerIndex = -1,
+												sQuestionId = quesVal.question_id;
+											if (typeof savedData[sQuestionId] != "undefined") {
+												iAnswerIndex = savedData[sQuestionId]["answerIndex"];
+											}
+%>
+										<!-- CLAS-99 -->
+										<!-- <div class="question_box_space"> -->
+										<div id="<%= sQuestionId %>" class="question_box_space">
+										<!-- End of CLAS-99 -->
+											<div class="new_assignment_title">
+												
+												<div class="middle">
+<%
+												if ($.trim($("<div/>").html(quesVal.content).text()).match(/^[0-9]+\./)) {
+%>
+													<%= quesVal.content %>
+													
+													<!-- display new content audio and image -->
+													<!-- <div class="multichoicepassageslide media_content inner" >
+													<% 
+													function displayData(exclusiveToIlit20){
+														if(exclusiveToIlit20){
+															if(isIlit20 || ShowGradeExamWithAllMedia){
+																return true;
+															}		
+															return false;
+														}	
+														return true;	
+													}
+
+													if(displayData((typeof quesVal.instructional_audio_exclusive_to_ilit20 != 'undefined') ? quesVal.instructional_audio_exclusive_to_ilit20 : false))
+													{
+														if(quesVal.instructional_audio != '')
+														{ 
+														
+														%>
+														<div class="audioPlayer">
+															 <audio id="player_<%= partIdx %>" class="player" controls="false" >
+															  Your browser does not support the <code>audio</code> element.
+															  <source src="<%= mediaPath+quesVal.instructional_audio %>" type="audio/mp3">
+															 </audio>
+															 <span data-slide-idx="<%= partIdx %>" class="playPauseButton sprite2"></span>
+														 </div>
+														 <% 
+														 } 
+													 }
+													 %>
+													 
+													 <% 
+													 if(displayData((typeof quesVal.image_exclusive_to_ilit20 != 'undefined') ? quesVal.image_exclusive_to_ilit20 : false))
+													 {
+														if(quesVal.image != '')
+														{ 
+														%>
+														<img src="<%= mediaPath+quesVal.image %>" />
+														<% 
+														} 
+													}
+													%> 
+													</div> -->
+													<!-- end display new content audio and image -->
+													
+													
+<%
+												}
+												else {
+													quesVal.content = chopEmptyElements(quesVal.content);
+													var s1stTag = get1stHTMLTag(quesVal.content),
+														sHtml = quesVal.content.replace(s1stTag, s1stTag + quesIdx + '. ');
+%>
+													<%= sHtml %>
+<%
+												}
+%>
+												</div>
+												<div class="right" style="width:30px; height:100%">
+													<div class="correct sprite" style="display:none;"></div>
+													<div class="incorrect sprite" style="display:none;"></div>
+												</div>
+											</div>
+											<div class="new_assignment_irr">
+												<ul class="question_part multiple_choice_ul" data-question-id="<%= sQuestionId %>">
+													<% $.each(quesVal.answers, function(ansIdx, ansVal) { %>
+													<li data-is-correct="<%= ansVal.is_correct %>"<% if (ansIdx == iAnswerIndex) { %> class="active valid-activity"<% } else { %> class="valid-activity" <% } %> id="<%= sQuestionId %>-<%= ansIdx %>" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentAnswerSelect'].c_s_VERBID%>">
+														<div style="display:none;" class="correct sprite"></div>
+														<div style="display:none;" class="incorrect sprite"></div>
+														<div class="answer_key left"><%= GENERAL.c_s_ALPHABET_ORDER[ansIdx] %></div>
+														<div class="middle"><%= ansVal.answer_text_html%></div>
+														<div class="clear"></div>
+													</li>
+													<% }); %>
+												</ul>
+												<div class="clear"> </div>
+											</div>
+											<div class="assignment_report_box" style="display:none;">This is skill name</div>
+											<div class="clear"> </div>
+										</div>
+									<% }); %>
+									</div>
+								</div>
+								<div class="clear"> </div>
+							</div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </script>
+	<!-- End of multichoicepassageslide slide -->
+	
+
+	<!-- Study Plan Pre/Post Test Template -->
+	<script type="text/template" id="study_plan_pre_post_template">
+	<%
+		/*var backgroundStyle = "";
+		if (data.background_image != "" && typeof data.background_image != "undefined") {
+			backgroundStyle = 'style="background-image: url(\''+mediaPath  + data.background_image +'\'); background-size:cover;background-repeat:no-repeat;height:100%"';
+		}*/
+	%>
+		<div class="swiper-slide backgound_images" reference-key="<%= referenceKey %>" id="<%= referenceKey %>" data-slide-type="<%= slideType %>">
+			<!-- <div class="" ></div> -->
+            <div class="main_wrapper">
+				<div class="slider_swiper_inner slider_study_plain">
+					<div class="study_plain_container assignment_slider_wrapper">
+<%
+						$.each(data, function(idx, val) {
+							var iPartId = (
+									(aMatches = val.page_title.match(/^(Skill|skill)\s*(\d+):.*/)) != null?
+									aMatches.fetch(2) || val.skill_sequence || idx:
+									val.skill_sequence || idx
+								);
+%>
+						<div class="study_plain_title" data-skill-id="<%= val.subskill %>" data-part-id="<%= iPartId %>">
+							Part <%= idx %>: <%= val.page_title %>
+						</div>
+						<div class="natural_box_space">
+							<div class="view_place_scd"><%= val.instructional_text %></div>
+<%
+							$.each(val.questions, function(quesIdx, quesVal) {
+%>
+							<div class="question_box_space" data-question-id="<%= quesVal.question_id %>" data-skill-id="<%= val.subskill %>" data-part-id="<%= iPartId %>">
+								<div class="study_question_title"><%= quesVal.content %></div>
+								<div class="new_assignment_irr">
+									<ul class="question_part" data-skill-id="<%= val.subskill %>">
+<%
+									$.each(quesVal.answers, function(ansIdx, ansVal) {
+										var sActiveClass = '';
+										
+										/*
+										if (val.subskill in oStudentAttemptData) {
+											if (quesVal.question_id in oStudentAttemptData[val.subskill]) {
+												if (oStudentAttemptData[val.subskill][quesVal.question_id]['answerIndex'] == ansIdx) {
+													sActiveClass = ' class="active"';
+												}
+											}
+										}
+										*/
+										
+										for (var sSkillId in oStudentAttemptData) {
+											if (['completed', 'finished'].indexOf(sSkillId.toLowerCase()) != -1) {
+												continue;
+											}
+											
+											for (sQuestionId in oStudentAttemptData[sSkillId]) {
+												if (['totalscore', 'score', 'done'].indexOf(sQuestionId.toLowerCase()) != -1) {
+													continue;
+												}
+												if (quesVal.question_id == sQuestionId) {
+													if (oStudentAttemptData[sSkillId][sQuestionId].answerIndex == ansIdx) {
+														sActiveClass = ' class="active"';
+														break;
+													}
+												}
+											}
+											
+											if (sActiveClass.length > 0) {
+												break;
+											}
+										}
+%>
+										<li data-correct="<%= ansVal.is_correct %>"<%= sActiveClass %> data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentAnswerSelect'].c_s_VERBID%>" class="valid-activity">
+											<div class="sprite"></div>
+											<div class="answer_key left"><%= GENERAL.c_s_ALPHABET_ORDER[ansIdx] %></div>
+											<div class="middle"><%= ansVal.answer_text_html%></div>
+											<div class="clear"></div>
+										</li>
+									<% }); %>
+									</ul>
+									<div class="clear"> </div>
+								</div>
+								<div class="clear"> </div>
+							</div>
+							<% }); %>
+							<div class="clear"></div>
+						</div>
+						<div class="clear"></div>
+						<% }); %>
+					</div>
+					<div class="studyplan_footer assessment_pagination">
+						<div class="pagination_footer pagination_footer_part assign_teacherview" id="<%= ASSIGNMENTS.c_s_DIV_STUDY_PLAN_SHOW_SCORE_ID %>">
+							<button class="button7 btn right valid-activity" id="<%= ASSIGNMENTS.c_s_BTN_STUDY_PLAN_SUBMIT_ANSWER_ID %>" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"><%= ASSIGNMENTS.c_s_SUBMIT_ANSWERS_BTTN %></button>
+							<div class="clear"></div>
+						</div>
+					</div>
+					<% /* %>
+					<div class="pagination_footer pagination_footer_part pre_post_tpl_submit_btn" style="position:fixed; bottom:0px; width:100%; background: #FFFFFF;">
+						<button class="button7 btn right" style="margin-right:15px;"><%= ASSIGNMENTS.c_s_SUBMIT_ANSWERS_BTTN %></button>
+						<div class="footer_partmiddle middle">
+							<div class="footer_partmiddle_area">  </div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<% */ %>
+				</div>
+			</div>
+            <div class="clear"></div>
+        </div>
+    </script>
+	<!-- End of Study Plan Pre/Post Test Template -->
+	
+	
+	
+	<!-- Start of Study Plan Practice Template -->
+	
+	<!-- study plan practice popup template -->
+	<script type="text/template" id="studyPlan_practice_popup_tpl">
+		<div class="overley"></div>
+		<div class="slide_upload_light_box" role="dialog">
+			<button tabindex="0" aria-label="Close Button" role="button" class="light_box_close sprite"></button>					
+			<div class="light_box_content">			
+			<% 
+			var cnt = 0;
+			_.each(data, function(obj, key){
+				cnt++;
+				if(cnt > 1)
+				{
+					%>
+					<br><div class="borderline"></div><br>
+					<%
+				}
+			%>			
+				<h3><%= obj.page_title %></h3>
+				
+				<% _.each(obj.questions, function(qobj, qkey){ %>				
+				
+				<%= qobj.content %>
+				
+				<div class="question_box_space">
+					<div class="new_assignment_irr">
+						<ul class="question_part" id="ques_part_<%= key %>_<%= qkey %>">
+							<%
+							var num = 64;
+							var cnta = 0;
+							_.each(qobj.answers, function(ans, akey) {
+								num++;
+								cnta++;
+								var magin_none = (cnta == _.size(qobj.answers))?'class="margin_none"':'';
+							%>
+							<li <%= magin_none %> data-correct="<%= (ans.is_correct === true)?'true':'false' %>" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentAnswerSelect'].c_s_VERBID%>" class="valid-activity">
+								<div class="correct sprite" style="display:none;"></div>
+								<div class="incorrect sprite" style="display:none;"></div>
+								<div class="answer_key left"><%= String.fromCharCode(num) %></div>
+								<div class="middle"><%= ans.answer_text_html %></div>
+								<div class="clear"></div>
+							</li>
+							<% }); %>							
+						</ul>
+						<div class="clear"> </div>
+						<div class="additional_txt" id="additional_txt_<%= key %>_<%= qkey %>" style="display:none;">
+						<%
+						var ans_content = _.where(qobj.answers, {'is_correct' : true});						
+						%>						
+						<%= ans_content[0].additional_information_html %>
+						</div>
+					</div>
+					<div class="clear"> </div>
+				</div>
+				<div class="clear"></div>
+				<%
+					});
+				}); 
+				%>
+				<div class="clear"></div>
+			</div>
+			
+			<div class="clear"></div>
+		</div>
+	
+	</script>
+	
+	<!-- study plan practice header -->
+	<script type="text/template" id="studyPlan_practice_header_tpl">
+<%
+	for (var iIndex = 0; iIndex < aHeaderContent.length; iIndex++) {
+		var oHeaderContent = aHeaderContent[iIndex],
+			tabClass = "",
+			sSkillId = oHeaderContent.skillId,
+			iPartId = oHeaderContent.partId,
+			iOrigPartId = oHeaderContent.origPartId,
+			sNumberClass = (
+				(oHeaderContent.completed || false)?
+				' done':
+				''
+			);
+			
+		if (iIndex == 0) {
+			tabClass = ' first';
+		}
+		if (iIndex == (aHeaderContent.length - 1)) {
+			tabClass = ' last';
+		}
+
+%>
+		<div data-skill-id="<%= sSkillId %>" id="<%= sSkillId %>___<%= iPartId %>" class="tabs_number<%= tabClass %> valid-activity" data-part-id="<%= iOrigPartId %>" tabindex="0" tabindex="0" role="button" aria-pressed ="false" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">
+			<span class="no_text sprite3<%= sNumberClass %>"> <%= (iIndex + 1).toString() %> </span>
+			<span class="page_arrow_s"></span>
+		</div>
+<%
+	}
+%>
+	</script>
+	
+	<!-- Study plan practice MCQ question -->
+	<script type="text/template" id="studyPlan_practice_mcq_question_tpl">
+		<div class="question_box_space swiper-slide" data-skill-id="<%= skillId %>" page-title="<%= pageTitle %>" context-clue-ref="<%= contextClueRef %>" data-question-id="<%= question.question_id %>" data-part-id="<%= partId %>">
+			<div class="studyPlan_practice_mcq_wrapper <%= ASSIGNMENTS.c_s_CSS_NOT_COMPLETED %>">
+				<div class="study_question_title"><%= question.content %></div>
+				<div class="study_question_mcq_content"><%= instructionalText %></div>
+				<div class="new_assignment_irr new_assignment_irr_sp_mcq">
+					<ul class="question_part">
+<%
+						$.each(question.answers, function(ansIdx, ansVal) {
+							if ((ansIdx + 1) == question.answers.length) {
+								lastClassName = "margin_none";
+							}
+%>
+						<li data-correct="<%= ansVal.is_correct %>" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentAnswerSelect'].c_s_VERBID%>" class="valid-activity">
+							<div class="correct sprite" style="display:none;"></div>
+							<div class="incorrect sprite" style="display:none;"></div>
+							<div class="answer_key left"><%= GENERAL.c_s_ALPHABET_ORDER[ansIdx] %></div>
+							<div class="middle"><%= ansVal.answer_text_html %></div>
+							<div class="clear"></div>
+						</li>
+<%
+						});
+%>
+					</ul>
+					<div class="clear"> </div>
+<%
+						sDisabledStr = ' disabled="disabled"';
+						sButtonClass = ' disabled btndisabled';
+						if (includeSubmitButton) {
+							if (enableSubmitButton) {
+								sDisabledStr = '';
+								sButtonClass = '';
+							}
+%>
+					
+					<div class="pagination_footer pagination_footer_part assign_teacherview" id="<%= ASSIGNMENTS.c_s_DIV_STUDY_PLAN_SHOW_SCORE_ID %>">
+						<button class="button7 btn right<%= sButtonClass %> practice_done_bttn valid-activity" id="<%= ASSIGNMENTS.c_s_BTN_STUDY_PLAN_SUBMIT_ANSWER_ID %>"<%= sDisabledStr %>  data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">
+							<%= ASSIGNMENTS.c_s_TYPE_TPL_STUDY_PLAN_PRACTICE_DONE_TXT %>
+						</button>
+					</div>
+<%
+						}
+%>					
+				</div>
+				<div class="clear"> </div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</script>
+	
+	<!-- Study Plan Practice Video -->
+	<script type="text/template" id="studyPlan_practice_video_tpl">
+<%
+			var _sVideo = "http://vjs.zencdn.net/v/oceans.mp4";
+			var _sVideoCCPath = "";
+			var _sVideoADPath = "";
+			if (video != null && video != "null") {
+				_sVideo = mediaPath + video;
+				_sVideoCCPath = mediaPath + videoccPath;
+				_sVideoADPath = mediaPath + videoADPath;
+			}
+%>
+		<div class="question_box_space swiper-slide" data-skill-id="<%= skillId %>" page-title="<%= header %>" context-clue-ref="<%= contextClueRef %>" > <% //= data[0].slide_title%>
+			<div class="studyPlan_practice_video_wrapper">
+				
+				<div class="new_assignment_irr new_assignment_irr_sp_video">
+					<div class="video_container page_container_video">
+						<video id="video___<%= skillId %>__<%= partId %>" class="video-js vjs-default-skin valid-activity" data-setup='{"controls":true, "preload": false, "autoplay": false,"techOrder": ["html5"]}' data-verbid="<%=TRACK_EVENT[5].Assignment['Videoplayed'].c_s_VERBID%>">
+						
+							<source type="video/mp4;" src="<%= _sVideo %>" />
+							<track id="captionsTrack" kind="captions" src="<%= _sVideoCCPath %>" srclang="en" label="captions on" ></track>
+							<track id="ADTrack" kind="descriptions" src="<%= _sVideoADPath %>" srclang="en" label="descriptions on" default></track>
+						</video>
+						<div class="clear"></div>
+						
+					</div>
+					<div class="clear"> </div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</script>
+	
+	<!-- Study Plan Practice Master Template -->
+	<script type="text/template" id="studyPlan_practice_master_tpl">
+		<div class="study_plain_container assignment_slider_wrapper">
+			<div class="study_plain_container_slide">
+				<div class="ui_slide_tabs">
+					<div id="studyPlan_practice_header_container" class="ui_slide_tabs_cont">
+						
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="study_plain_container_contents">
+					<div class="study_plain_heading">
+						<div class="study_title_heading">
+							<div tabindex="0" role="button" aria-expanded="false" aria-label ="Help Button"class="help_notification right sprite valid-activity" title ="Help button" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"></div>
+							<div id="practice_assessment_page_title" class="middle"><%= pageTitle %></div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					
+					<div class="slider_pager_content_outer">
+						<button tabindex="0" role="button" title="Previous Page Button" aria-label="Previous page" id="prevPagingBtn" class="slider_pager_left sprite valid-activity" type="button" data-verbid="<%=TRACK_EVENT[5].Assignment['SlideChange'].c_s_VERBID%>"></button>
+						<div class="slider_pager_content" style="width:auto;">
+							
+							<div class="swiper-container" style="height:100%; overflow:hidden;">
+								<div id="slide_inner_container" class="swiper-wrapper slider_pager_sl">
+									<!-- Container for Video & question slides --> 
+									<!-- <div class="clear"></div> -->
+								</div>
+							</div>
+							<div class="pagination"></div>
+							
+						</div>
+						<div class="clear"></div>
+						<button tabindex="0" role="button" title="Next Page Button" aria-label="Next page" id="nextPagingBtn" class="slider_pager_right sprite valid-activity" type="button" data-verbid="<%=TRACK_EVENT[5].Assignment['SlideChange'].c_s_VERBID%>"></button>
+					</div>
+					
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+						
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+	</script>
+
+	<!-- End of Study Plan Practice Template -->
+	
+	<!-- Essay Slide Starts -->
+    <script type="text/template" id="essayslide">        
+<%
+		var backgroundStyle = "";
+		if (data.background_image != "" && typeof data.background_image != "undefined") {
+			backgroundStyle = 'style="background-image: url(\''+mediaPath  + data.background_image +'\'); background-size:cover;background-repeat:repeat;height:100%"';
+		}
+		var conclusion, intro, body = "";
+		if (studentAttemptData) {
+			conclusion = (studentAttemptData.itemSlides[0].slideInputData.conclusion) ? decodeURIComponent(studentAttemptData.itemSlides[0].slideInputData.conclusion) : ''; 
+			intro = (studentAttemptData.itemSlides[0].slideInputData.intro) ? decodeURIComponent(studentAttemptData.itemSlides[0].slideInputData.intro) : '';
+			body = (studentAttemptData.itemSlides[0].slideInputData.body) ? decodeURIComponent(studentAttemptData.itemSlides[0].slideInputData.body) : '';
+		}
+%>
+		<div class="swiper-slide backgound_images bg15" reference-key="<%= referenceKey %>" id="<%= referenceKey %>" <%= backgroundStyle %> data-slide-type="<%= slideType %>">
+            <div class="main_wrapper">
+                <div class="slider_swiper_inner summary_div_conts feedback_summary_div_conts without_sliding_top">
+                    <section class="container_space addclass_for_padd">
+                        <div class="box_outer_space">
+                            <div class="continent_box_space left_conts_place new_tab_space left">
+                                <div class="continent_box_inner  paragraph_prompt_slide">
+                                    <div class="scroll_padding">
+                                    <div class="continent_content_inner">
+										<div class="prompt_container">
+											<div class="prompt_text_heading">
+												<div class="cnt_sld left"><%= $.trim(ASSIGNMENTS.c_s_PARAGRAPH_PROMPT_HEADING) %></div>
+												<div class="arrow_pd left"></div>
+												<div class="clear"></div>
+											</div>
+											<div class="clear"></div>
+											<div class="prompt_text_container"><%= $.trim(data.prompt) %></div>
+										</div>
+                                        <div class="clear"></div>
+										
+										<!--- TABS STARTS -->
+										<div id="essay_tabs">
+											<ul>
+												<li><a href="#tabs-1"><%= ASSIGNMENTS.c_s_TAB_INTRO_LABEL %></a></li>
+												<li><a href="#tabs-2"><%= ASSIGNMENTS.c_s_TAB_BODY_LABEL %></a></li>
+												<li><a href="#tabs-3"><%= ASSIGNMENTS.c_s_TAB_CONCLUSION_LABEL %></a></li>
+												<li><a href="#tabs-4"><%= ASSIGNMENTS.c_s_TAB_WHOLE_LABEL %></a></li>
+											</ul>
+											<div id="tabs-4">
+												<div class="text_box_area accordin_slide_open"><div name="" class="txtarea" id="txtEssayWhole" ></div><!--<div id="txtEssayWhole" ></div>--></div>
+												<div class="feedbackBttn"><button class="button7 btn get_feedback right active valid-activity" data-verbid="<%= TRACK_EVENT[5]["Assignment"].AssignmentButtonClick.c_s_VERBID%>" id="getFeedbackWhole">Get Feedback</button></div>
+												<div class="clear"></div>
+											</div>
+											<div id="tabs-3">
+												<div class="text_box_area accordin_slide_open"><textarea autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="" id="txtEssayConclusion" class="valid-activity"><%= $.trim(conclusion) %></textarea></div>
+												<div class="feedbackBttn"><button class="button7 btn get_feedback 
+												<%= ($.trim(conclusion) == '')?'btndisabled disabled':'' %> right valid-activity" data-verbid="<%=TRACK_EVENT[5]["Assignment"].AssignmentButtonClick.c_s_VERBID%>" id="getFeedbackConclusion">Get Feedback</button></div>
+												<div class="clear"></div>
+											</div>
+											<div id="tabs-2">
+												<div class="text_box_area accordin_slide_open"><textarea autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="" id="txtEssayBody" class="valid-activity"><%= $.trim(body) %></textarea></div>
+												<div class="feedbackBttn"><button class="button7 btn get_feedback 
+												<%= ($.trim(body) == '')?'btndisabled disabled':'' %> right valid-activity" data-verbid="<%= TRACK_EVENT[5]["Assignment"].AssignmentButtonClick.c_s_VERBID%>" id="getFeedbackBody">Get Feedback</button></div>
+												<div class="clear"></div>
+											</div>
+											<div id="tabs-1">
+												<div class="text_box_area accordin_slide_open"><textarea autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="" id="txtEssayIntro" class="valid-activity"><%= $.trim(intro) %></textarea></div>
+												<div class="feedbackBttn"><button class="button7 btn get_feedback 
+												<%= ($.trim(intro) == '')?'btndisabled disabled':'' %> right valid-activity" data-verbid="<%= TRACK_EVENT[5]["Assignment"].AssignmentButtonClick.c_s_VERBID%>" id="getFeedbackIntro">Get Feedback</button></div>
+												<div class="clear"></div>
+											</div>
+										</div>
+										<!--- TABS ENDS -->
+										
+                                    </div>
+                                    </div>
+                                    <div class="edit_box_title paddright">
+                                        <button class="slideCommonSubmitButton button7 btn right <% if (!enableSubmit) { %> btndisabled disabled<% } %>" id="btnsubmit_essay"><%=$.trim(ASSIGNMENTS.c_s_SUBMIT_GRADING_BTTN)%></button>
+                                        <button class="button7 btn right" id="btnemail_essay" style="display:none;"><%=$.trim(ASSIGNMENTS.c_s_EMAIL_PARAGRAPH_BTTN)%></button>
+                                        <button class="button7 btn right" id="btnprint_essay" style="display:none;"><%=$.trim(ASSIGNMENTS.c_s_PRINT_ASSIGNMENT_BTTN)%></button>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                            <div class="continent_edit_box new_tab_space left_conts_place left summary_right_box">
+                                <div class="middle">
+                                    <div class="continent_wrap_box">
+                                        <div class="continent_conts right_conts_element">
+                                            <div class="new_tab_space_title"> 
+                                                <div class="right tabbing">
+                                                    <div class="button8 left active" id="instruction_tab"><%=$.trim(ASSIGNMENTS.c_s_INSTRUCTION_TAB_TITLE)%></div>
+                                                    <div class="button8 left" id="feedback_tab" ><%=$.trim(ASSIGNMENTS.c_s_FEEDBACK_TAB_TITLE)%></div>
+                                                    <div class="clear"></div>
+                                                </div>
+                                                <div class="clear"></div>
+                                            </div>
+                                            <div class="new_tab_space_title_tab"> 
+												<div class="back_bttn sprite backtoinst" style="display:none;"></div>
+												<div class="back_bttn sprite backtodetail" style="display:none;"></div>
+												<div class="back_bttn sprite backtofeedbck" style="display:none;"></div>
+												<div class="back_bttn sprite backtodrill" style="display:none;"></div>
+												<h3 role="heading" aria-level="1" class=""><%=$.trim(ASSIGNMENTS.c_s_INSTRUCTION_TAB_TITLE)%></h3>
+                                                <div class="clear"></div>
+                                            </div>
+                                            <div id="feedback_content">                                               
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+                                    </div>
+                                </div>
+								<div class="summaryLoader">
+									<img src="media/loader.gif"/>
+								</div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </section>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </script>
+    <!-- Essay Slide Ends -->
+	
+	<!-- Essay Slide Instruction Starts -->
+    <script type="text/template" id="essayinstruction">
+    <div class="new_tab_space_inner"> 
+        <div class="scroller_panel paragraph_instructionText assignments_container" id="instructionList">		
+			<ul> 
+			<% 			
+			_.each(data, function(stages,idx){
+			%>
+				<li data-text="<%= escape(stages.text) %>" data-label="<%= stages.label %>"><span class="ar_rt right sprite"></span><div class="middle instrlist" ><%= stages.label %></div><div class="clear"></div></li>				
+			<%
+			})
+			%>
+			</ul>
+		
+		</div>
+		<div class="scroller_panel paragraph_instructionText" style="display:none;" id="instructionText"></div>
+		<div class="scroller_panel paragraph_instructionText" style="display:none;" id="instructionDetail"></div>		
+
+    </div>
+    </script>
+    <!-- Essay Slide Instruction Ends -->
+	
+	<!-- Essay Slide Feedback Starts -->
+    <script type="text/template" id="essayfeedback">
+        
+		<div id="score_container" class="essay_score_container">
+            <% if(EssayView.viewType == "wholeEssay") 
+			{ %>
+			<!--- Overall Starts -->
+			<div class="sub_title_space">Overall</div>
+			<div class="feedboxes_spaces">
+					<div class="feedboxes_spaces_rate essay_scores">
+						<%
+							var score = scoreData.essayScore.overallScore;					
+							
+							for(var i=1; i<=6; i++)
+							{	
+						%>
+							<div class="scrore<%=i%>"><%=i%></div>
+						<%  
+							}
+						%>                              
+						<div class="clear"></div>
+					</div>
+					<div class="row_boxes_space">
+						<% 
+						for(var b=1; b <= 13; b++)
+						{
+							if(score == 1 && b == 1)
+							{
+								var active = 'active';
+							}
+							else if(score == 2 && b <= 3)
+							{
+								var active = 'active';
+							}
+							else if(score == 3 && b <= 6)
+							{
+								var active = 'active';
+							}
+							else if(score == 4 && b <= 8)
+							{
+								var active = 'active';
+							}
+							else if(score == 5 && b <= 11)
+							{
+								var active = 'active';
+							}
+							else if(score == 6 && b <= 13)
+							{
+								var active = 'active';
+							}
+							else
+							{
+								var active = '';
+							}
+							
+							if(b == 13)
+							{
+								var last = 'last';
+							}
+							else
+							{
+								var last = '';
+							}
+						%>
+							<div class="box_over color_<%= b %> <%= active %> <%= last %>"></div>
+						<%
+						}
+						%>
+						<div class="clear"></div>
+					</div> 					
+					<div class="clear"></div>
+			   </div>
+			   <!--- Overall Ends -->
+			   
+			   <div class="sub_title_space"><%= ASSIGNMENTS.c_s_TRAITS_TXT %></div>
+			   <div class="catagory_section">
+				<% 
+				_.each(scoreData.essayScore.traits, function(trait,key){
+					var last = (key == _.size(scoreData.essayScore.traits) - 1)?'last':'';				
+					var objName = _.where(ASSIGNMENT_ESSAY_TRAITS, {"c_s_CODE": trait.name});					
+				%>
+				   <div class="catagory_row new_features_numbers <%= last %>">
+					<div class="cat_section left six_scores">                                	
+							<%= objName[0].c_s_NAME %>
+						<div class="clear"></div>
+					</div>
+					<div class="cat_sound">						
+						<div class="feedboxes_spaces_rate essay_scores" style="display: block;">	
+							<%
+								for(var i=1; i<=6; i++)
+								{	
+							%>
+								<div class="scrore<%=i%>"><%=i%></div>
+							<%  
+								}
+							%>    
+							<div class="clear"></div>
+						</div>
+						<div class="right"><img data-score="<%= trait.score %>" data-code="<%= trait.name %>" data-heading="<%= objName[0].c_s_NAME %>" class="trait_drill img_link" src="media/paly_btn.png" width="23" height="23" alt=""></div>
+						<div class="row_boxes_space left">
+						
+						<% 								
+							for(var b=1; b <= 13; b++)
+							{
+								if(trait.score == 1 && b == 1)
+								{
+									var active = 'active';
+								}
+								else if(trait.score == 2 && b <= 3)
+								{
+									var active = 'active';
+								}
+								else if(trait.score == 3 && b <= 6)
+								{
+									var active = 'active';
+								}
+								else if(trait.score == 4 && b <= 8)
+								{
+									var active = 'active';
+								}
+								else if(trait.score == 5 && b <= 11)
+								{
+									var active = 'active';
+								}
+								else if(trait.score == 6 && b <= 13)
+								{
+									var active = 'active';
+								}
+								else
+								{
+									var active = '';
+								}
+								
+								if(b == 13)
+								{
+									var last = 'last';
+								}
+								else
+								{
+									var last = '';
+								}
+							%>
+								<div class="box_over color_<%= b %> <%= active %> <%= last %>"></div>
+							<%
+							}
+							%>							
+						
+							<div class="clear"></div>
+						</div>
+						
+					</div>
+					<div class="clear"></div>
+				</div>
+				<% }); %>
+				</div>				
+				
+		 <% } 
+			else 
+			{
+			%>
+			
+					   <div class="sub_title_space"><%= ASSIGNMENTS.c_s_PARAGRAPH_TXT %></div>
+					   <div class="catagory_section">
+						   <!--- Topic Focus -->					
+							<div id="topic_focus"></div>
+							
+							<!--- Topic Development -->
+							<div id="topic_development"></div>
+							
+							<!--- Organization -->
+							<div id="organization"></div>	
+						
+						</div>
+						
+						<div class="sub_title_space"><%= ASSIGNMENTS.c_s_SENTENCE_VARIETY_TXT %></div>
+					   <div class="catagory_section">
+						   <!--- Length -->					
+							<div id="length_div"></div>
+							
+							<!--- Beginnings -->
+							<div id="beginnings"></div>
+							
+							<!--- Structure -->
+							<div id="structure"></div>	
+						
+						</div>
+		<% } %>
+				<div class="sub_title_space"><%= ASSIGNMENTS.c_s_WORD_CHOICE_TXT %></div>
+			   <div class="catagory_section">
+				   <!--- Vague Adjectives -->					
+					<div id="vague_adj"></div>
+					
+					<!--- Repeated Words -->
+					<div id="repeated_words"></div>
+					
+					<!--- Pronounce -->
+					<div id="pronounce"></div>	
+				
+				</div>
+				
+				<div class="sub_title_space"><%= ASSIGNMENTS.c_s_EDITING_TOOL_TXT %></div>
+			   <div class="catagory_section">
+				   <!--- Spelling -->					
+					<div id="spelling"></div>
+					
+					<!--- Grammar -->
+					<div id="grammar"></div>
+					
+					<!--- Repeated Ideas -->
+					<div id="repeated_ideas"></div>	
+				
+				</div>
+				
+				
+				<div class="clear"></div>
+			</div>
+			
+			<div class="drill_container" style="display:none;"> 
+				<div class="hint_tab_space_inner">
+					<div id="drill_hint_txt" class="hint_text_div">
+					</div>
+				</div>
+				<div class="new_tab_space_inner">
+					<div class="scroller_panel" id="drill_text"><p></p></div> 
+					<div class="scroller_panel" id="link_text" style="display:none;"><p></p></div>
+				</div>
+			</div>
+    </script>
+    <!-- Essay Slide Feedback Ends -->
+	
+	<!--- Essay Feedback Check Work Template -->
+	<script type="text/template" id="essayfeedbackCheck">
+		<% if(_.size(data) > 0){ %>
+		<div class="catagory_row <%= last %>">
+			<div class="cat_section left">
+				<%=$.trim(title)%>
+				<div class="clear"></div>
+			</div>
+			<div class="cat_sound">
+				<div class="right"><img class="<%= drill_class %> img_link" src="media/paly_btn.png" width="23" height="23" alt=""></div>
+				<div class="row_boxes_space check left">
+					<%= msg %>
+					<div class="clear"></div>
+				</div>
+				
+		  </div>
+			<div class="clear"></div>
+		</div>
+		<% } %>
+	</script>
+	
+	<!--- Essay Feedback Sub Score Template -->
+	<script type="text/template" id="essayfeedbackScore">
+	
+		<% if(_.size(data) > 0){
+			
+			if(rating == ASSIGNMENTS.c_s_FEEDBACK_GOOD || rating == ASSIGNMENTS.c_s_FEEDBACK_RIGHT_IDEAS)
+			{
+				var topic_score = 3;
+			}
+			else if(rating == ASSIGNMENTS.c_s_FEEDBACK_FAIR || rating == ASSIGNMENTS.c_s_FEEDBACK_MANY_IDEAS 
+			|| rating == ASSIGNMENTS.c_s_FEEDBACK_GOOD_VARIETY)
+			{
+				var topic_score = 2;
+			}
+			else if(rating == ASSIGNMENTS.c_s_FEEDBACK_POOR || rating == ASSIGNMENTS.c_s_FEEDBACK_FEW_IDEAS 
+			|| rating == ASSIGNMENTS.c_s_FEEDBACK_POOR_VARIETY)
+			{
+				var topic_score = 1;
+			}
+			else if($.isNumeric(rating))
+			{
+				var topic_score = rating;
+			}
+			
+		%>
+			<div class="catagory_row <%= (rating != "tooFewSentences" && rating != "notApplicable")?'new_features_numbers':'' %> <%= last %>">
+				<div class="cat_section left">                                	
+						<%= $.trim(title) %>
+					<div class="clear"></div>
+				</div>
+				<div class="cat_sound">
+					<% if(rating != "tooFewSentences" && rating != "notApplicable")
+					{%>
+					<div class="feedboxes_spaces_rate" style="display: block;">				
+							<div class="scrore1 active">1</div>	
+							<% if(limit == 3) {%>
+							<div class="score_mid active">2</div>						
+							<div class="scrore4 active">3</div>
+							<% }
+							else if(limit == 2)
+							{ %>
+							<div class="scrore4 active">2</div>
+							<%}%>
+						<div class="clear"></div>
+					</div>
+					<% } %>
+					<div class="right"><img src="media/paly_btn.png" class="<%= drill_class %> img_link" width="23" height="23" alt=""></div>
+					<div class="row_boxes_space <%= (rating == "tooFewSentences" || rating == "notApplicable")?'check':'' %> left">
+					
+						<% 
+							if(rating != "tooFewSentences" && rating != "notApplicable")
+							{
+								for(var b=1; b <= 13; b++)
+								{
+									if(topic_score == 1 && b == 1)
+									{
+										var active = 'active';
+									}
+									else if(topic_score == 2 && b <= 7 && limit == 3)
+									{
+										var active = 'active';
+									}
+									else if(topic_score == limit && b <= 13)
+									{
+										var active = 'active';
+									}									
+									else
+									{
+										var active = '';
+									}
+									
+									if(b == 13)
+									{
+										var last = 'last';
+									}
+									else
+									{
+										var last = '';
+									}
+								%>
+									<div class="box_over color_<%= b %> <%= active %> <%= last %>"></div>
+								<%
+								}
+							}
+							else if(rating == "tooFewSentences")
+							{
+							%>
+								<span class="span_red"><%= ASSIGNMENTS.c_s_FEEDBACK_FEW_SENTENCES_LBL %></span>
+							<% 
+							} 
+							else if(rating == "notApplicable")
+							{
+							%>
+							<span class="span_red"><%= ASSIGNMENTS.c_s_CHECK_WORK_TXT %></span>
+							<% } %>							
+					
+						<div class="clear"></div>
+					</div>
+					
+				</div>
+				<div class="clear"></div>
+			</div>
+			
+		<% } %>
+		<div class="clear"></div>						
+	</script>
+	
+	<!-- Extended PhonicTextBasedView Template -->
+    <script type="text/template" id="extendedphonic">
+		<div class="swiper-slide main_swiper_slide backgound_images" data-slide-type="<%= slideType %>" reference-key="<%=referenceKey%>" id="<%=referenceKey%>" >
+			<div class="main_wrapper">
+                <div class="slider_swiper_inner slide_with_bg_image">
+                    <section class="container_space addclass_for_padd">
+                        <div class="box_outer_space">
+                            <div class="continent_box_space left">
+                                <div class="continent_box_inner">
+                                    <div class="scroll_padding">
+										<div class="continent_content_inner">
+											<%= ASSIGNMENTS.c_s_EXTENDED_PHONIC_BOOK_PAGE_TEXT %>
+											<br>
+											
+											<div class="book_image_cont" id="book_image_cont"></div>
+											<div class="clear"></div>
+										</div>																		
+										
+                                    </div>
+                                    <div class="clear"></div>
+                               </div>
+                            </div>
+                            
+                            <div class="continent_edit_box hidden left">
+                                <div class="middle">
+                                    <div class="continent_wrap_box">
+                                        <div class="continent_conts" id="phonic_slides">
+											<!--- Text-Based template---->
+										</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </section>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </script>
+    <!-- End of Extended phonictextbasedslide Template -->
+	
+	<!-- PhonicTextBasedView Template -->
+    <script type="text/template" id="phonictextbasedslide">
+		<div class="swiper-slide main_swiper_slide backgound_images" data-slide-type="<%= slideType %>" reference-key="<%=referenceKey%>" id="<%=referenceKey%>" >
+			<div class="main_wrapper">
+                <div class="slider_swiper_inner slide_with_bg_image">
+                    <section class="container_space addclass_for_padd">
+                        <div class="box_outer_space  phonicTextSlideDrag">
+                            <div class="continent_box_space left">
+                                <div class="continent_box_inner">
+                                    <div class="scroll_padding">
+										<% 
+										var oInteractiveText = data.interactive_text || {},
+											sNewInteractiveText = '';
+											var _sImageAltText ='';
+											
+										if (typeof oInteractiveText == 'object') {	
+
+											$.each(oInteractiveText, function(k,oCont){
+												if(oCont.image_alternative_text!=null && oCont.image_alternative_text!='undefined')
+													_sImageAltText = oCont.image_alternative_text;
+												
+												sNewInteractiveText += (oCont.content_type == 'text') ? oCont.content : 
+																		(
+																			(stripHtmlTagsFromString(sNewInteractiveText) == '') ? 
+																			'<img src="'+ mediaPath + oCont.content +'" alt="'+_sImageAltText+'"><br>' : 
+																			'<br><img src="'+ mediaPath + oCont.content +'" alt="'+_sImageAltText+'"><br>'
+																		);
+											});
+										}
+										else {
+											sNewInteractiveText = oInteractiveText;
+										}
+
+										if (sNewInteractiveText != "") {
+%>										
+											<div class="continent_content_inner_iscroll">
+												<div class="draggable_area" style="height:auto;">
+													<%= sNewInteractiveText %>
+													<div class="clear"></div>
+												</div>
+											</div>
+<%
+										}
+%>
+										<div class="edit_box_title">
+											<button class="slideCommonSubmitButton button7 btn <%= ASSIGNMENTS.c_s_ASSIGN_READ_CHKPNT_BTN_SELECTOR %>" id="btnInput">
+												<%= $.trim(ASSIGNMENTS.c_s_INPUT_ANSWER_BTTN) %>
+											</button>
+											<div class="clear"></div>
+										</div>
+                                    </div>
+                                    <div class="clear"></div>
+                               </div>
+                            </div>
+                            
+                            <div class="continent_edit_box hidden left">
+                                <div class="middle">
+                                    <div class="continent_wrap_box">
+                                        <div class="continent_conts" id="phonic_slides">
+											<!--- Text-Based template -->
+										</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </section>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </script>
+    <!-- End of phonictextbasedslide Template -->
+	
+	<!-- PhonicTextBasedView Comprehension Template -->
+    <script type="text/template" id="phonic_comprehension_template">
+	<div role="region" class="assistive-text" id="ariaLiveTxt" aria-live="polite" aria-atomic="true">
+					  <p id="feedbackTxt"></p>
+	</div>
+	<div class="swiper-padding-right swiper-padding-left">
+	<div class="phonic_compre_conts">
+	<div class="text_content"><%= data.title %></div>
+			<div class="text_content"><%= data.instruction_text %></div>
+				<%
+					var SelectedAnswer = (studentAttemptData.subSlideSelectedAnswer)?studentAttemptData.subSlideSelectedAnswer:'';
+					var Submitted = (studentAttemptData.subSlideSubmitted)?studentAttemptData.subSlideSubmitted:false;
+					var slideScore = (studentAttemptData.subSlideScore)?studentAttemptData.subSlideScore:0;
+					Submitted = (Submitted == 'true') ? true : ((Submitted == 'false') ? false : Submitted);
+				%>			
+				<div class="Phinics_question swiper-scrollbar" data-type="<%= ASSIGNMENTS.c_s_SLIDE_TYPE_COMPREHENSION %>" data-score="<%= slideScore %>">
+					<div class="question_box_space">
+							<% if($.trim(data.content) != ''){ %>
+								<div class="study_question_title_nobg"><%= data.content %></div>
+							<% } %>
+							<div class="new_assignment_irr phonic_compre_box">								
+								<ul class="question_part <%= Submitted ? 'locked' : '' %>">
+									<%
+									$.each(data.answers, function(ansIdx, ansVal){
+										if((ansIdx + 1) == data.answers.length) lastClassName = "margin_none";
+										
+										var active = (SelectedAnswer == GENERAL.c_s_ALPHABET_ORDER[ansIdx])?'active':'';
+										
+										var correctDisplay = (Submitted && ansVal.is_correct)?'display:block;':'display:none;';
+										
+										var inCorrectDisplay = (Submitted && !ansVal.is_correct && active == 'active')?'display:block;':'display:none;';
+									%>
+									<li attempted="no" data-correct="<%= ansVal.is_correct %>" 
+										class="<%= active %> valid-activity" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentAnswerSelect'].c_s_VERBID%>">
+										<div class="correct sprite" style="<%= correctDisplay %>"></div>
+										<div class="incorrect sprite" style="<%= inCorrectDisplay %>"></div>
+										<div class="answer_key bigger_box left"><%= GENERAL.c_s_ALPHABET_ORDER[ansIdx] %></div>
+										<div class="middle"><%= ansVal.answer_text_html %></div>
+										<div class="clear"></div>
+									</li>
+									<%
+									});
+									%>									
+									
+								</ul>								
+								
+								<div class="clear"> </div>
+							</div>
+						<div class="clear"> </div>
+					</div>
+					
+				   
+				<div class="clear"></div>
+			  </div>
+			  <!--<div class="pager_container"><div class="pagination_for_slider"><span class="slider_switch active"></span> <span class="slider_switch"></span></div> </div><div class="edit_box_title">-->
+					<div class="button_cont">
+					<% 
+						var bDisableBtn = Submitted;
+						if (typeof sAssignmentType != 'undefined' && sAssignmentType == ASSIGNMENTS.c_s_TYPE_TPL_FRS && Submitted) {
+							bDisableBtn = false; 
+							buttonLabel = ASSIGNMENTS.c_s_BTN_LBL_NEXT;
+						}
+					%>
+					<button class="slideCommonSubmitButton button7 btn right comprehension_submit valid-activity <%= Submitted ? 'disabled btndisabled' : '' %>" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">
+						<%= buttonLabel %>
+					</button>
+					
+					<div class="clear"></div>
+					</div>
+			<!--<div class="clear"></div></div>-->
+			
+			<div class="clear"></div>
+		</div>
+	</div>
+	</script>
+	<!-- PhonicTextBasedView Comprehension Template Ends -->
+	
+	<!-- PhonicTextBasedView Practice Template -->
+    <script type="text/template" id="phonic_practice_template">
+	<div class="swiper-padding-right swiper-padding-left">
+		<div class="phonic_practice_conts">
+		<div class="text_content"><%= data.title %></div>
+		<div class="text_content"><%= data.instruction_text %></div>
+			<%
+				var DroppedAnswer = (studentAttemptData.subSlideDroppedAnswer)?studentAttemptData.subSlideDroppedAnswer:[];
+				var Submitted = (studentAttemptData.subSlideSubmitted)?studentAttemptData.subSlideSubmitted:false;
+				var slideScore = (studentAttemptData.subSlideScore)?studentAttemptData.subSlideScore:0;
+				Submitted = (Submitted == 'true') ? true : ((Submitted == 'false') ? false : Submitted);				
+				
+			%>		
+			<div class="Phinics_question swiper-scrollbar" data-type="<%= ASSIGNMENTS.c_s_SLIDE_TYPE_PRACTICE %>" data-score="<%= slideScore %>">
+				<div class="textbox_heading_content"><%= data.content %></div>
+				<div class="text_box_area practice_drag_drop phonic_dropbox <%= Submitted ? 'locked' : '' %>">
+				<%
+
+				_.each(DroppedAnswer, function(val, key){
+					if ($.inArray($('<div/>').html(val).text(),oSelf.correctAnswers[slideId]) != -1 ||
+							$.inArray(SpecialCharToCode($('<div/>').html(val).text(),true),oSelf.correctAnswersEncoded[slideId]) != -1 || 
+							$.inArray(SpecialCharToCode($('<div/>').html(val).text(),true),oSelf.correctAnswersEncodedASCII[slideId]) != -1
+					) {
+						var statusClass = Submitted ? 'okey' : '';
+					}
+					else {
+						var statusClass = Submitted ? 'wrong' : '';
+					}					
+				%>
+					<div class="text_search <%= statusClass %>" data-text="<%= val %>">
+					<div class="cross_icon sprite" style="<%= Submitted ? 'display:block;' : 'display:none;' %>"></div>
+					<% 
+					if(Submitted == false) 
+					{
+					%>
+						<div class="delete_icon sprite valid-activity" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"></div>
+					<%
+					}
+					%>
+					<div class="txt_dropped"><%= val %></div></div><div class="clear"></div>
+				<%
+				});
+				%>
+				</div>
+			   
+			<div class="clear"></div>
+		  </div>
+		  <!--<div class="pager_container"><div class="pagination_for_slider"><span class="slider_switch active"></span> <span class="slider_switch"></span></div> </div><div class="edit_box_title">-->
+				<div class="button_cont">
+				<% 
+					var bDisableBtn = Submitted;
+					if (typeof sAssignmentType != 'undefined' && sAssignmentType == ASSIGNMENTS.c_s_TYPE_TPL_FRS && Submitted) {
+						bDisableBtn = false; 
+						buttonLabel = ASSIGNMENTS.c_s_BTN_LBL_NEXT;
+					}
+				%>
+				<button class="slideCommonSubmitButton button7 btn right practice_submit valid-activity <%= (bDisableBtn) ? 'disabled btndisabled' : '' %>"  data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">
+					<%= buttonLabel %>
+				</button>
+				<div class="clear"></div>
+				</div>
+		<!--<div class="clear"></div></div>-->
+		
+		<div class="clear"></div>
+	  </div>
+	 </div>
+	</script>
+	<!-- PhonicTextBasedView Practice Template -->
+	
+	<!-- Oral Fluency Template -->
+    <script type="text/template" id="phonic_oralfluency_template">
+	<div class="swiper-padding-right swiper-padding-left">
+		<%
+		/*== bDisableIcons : true if in view mode ==*/
+		/*== Submitted : true if user has submitted the slide ==*/
+		/*== bRejected : true if teacher has rejected the slide (note in this case value of Submitted is true) ==*/
+		/*== isRejectedAttempted : true if user has re-attempted the rejected slide (note in this case value of bRejected is true) ==*/
+		
+		var Submitted = (studentAttemptData.subSlideSubmitted) ? studentAttemptData.subSlideSubmitted : '';
+		var sLockedClass = ((Submitted && !bRejected) || 
+							(
+								bRejected && 
+								typeof studentAttemptData.isRejectedAttempted != 'undefined' && 
+								studentAttemptData.isRejectedAttempted)
+							) ? 'locked' : '';
+							
+		var bRejectedAttempted = (typeof studentAttemptData.isRejectedAttempted != 'undefined' && 
+								studentAttemptData.isRejectedAttempted) ? "true" : "false";
+		%>
+		<div class="phonic_oralfluency_conts <%= sLockedClass %>" data-question-id="<%= data.question_id %>" data-prompt-id="<%= oralFluencyPromptId %>" data-rejected="<%= bRejected %>" data-rejected-attempted=<%= bRejectedAttempted %>>
+		<div class="text_content"><%= data.title %></div>
+		<div class="text_content"><%= data.instruction_text %></div>	
+		
+		<div class="Phinics_question swiper-scrollbar cont-align-middle" data-type="<%= ASSIGNMENTS.c_s_SLIDE_TYPE_ORALFLUENCY %>" data-score="0"> 
+			<%
+				var inactive = (
+									bDisableIcons || 
+									(Submitted && !bRejected) || 
+									(
+										bRejected && 
+										typeof studentAttemptData.isRejectedAttempted != 'undefined' && 
+										studentAttemptData.isRejectedAttempted
+									)
+								) ? 
+								"inactive" : "";
+								
+				var playInactive = (aOralFluencyData.length > 0) ? "" : "inactive";
+				var audioPath = (aOralFluencyData.length > 0) ? aOralFluencyData[0].audiopath : '';				
+				var bDisplay = (bDisplayScore) ? "display: block" : "display: none";				
+			%>
+			<div class="microphone microphone-start <%= inactive %> valid-activity" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"></div>			
+			<div class="speaker speaker-on <%= playInactive %> valid-activity" data-audio="<%= audioPath %>" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"></div>
+			<div class="oral-fluency-score" style="<%= bDisplay %>">
+				<% 				
+				_.each(objScore[0], function(scoreVal, scoreKey) {
+					if (scoreKey != "QID" && scoreKey != "WC") { %>
+					<p><%= ASSIGNMENTS.c_o_ORAL_FUENCY_SCORE[scoreKey] %> : <%= (scoreVal < 0) ? 0 : scoreVal %></p>
+					<% }
+				});				
+				%>
+			</div>
+			<div style="display:none;">
+				<audio id="audioPlayer" controls="false" autoplay="false" preload="none" ></audio>
+			</div>
+			<div class="clear"></div> 
+		</div>
+		  
+		<div class="button_cont">				
+		<%
+			/* when teacher is viewing then submit button will be enabled */
+			var disabledClass = bDisableIcons ? "" : "btndisabled disabled";
+			var disabledAttr = bDisableIcons ? "" : "disabled";
+		%>
+		<button class="slideCommonSubmitButton button7 btn right microphone_grading_submit <%= disabledClass %> valid-activity" <%= disabledAttr %> data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">
+			<%= buttonLabel %>
+		</button>		
+		<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+	  </div>
+	 </div>							
+	</script>
+	<!-- Oral Fluency Template -->
+	
+	<!-- PHONIC SLIDER TEMPLATE -->
+	<script type="text/template" id="phonic_slider_template">
+		<div class="swiper-container swiper-nested1 swiper-n1">
+			<div class="swiper-wrapper">
+<%
+				var k=0;
+				_.each(slides, function (slide, i) {
+					k++;
+%>
+					<div class="swiper-slide" id="slide_<%= i %>" data-slidecount="<%= k %>"> </div>
+				<% }); %>                
+			</div>
+		</div>
+		<div class='pagination'></div>
+	</script>
+	
+	<!-- Plural Nouns View Template -->
+    <script type="text/template" id="pluralnouns">
+<%
+		var bDisableSubmit = false;
+		_.each(data, function(slides, key) {
+%>
+		<div class="swiper-slide" data-slide-type="<%= slideType %>" reference-key="<%=referenceKey%>" id="<%=referenceKey%>">
+			<div class="main_wrapper plural-nouns">
+				<section class="phonics_game_container">
+					<div class="phonicstext_content"><%= slides.instruction_text %></div>
+					<div class="WordSlam_container">
+						<div class="container2">
+							<div class="container1">
+								<div class="col1_left">
+									<div class="word_matching">
+										<div class="matching_container_content" id="plural-nouns-word-bank">
+										<% _.each(slides.drag_options, function(dragOpt,k){ %>
+											<div class="myButton draggable_box swiper-no-swiping valid-activity" data-verbid="<%=TRACK_EVENT[5]['Assignment'].DragAndDrop.c_s_VERBID%>">
+												<div class="myButtoninner">
+													<%= dragOpt.text %>
+												</div>
+											</div>
+										<% }); %>
+											<div class="clear"></div>
+										</div> 
+										<div class="clear"></div>
+									</div>
+								</div>
+								<div class="col1_right">
+									<div class="word_matching_area">
+										<div class="matching_container_answer plural-nouns-drop-area">
+<%
+										_.each(slides.drop_options, function(dropOpt, k) {
+											sBoxLabel = CONSTANTS.c_s_PLURAL_NOUN_DROP_LABEL;
+											if (savedData[k]) {
+												sBoxLabel = savedData[k];
+											}
+											else {
+												bDisableSubmit = true;
+											}
+%>
+											<div class="word_matching_row answer_right">
+												<div class="word_matching_content">
+													<div class="word_text">
+														<div class="wordtext_inner"><%= dropOpt.text %></div>
+													</div>
+												</div>
+												<div class="word_matching_content drop-box-cont">
+													<div class="myButton<% if (sBoxLabel == CONSTANTS.c_s_PLURAL_NOUN_DROP_LABEL) { %> blank<% } %> dropbox swiper-no-swiping valid-activity" data-verbid="<%=TRACK_EVENT[5]['Assignment'].DragAndDrop.c_s_VERBID%>">
+														<div class="myButtoninner valid-activity" data-index="<%= k %>" data-verbid="<%=TRACK_EVENT[5]['Assignment'].DragAndDrop.c_s_VERBID%>">
+															<%= sBoxLabel %>
+														</div>
+													</div>
+												</div>
+												<div class="word_matching_content final-answer-cont">
+													<div class="fgg"></div>
+													<div class="word_text">
+														<div class="answer_rt sprite" style="display:none;"></div>
+														<div class="answer_wg sprite" style="display:none;"></div>
+														<div class="wordtext_inner wordtext_answer final-answer">
+<%
+														if (savedData[k]) {
+															var sPlural = dropOpt.text.trim();
+															switch (sBoxLabel) {
+																case 'es':
+																case 's':
+																	sPlural += sBoxLabel;
+																	break;
+																case 'ies':
+																	sPlural = (	
+																		(sPlural.charAt(sPlural.length - 1).toLowerCase() == 'y')?
+																		sPlural.substring(0, sPlural.length - 1):
+																		sPlural
+																	) + sBoxLabel;
+																	break;
+															}
+%>
+															<%= sPlural %>
+<%														
+														}
+%>													
+														</div>
+														<div class="wordtext_correct"></div>
+													</div>
+												</div>
+												<div class="clear"></div>
+											</div>
+										<% }); %>
+										</div>
+										<div class="clear"></div>
+									</div>
+									<div class="clear"></div>
+									<div class="studyplan_footer assessment_pagination">
+										<div class="pagination_footer pagination_footer_part assign_teacherview plural-nouns" id="<%= CONSTANTS.c_s_DIV_PLURAL_NOUN_SHOW_SCORE_ID %>">
+											<button class="button7 btn right<% if (bDisableSubmit === true) { %> disabled btndisabled<% } %> valid-activity" data-verbid="<%=TRACK_EVENT[5]['Assignment'].AssignmentButtonClick.c_s_VERBID%>" id="<%= CONSTANTS.c_s_BTN_PLURAL_NOUN_SUBMIT_ANSWER_ID %>"<% if (bDisableSubmit === true) { %>  disabled="disabled"<% } %>>
+												<%= CONSTANTS.c_s_SUBMIT_ANSWERS_BTTN %>
+											</button>
+											<div class="clear"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</section>
+				<div class="clear"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+		<% });%>
+    </script>
+    <!-- End of Plural Nouns View Template -->
+	
+	<!-- /*==== Digraph View Template ====*/ -->
+    <script type="text/template" id="digraphs">
+		<% for (var key in data) { %>
+			<% slides = data[key]; %>
+		<div class="swiper-slide digraph" data-slide-type="<%= slideType %>" reference-key="<%=referenceKey%>" id="<%=referenceKey%>">
+			<div class="main_wrapper">                
+				<section class="phonics_game_container">
+					<div class="phonicstext_content"><%= slides.instruction_text %></div>
+					<div class="WordSlam_container">
+						<div class="container2">
+							<div class="container1">
+								<div class="col1_left">
+									<div class="word_matching">
+										<div class="matching_container_content" id="digraphs-word-bank">
+										<% _.each(slides.drag_options, function(dragOpt,k) { %>
+											<div class="myButton draggable_box swiper-no-swiping" role="option" data-answer-index="<%= k %>" >
+												<div class="myButtoninner">
+													<%= dragOpt.text %>
+												</div>
+											</div>
+										<% }); %>
+											<div class="clear"></div>
+										</div> 
+										<div class="clear"></div>
+									</div>
+								</div>
+								<div class="col1_right">
+									<div class="word_matching_area">
+										<div class="matching_container_answer digraph-drop-area">
+<%
+										_.each(slides.drop_options, function(dropOpt, k) {
+											sBoxLabel = CONSTANTS.c_s_DIGRAPH_DROP_LABEL;
+											if (savedData[k]) {
+												sBoxLabel = savedData[k];
+											}
+%>
+											<div class="word_matching_row answer_right" data-drop-index="<%= k %>">
+												<div class="word_matching_content">
+													<div class="word_text prefix">
+														<div class="wordtext_inner"><%= dropOpt.prefix %></div>
+													</div>
+												</div>
+												<div class="word_matching_content drop-box-cont">
+													<div class="myButton<% if (sBoxLabel == CONSTANTS.c_s_DIGRAPH_DROP_LABEL) { %> blank<% } %> dropbox swiper-no-swiping" role="option" data-index="<%= k %>"  >
+														<div class="myButtoninner" data-index="<%= k %>">
+															<%= sBoxLabel %>
+														</div>
+													</div>
+												</div>
+												<div class="word_matching_content">
+													<div class="word_text suffix">
+														<div class="wordtext_inner"><%= dropOpt.suffix %></div>
+													</div>
+												</div>
+												<div class="word_matching_content final-answer">
+													<div class="fgg"></div>
+													<div class="word_text">
+														<div class="answer_rt sprite" style="display:none;"></div>
+														<div class="answer_wg sprite" style="display:none;"></div>
+														<div class="wordtext_inner wordtext_answer">
+<%
+														if (savedData[k]) {
+															var sPhrase = dropOpt.prefix + sBoxLabel + dropOpt.suffix;
+%>
+															<%= sPhrase %>
+<%														
+														}
+%>													
+														</div>
+														<div class="wordtext_correct"></div>
+													</div>
+												</div>
+												<div class="clear"></div>
+											</div>
+										<% }); %>
+											<br clear="all" />
+										</div>
+									</div>
+									<div class="clear"></div>
+									<div class="studyplan_footer assessment_pagination">
+										<div class="pagination_footer pagination_footer_part assign_teacherview" id="<%= CONSTANTS.c_s_DIV_DIGRAPH_SHOW_SCORE_ID %>">
+											<button aria-label="save and continue button" class="button7 btn right valid-activity <% if (enableButton === false) { %> disabled btndisabled<% } %>" id="<%= CONSTANTS.c_s_BTN_DIGRAPH_SUBMIT_ANSWER_ID %>"<% if (enableButton === false) { %> disabled="disabled"<% } %> data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">
+												<%= CONSTANTS.c_s_SUBMIT_ANSWERS_BTTN %>
+											</button>
+											<div class="clear"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</section>
+				<div class="clear"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+		<% } %>
+    </script>
+    <!-- /*== End Digraph View Template ==*/ -->
+	
+	<!-- /*==== Word Families Template ====*/ -->
+    <script type="text/template" id="word_families">
+<%
+		var bDisableSubmit = false;
+		_.each(data, function(slides, key) {
+%>
+		<div class="swiper-slide" data-slide-type="<%= slideType %>" reference-key="<%=referenceKey%>" id="<%=referenceKey%>">
+			<div class="main_wrapper">                
+				<section class="phonics_game_container">
+					<div class="phonicstext_content"><%= slides.instruction_text %></div>
+					<div class="WordSlam_container">
+						<div class="container2">
+							<div class="container1">
+								<div class="col1_left">
+									<div class="word_matching">
+										<div class="matching_container_content" id="word-families-word-bank">
+										<% _.each(slides.drag_options, function(dragOpt,k){ %>
+											<div class="myButton draggable_box swiper-no-swiping">
+												<div class="myButtoninner">
+													<%= dragOpt.text %>
+												</div>
+											</div>
+										<% }); %>
+											<div class="clear"></div>
+										</div> 
+										<div class="clear"></div>
+									</div>
+								</div>
+								<div class="col1_right">
+									<div class="header_word_wrap">
+<%
+									var sFamily = '',
+										iFamilyCount = 0;
+									_.each(slides.drop_options, function(dropOpt, k) {
+										if (dropOpt.family != sFamily) {
+											sFamily = dropOpt.family;
+											iFamilyCount++;
+%>
+										<div class="f-<% if (iFamilyCount % 2 == 0) { %>right<% } else { %>left<% } %>">
+											-<%= dropOpt.family %> family
+										</div>
+										<% } %>
+									<% }); %>
+									<div class="clear"></div>
+									</div>
+									<div class="word_matching_area">
+										<div class="matching_container_answer word-families">
+<%
+										sFamily = '';
+										iFamilyCount = 0
+										_.each(slides.drop_options, function(dropOpt, k) {
+											if (dropOpt.family != sFamily) {
+												iFamilyCount++;
+												if (k > 0) {
+%>
+											</div>
+<%
+													if ((k + 1) % 2 == 0) {
+%>
+											<div class="clear"></div>
+<%											
+													}
+												}
+												sFamily = dropOpt.family;
+%>
+											
+											<div class="f-<% if (iFamilyCount % 2 == 0) { %>right<% } else { %>left<% } %>">
+<%												
+											}
+											sBoxLabel = CONSTANTS.c_s_WORD_FAMILIES_DROP_LABEL;
+											if (savedData[k]) {
+												sBoxLabel = savedData[k];
+											}
+											else {
+												bDisableSubmit = true;
+											}
+%>
+												<div class="word_matching_row answer_right">
+													<div class="word_matching_content">
+														<div class="myButton swiper-no-swiping<% if (sBoxLabel == CONSTANTS.c_s_WORD_FAMILIES_DROP_LABEL) { %> blank<% } %> dropbox">
+															<div class="myButtoninner" data-index="<%= k %>" data-family="<%= dropOpt.family %>">
+																<%= sBoxLabel %>
+															</div>
+														</div>
+													</div>
+													<div class="word_matching_content message_word">
+														<div class="word_text" id="result-<%= k %>">
+															<div class="answer_rt sprite" style="display:none;"></div>
+															<div class="answer_wg sprite" style="display:none;"></div>
+															<div class="wordtext_inner wordtext_answer"><%= dropOpt.family %></div>
+														</div>
+													</div>
+													<div class="clear"></div>
+												</div>
+										<% }); %>
+											</div>
+											<div class="clear"></div>
+										</div>
+										<div class="clear"></div>
+										<div class="studyplan_footer assessment_pagination">
+											<div class="pagination_footer pagination_footer_part assign_teacherview" id="<%= CONSTANTS.c_s_DIV_WORD_FAMILIES_SHOW_SCORE_ID %>">
+												<button class="button7 btn right<% if (bDisableSubmit === true) { %> disabled btndisabled<% } %>" id="<%= CONSTANTS.c_s_BTN_WORD_FAMILIES_SUBMIT_ANSWER_ID %>"<% if (bDisableSubmit === true) { %> disabled="disabled"<% } %>>
+													<%= CONSTANTS.c_s_SUBMIT_ANSWERS_BTTN %>
+												</button>
+												<div class="clear"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</section>
+				<div class="clear"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+		<% });%>
+    </script>
+    <!-- /*== End Word Families Template ==*/ -->
+	
+	<!-- /*==== Syllables Template ====*/ -->
+	<script type="text/template" id="syllables">
+<%
+		var bDisableButton = false;
+		_.each(data, function(slides, key) {
+		
+%>
+		<div class="swiper-slide syllables" data-slide-type="<%= slideType %>" reference-key="<%= referenceKey %>" id="<%= referenceKey %>">
+			<div class="main_wrapper">                
+				<section class="phonics_game_container">
+					<div class="phonicstext_content"><%= slides.instruction_text %></div>
+					<div class="WordSlam_container">
+						<div class="container2">
+							<div class="overflow-scroll">
+								<div class="container1">
+									<div class="col1_left">
+										<div class="word_matching">
+											<div class="matching_container_content">
+<%
+											var iTotalWords = slides.drag_options.length;
+											_.each(slides.drag_options, function(dragOpt, k) {
+%>
+												<div id="syllable-bank-<%= k %>" class="syllable-bank<% if (k + 1 == iTotalWords) { %> last<% } %>">
+												<% _.each(dragOpt.syllables, function(syllable, l) { %>
+													<div class="myButton draggable_box swiper-no-swiping valid-activity" role="option" aria-selected="false" data-index="<%= k %>" data-answer-index="<%= l %>" data-verbid="<%= TRACK_EVENT[5]['Assignment'].DragAndDrop.c_s_VERBID%>">
+														<div class="myButtoninner">
+															<%= syllable %>
+														</div>
+													</div>
+												<% }); %>
+												</div>
+											<% }); %>
+												<div class="clear"></div>
+											</div> 
+											<div class="clear"></div>
+										</div>
+									</div>
+									<div class="col1_right">
+										<div class="word_matching_area">
+											<div class="matching_container_answer syllables">
+<%
+											var iTotalWords = slides.drop_options.length;
+											_.each(slides.drop_options, function(dropOpt, k) {
+%>
+												<div id="syllables-drop-area-<%= k %>" class="syllables-drop-area<% if (k + 1 == iTotalWords) { %> last<% } if (k == 0) { %> first<% } %>">
+													<div class="word_matching_row answer_right">
+														<div class="word_matching_content">
+												<span class="header">
+													<% if (dropOpt.question_text) { %>
+														<%= dropOpt.question_text %>
+													<% } else { %>
+														<%= dropOpt.answer.join('') %>
+													<% } %>
+												</span>
+												<br clear="all" />
+<%
+												_.each(dropOpt.answer, function(dropOpt, l) {
+													sBoxLabel = CONSTANTS.c_s_SYLLABLES_DROP_LABEL;
+													if (savedData[k]) {
+														if (savedData[k][l]) {
+															sBoxLabel = savedData[k][l];
+														}
+														else {
+															bDisableButton = true;
+														}
+													}
+													else {
+														bDisableButton = true;
+													}
+%>
+															<div class="myButton swiper-no-swiping<% if (sBoxLabel == CONSTANTS.c_s_SYLLABLES_DROP_LABEL) { %> blank<%  }  else { %> draggable_box<% } %> dropbox valid-activity" role="option" aria-selected="false" data-drop-index="<%= k %>" data-verbid="<%= TRACK_EVENT[5]['Assignment'].DragAndDrop.c_s_VERBID%>">
+																<div class="myButtoninner valid-activity" data-verbid="<%= TRACK_EVENT[5]['Assignment'].DragAndDrop.c_s_VERBID%>">
+																	<%= sBoxLabel %>
+																</div>
+															</div>
+												<% }); %>
+														</div>
+														<div class="word_matching_content message_word">
+															<div class="word_text" id="result-<%= k %>">
+																<div class="answer_rt sprite" style="display:none;"></div>
+																<div class="answer_wg sprite" style="display:none;"></div>
+																<div class="wordtext_inner wordtext_answer"> </div>
+															</div>
+														</div>
+														<div class="clear"></div>
+													</div>
+												</div>
+												<div class="clear"></div>
+											<% }); %>
+											</div>
+											<div class="clear"></div>
+										</div>
+									</div>
+									<div class="clear"></div>
+								</div>
+							</div>
+							<div class="clear"></div>
+							<div class="studyplan_footer assessment_pagination">
+								<div class="pagination_footer pagination_footer_part assign_teacherview">
+									<button aria-label="save and continue"  class="button7 btn right<% if (bDisableButton === true) { %> disabled btndisabled<% } %> valid-activity" data-verbid="<%= TRACK_EVENT[5]['Assignment'].AssignmentButtonClick.c_s_VERBID%>"  id="<%= CONSTANTS.c_s_BTN_SYLLABLES_SUBMIT_ANSWER_ID %>"<% if (bDisableButton === true) { %> disabled="disabled"<% } %>>
+										<%= CONSTANTS.c_s_SUBMIT_ANSWERS_BTTN %>
+									</button>
+									<div class="clear"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="clear"></div>
+				</section>
+				<div class="clear"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+		<% });%>
+    </script>
+	<!-- /*== End Syllables Template ==*/ -->
+	
+	<!-- /*==== Word Sort Template ====*/ -->
+    <script type="text/template" id="word_sort">
+<%
+		var bDisableButton = false;
+		_.each(data, function(slides, key) {
+%>
+		<div class="swiper-slide" data-slide-type="<%= slideType %>" reference-key="<%= referenceKey %>" id="<%= referenceKey %>">
+			<div class="main_wrapper">                
+				<section class="phonics_game_container">
+					<div class="phonicstext_content"><%= slides.instruction_text %></div>
+					<div class="WordSlam_container">
+						<div class="container2">
+							<div class="container1">
+								<div class="col1_left">
+									<div class="word_matching">
+										<div class="matching_container_content" id="word-bank">
+<%
+										for (var k = 0; k < slides.drag_options.length; k++) {
+											dragOpt = slides.drag_options[k];
+											if ($.inArray(dragOpt.word.toLowerCase(), usedWords) == -1) {
+%>
+											<div class="myButton draggable_box swiper-no-swiping" >
+												<div class="myButtoninner">
+													<%= dragOpt.word %>
+												</div>
+											</div>
+<%
+											}
+										}
+%>
+											<div class="clear"></div>
+										</div> 
+										<div class="clear"></div>
+									</div>
+								</div>
+								<div class="col1_right">
+									<div class="header_word_wrap">
+<%
+									var sFamily = '',
+										iFamilyCount = 0;
+										
+									for (var k = 0; k < slides.drop_options.length; k++) {
+										dropOpt = slides.drop_options[k];
+										if (dropOpt.family != sFamily) {
+											sFamily = dropOpt.family;
+											iFamilyCount++;
+%>
+										<div class="f-<% if (iFamilyCount % 2 == 0) { %>right<% } else { %>left<% } %>">
+											<%= dropOpt.family %>
+										</div>
+<%
+										}
+									}
+%>
+									<div class="clear"></div>
+									</div>
+									<div class="word_matching_area">
+										<div class="matching_container_answer word-sort">
+<%
+										sFamily = '';
+										iFamilyCount = 0;
+										_.each(slides.drop_options, function(dropOpt, k) {
+											if (dropOpt.family != sFamily) {
+												iFamilyCount++;
+												if (iFamilyCount > 1) {
+%>
+												</div>
+<%
+												}
+%>
+												<div class="f-<% if (iFamilyCount % 2 == 0) { %>right<% } else { %>left<% } %>">
+<%
+												sFamily = dropOpt.family;
+											}
+											sBoxLabel = CONSTANTS.c_s_WORD_SORT_DROP_LABEL;
+											if (savedData[k]) {
+												sBoxLabel = savedData[k];
+											}
+											else {
+												bDisableButton = true;
+											}
+%>
+												<div class="word_matching_row answer_right">
+													<div class="word_matching_content">
+														<div class="myButton swiper-no-swiping<% if (sBoxLabel == CONSTANTS.c_s_WORD_SORT_DROP_LABEL) { %> blank<% } %> dropbox" >
+															<div class="myButtoninner" data-index="<%= k %>" data-family="<%= dropOpt.family %>">
+																<%= sBoxLabel %>
+															</div>
+														</div>
+													</div>
+													<div class="word_matching_content message_word">
+														<div class="word_text" id="result-<%= k %>">
+															<div class="answer_rt sprite" style="display:none;"></div>
+															<div class="answer_wg sprite" style="display:none;"></div>
+															<div class="wordtext_inner wordtext_answer"></div>
+														</div>
+													</div>
+													<div class="clear"></div>
+												</div>
+										<% }); %>
+											</div>
+											<div class="clear"></div>
+											<div id="<%= CONSTANTS.c_s_DIV_CORRECTED_ANSWERS_CONTAINER_ID %>"> </div>
+										</div>
+										<div class="clear"></div>
+										<div class="studyplan_footer assessment_pagination">
+											<div class="pagination_footer pagination_footer_part assign_teacherview" id="<%= CONSTANTS.c_s_DIV_WORD_SORT_SHOW_SCORE_ID %>">
+												<button  aria-lable="submit button" tabindex="0" aria-hidden="false" class="button7 btn right valid-activity <% if (bDisableButton === true) { %> disabled btndisabled<% } %>" id="<%= CONSTANTS.c_s_BTN_WORD_SORT_SUBMIT_ANSWER_ID %>"<% if (bDisableButton === true) { %> disabled="disabled"<% } %> data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">
+													<%= CONSTANTS.c_s_SUBMIT_ANSWERS_BTTN %>
+												</button>
+												<div class="clear"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</section>
+				<div class="clear"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+		<% });%>
+    </script>
+    <!-- /*== End Word Sort Template ==*/ -->
+	
+    <!-- /*==== Word Slam Template ====*/ -->
+	<script type="text/template" id="word_slam">
+		<div id="word-slam-swiper">
+			<div id="word-slam-swiper-slide-container" class="swiper-wrapper">
+<%
+		var iTotalSlides = data.length,
+			bDisableSubmit = false,
+			iQuestionIndex = 1;
+		_.each(data, function(oSlide, iSlideIndex) {
+%>
+				<div class="swiper-slide" data-slide-type="<%= slideType %>" reference-key="<%= referenceKey %>" id="<%= referenceKey %>___<%= (iSlideIndex + 1) %>">
+					<div class="main_wrapper">                
+						<section class="phonics_game_container">
+							<div class="phonicstext_content"><%= oSlide.instruction %></div>
+							<div class="WordSlam_container">
+								<div class="container2">
+									<div class="container1">
+										<div class="col1_left">
+											<div class="word_matching">
+												<div class="matching_container_content valid-activity" id="word-bank-<%= (iSlideIndex + 1) %>">
+													<%= wordBankHtmls[iSlideIndex + 1] %>
+													<div class="clear"></div>
+												</div> 
+												<div class="clear"></div>
+											</div>
+										</div>
+										<div class="col1_right">
+											<div class="word_matching_area">
+												<div class="matching_container_answer word-slam" id="word-slam-drop-area-<%= (iSlideIndex + 1) %>">
+												<% _.each(oSlide['questions'], function(oQuestion, iQIndex) { %>
+													<div class="word_matching_row">
+														<div class="textbox_heading_content">
+															<span><%= iQuestionIndex++ %>. </span><%= oQuestion.text %>
+														</div>
+														<div class="word_matching_content">
+<%
+														var aAnswers = oQuestion.answer.split(','),
+															aSavedAnswers = [],
+															sDropBoxLabel;
+														
+														aSavedAnswers = [];
+														try {
+															aSavedAnswers = savedData[iSlideIndex + 1][iQIndex + 1].answer;
+														}
+														catch (oException) {
+															aSavedAnswers = [];
+														}
+														 var qNum = 0;
+														_.each(aAnswers, function(sAnswer, iAIndex) {
+															qNum++;
+															sDropBoxLabel = ASSIGNMENTS.c_s_WORD_SLAM_DROP_LABEL;
+															if (aSavedAnswers.fetch(iAIndex)) {
+																if (aSavedAnswers.fetch(iAIndex).length) {
+																	sDropBoxLabel = aSavedAnswers.fetch(iAIndex);
+																}
+																else {
+																	bDisableSubmit = true;
+																}
+															}
+															else {
+																bDisableSubmit = true;
+															}
+%>
+															<div class="myButton<% if (sDropBoxLabel == ASSIGNMENTS.c_s_WORD_SLAM_DROP_LABEL) { %> blank<% } else { %> draggable_box swiper-no-swiping<% } %>" data-slide-id="<%= (iSlideIndex + 1) %>" data-index="<%= (iQIndex + 1) %>">
+																<div class="myButtoninner"  data-qNum = "<%= qNum%>"><%= sDropBoxLabel %></div>
+															</div>
+														<% }); %>
+														</div>
+														<div class="word_matching_content message_word">
+															<div class="fgg"></div>
+															<div class="word_text" id="result-<%= (iSlideIndex + 1) %>-<%= (iQIndex + 1) %>">
+																<div class="answer_rt sprite"></div>
+																<div class="answer_wg sprite"></div>
+																<div class="wordtext_inner">  </div>
+															</div>
+														</div>
+														<div class="clear"></div>
+													</div>
+												<% }); %>
+												</div>
+												<div class="clear"></div>
+												<% if (iTotalSlides == iSlideIndex + 1) { %>
+												<div class="studyplan_footer assessment_pagination">
+													<div class="pagination_footer pagination_footer_part assign_teacherview" id="<%= ASSIGNMENTS.c_s_DIV_WORD_SLAM_SHOW_SCORE_ID %>">
+														<button class="button7 btn right valid-activity <% if (bDisableSubmit === true) { %> disabled btndisabled<% } %>" id="<%= ASSIGNMENTS.c_s_BTN_WORD_SLAM_SUBMIT_ANSWER_ID %>"<% if (bDisableSubmit === true) { %> disabled="disabled"<% } %> data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">
+															<%= ASSIGNMENTS.c_s_SUBMIT_ANSWERS_BTTN %>
+														</button>
+														<div class="clear"></div>
+													</div>
+												</div>
+												<% } %>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="clear"></div>
+							</div>
+							<div class="clear"></div>
+						</section>
+						<div class="clear"></div>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+		<% }); %>
+			</div>
+		</div>
+    </script>
+    <!-- /*== End Word Slam Template ==*/ -->
+	
+	<!-- New fillableworksheet Template -->
+    <script type="text/template" id="fillableworksheet">
+<%
+		var backgroundStyle = "";
+		if (data.background_image != "" && typeof data.background_image != "undefined") {
+			backgroundStyle = 'style="background-image: url(\''+mediaPath  + data.background_image +'\'); background-size:cover; background-repeat:repeat; height:100%"';
+		}
+%>
+		<div class="swiper-slide" reference-key="<%= referenceKey %>" id="<%= referenceKey %>" <%= backgroundStyle %> data-slide-type="<%= slideType %>">			
+					<section class="dailyassignment_container da_container"> 
+						<div class="daily_assignment_content">
+						<div class="da_container_box">				 
+						<%		
+						var nodes = [];
+						
+						nodes[ASSIGNMENTS.c_s_STEM_TAG] = extractText(data, ASSIGNMENTS.c_s_STEM_START,  ASSIGNMENTS.c_s_STEM_END);
+						
+						nodes[ASSIGNMENTS.c_s_DIRECTION_TAG] = extractText(data,ASSIGNMENTS.c_s_DIRECTION_START, ASSIGNMENTS.c_s_DIRECTION_END);
+						
+						var question_text = extractText(data,ASSIGNMENTS.c_s_QUESTION_START, ASSIGNMENTS.c_s_QUESTION_END);
+						
+						
+						var arrSplited = [];
+						arrSplited = question_text.split(ASSIGNMENTS.c_s_QTEXT_END);						
+						var arrResult = [];
+						_.each(arrSplited, function(val,key) {
+							if(val != '') {	
+								var str = val.toString();								
+								arrResult.push(str.replace(ASSIGNMENTS.c_s_QTEXT_START, ""));
+							}
+						});										 
+						%> 								
+								<div class="daily_assignment_title">
+								<%= nodes[ASSIGNMENTS.c_s_DIRECTION_TAG] %>
+								</div>
+								<div class="daily_assignment_mid no_radius">
+								<% if (nodes[ASSIGNMENTS.c_s_STEM_TAG] != '') { %>
+									<div class="question_det">
+										<%= nodes[ASSIGNMENTS.c_s_STEM_TAG] %>
+									</div>
+								<% } %>
+									<div class="Phinics_question daily_assignment_ans">
+										<%
+											var j = 0;
+											$(arrResult).each(function(k, val){												
+												if($.trim(stripHtmlTagsFromString(val)) != '')
+												{
+													j++;
+											%>
+													<label for="textTypeArea<%= j %>">
+													<div class="textbox_heading_content" id="da_question<%= j %>" data-index="<%= j %>">
+													<%=val%>
+													</div>
+													</label>
+													<div class="text_box_area text_box_area_ct">
+													<textarea autocomplete="off" autocorrect="off" autocapitalize="off" tabindex="0" data-index="<%= j %>" spellcheck="false" class="question_textarea valid-activity" id="textTypeArea<%= j %>" data-verbid="<%=TRACK_EVENT[5].Assignment['Typing'].c_s_VERBID%>"></textarea>
+													</div>
+											<%
+												}
+											});
+											%>
+									</div>
+									
+								</div>
+								
+						</div>						
+						<div class="clear"></div>
+						<div class="edit_box_title" style="text-align: right">
+							<button class="button7 btn valid-activity" id="btnPrint" tabindex="0" aria-label="<%=$.trim(ASSIGNMENTS.c_s_PRINT_BTTN)%>" style="display:none;" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"><%=$.trim(ASSIGNMENTS.c_s_PRINT_BTTN)%></button>
+							<button class="button7 btn btndisabled valid-activity" id="btnSubmit" tabindex="0" aria-label="<%=$.trim(ASSIGNMENTS.c_s_SUBMIT_ANSWER_BTTN)%>" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"><%=$.trim(ASSIGNMENTS.c_s_SUBMIT_ANSWER_BTTN)%></button>
+							<div class="clear"></div>
+							<div class="clear"></div>
+						</div>
+						<div class="clear"></div>
+						</div>
+					</section>
+				<!--</div>-->
+                
+            
+            <div class="clear"></div>
+        </div>
+		<!-- Text Help Div -->
+		<div id="textHelpDiv"></div>
+    </script>
+	
+	<!-- /*==== Rotating Lists Template ====*/ -->
+    <script type="text/template" id="rotatinglists">		
+			
+		<div class="swiper-slide rotatinglists" data-slide-type="<%= slideType %>" reference-key="<%=referenceKey%>" id="<%=referenceKey%>" style="width:100%;">
+			<div class="main_wrapper">                
+				<section class="phonics_game_container rotating_list_cont">
+					<div class="phonicstext_content"><%= data.instruction_text %></div>
+					<div class="WordSlam_container">                               
+						<div class="container2">							
+							<div class="matching_container_content">
+								<!---- SWIPER STARTS --->
+								<div class="demo-phone">
+								<div class="demo-phone-screen">
+									<table width="100%">
+<%
+									var sid = 0;
+									_.each (data.questions, function(ques, id) {
+%>
+										<tr>
+										<td width="35%" style="vertical-align: middle">
+										<div class="demo-phone-question"><%= ques.question_text %></div>
+										</td>									
+										<td width="45%">
+										<%
+										_.each (ques.lists, function(list, lid) {
+											sid++;											
+										%>
+											<div id="swiper<%= sid %>" class="swiper valid-activity" data-verbid="<%=TRACK_EVENT[5]['Assignment'].Rotating.c_s_VERBID%>">
+											<div class="swiper-wrapper">
+											<%
+											_.each (list.options, function(val,key){
+											%>
+											<div data-key="<%= key %>" data-correct = "<%= (val == list.correct)?'true':'false' %>"><%= ($.trim(val) == '')?'---':val %></div>
+											<% }) %>											
+											</div>
+											<div class="swipper-window"></div>
+											<div class="masker"></div>
+											</div>
+										<% }) %>									
+										</td>
+										<td width="20%" style="vertical-align: middle"><div class="correct_answer" style="display:none;"><%= ques.answer %></div></td>
+										</tr>
+									<% }) %>
+									</table>
+									</div>
+									</div>												
+									<!--- SWIPER ENDS --->
+									
+									<div class="studyplan_footer assessment_pagination">
+										<div id="status-bar" class="pagination_footer pagination_footer_part assign_teacherview">
+											<button id="<%= ASSIGNMENTS.c_s_BTN_ROTATING_SUBMIT_ANSWER_ID%>" class="button7 btn right valid-activity" data-verbid="<%=TRACK_EVENT[5]['Assignment'].AssignmentButtonClick.c_s_VERBID%>">
+												<%= ASSIGNMENTS.c_s_SUBMIT_ANSWERS_BTTN %>
+											</button>
+											<div class="clear"></div>
+										</div>
+									</div>
+									
+									<div class="clear"></div>
+								</div> 
+								<div class="clear"></div>										
+							</div>
+							<div class="clear"></div>
+						</div>
+					<div class="clear"></div>
+				</section>
+				<div class="clear"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+		
+    </script>
+    <!-- /*== End Rotating List Template ==*/ -->
+	
+	<!-- FRS Master Template -->
+	<script type="text/template" id="frs_master_tpl">
+		<div class="study_plain_container assignment_slider_wrapper frs-master-cont">
+			<div class="study_plain_container_slide">
+				<div class="study_plain_container_contents">
+					<div class="slider_pager_content_outer">
+						
+						<div class="slider_pager_content" style="width:auto;">
+							<div class="swiper-container" style="height:100%; overflow:hidden;">
+								<div id="slide_inner_container" class="swiper-wrapper slider_pager_sl">
+									<!-- Container for Video & question slides --> 
+									<!-- <div class="clear"></div> -->
+								</div>
+							</div>
+							<div class="pagination frs-main-pagination"></div>
+						</div>
+						<div class="clear"></div>
+						<button tabindex="0" role="button" title="Previous Page Button" id="prevPagingBtn" class="slider_pager_left sprite" type="button"></button>
+						<button tabindex="0" role="button" title="Next Page Button" aria-label="Next page" id="nextPagingBtn" class="slider_pager_right sprite" type="button"></button>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+	</script>
+
+	<!-- End of FRS Master Template -->
+	
+	<!-- /*== Foundational Reading Skills Video ==*/ -->
+	<script type="text/template" id="frs_video_tpl">
+<%
+			/* var sVideo = "https://lmdevsprint1.s3.amazonaws.com/dev_27_pg/content/ilit/curriculum/gr4/bbca41c545054cac904becbb6ba8ac81/media/AVA237897.mp4";*/
+			var _sVideoCCPath = "";
+			var _sVideoADPath = "";
+			if (video != null && video != "null") {
+				sVideo = mediaPath + video;
+				_sVideoCCPath = mediaPath + videoccPath;
+				_sVideoADPath = mediaPath + videoADPath;
+			}
+%>
+		<div class="question_box_space swiper-slide padding-right-0" data-page-title="<%= header %>" id="<%= referenceKey %>___<%= partId %><%= slideId %>" data-allow-swipe-next="true">
+			<div class="frs_container studyPlan_practice_video_wrapper">
+				
+				<div class="new_assignment_irr new_assignment_irr_sp_video">
+					<div class="video_container page_container_video">
+						<video id="video__<%= iCntVideoSlide %>__<%= partId %>__<%= slideId %>" class="video-js vjs-default-skin valid-activity" data-setup='{"controls":true, "preload": false, "autoplay": false}' crossorigin="anonymous" data-verbid="<%=TRACK_EVENT[5].Assignment['Videoplayed'].c_s_VERBID%>">
+							<source type="video/mp4;" src="<%= sVideo %>" />
+							<track id="captionsTrack" kind="captions" src="<%= _sVideoCCPath %>" srclang="en" label="captions on" ></track>
+							<track id="ADTrack" kind="descriptions" src="<%= _sVideoADPath %>" srclang="en" label="descriptions on" default ></track>
+						</video>
+						<div class="clear"></div>
+						
+					</div>
+					<div class="clear"> </div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</script>
+	<!-- /* End Foundational Reading Skills Video */ -->
+	
+<!-- Non Score Able Template -->
+<script type="text/template" id="nsa_fillableworksheet">
+<%
+	var backgroundStyle = "";
+	if (data.background_image != "" && typeof data.background_image != "undefined") {
+		backgroundStyle = 'style="background-image: url(\''+mediaPath  + data.background_image +'\'); background-size:cover; background-repeat:repeat; height:100%"';
+	}
+%>
+	<div class="swiper-slide" reference-key="<%= referenceKey %>" id="<%= referenceKey %>" <%= backgroundStyle %> data-slide-type="<%= slideType %>">			
+		<section class="dailyassignment_container da_container"> 
+			<div class="daily_assignment_content">
+				<div class="da_container_box">
+			<%		
+				var nodes = [];
+				
+				nodes[ASSIGNMENTS.c_s_STEM_TAG] = extractText(data, ASSIGNMENTS.c_s_STEM_START,  ASSIGNMENTS.c_s_STEM_END);
+				
+				nodes[ASSIGNMENTS.c_s_DIRECTION_TAG] = extractText(data,ASSIGNMENTS.c_s_DIRECTION_START, ASSIGNMENTS.c_s_DIRECTION_END);
+				
+				var question_text = extractText(data,ASSIGNMENTS.c_s_QUESTION_START, ASSIGNMENTS.c_s_QUESTION_END);
+				
+				
+				var arrSplited = [];
+				arrSplited = question_text.split(ASSIGNMENTS.c_s_QTEXT_END);						
+				var arrResult = [];
+				_.each(arrSplited, function(val,key) {
+					if(val != '') {	
+						var str = val.toString();								
+						arrResult.push(str.replace(ASSIGNMENTS.c_s_QTEXT_START, ""));
+					}
+				});										 
+			%>
+					<% if (nodes[ASSIGNMENTS.c_s_DIRECTION_TAG] != "") { %>
+					<div class="daily_assignment_title"><%= nodes[ASSIGNMENTS.c_s_DIRECTION_TAG] %></div>
+					<% } %>
+					<div class="daily_assignment_mid no_radius">
+						<div class="Phinics_question daily_assignment_ans">
+						<% if (nodes[ASSIGNMENTS.c_s_STEM_TAG] != '') { %>
+							<div class="question_det" style="margin-bottom: 0px; border: none;">
+								<%= nodes[ASSIGNMENTS.c_s_STEM_TAG] %>
+							</div>
+						<% } %>
+						</div>
+					</div>
+								
+				</div>						
+				<div class="clear"></div>
+				<div class="edit_box_title">
+					<button class="right button7 btn valid-activity" id="btnFinish" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"><%=$.trim(ASSIGNMENTS.c_s_FINISHED_BTTN)%></button>
+					<button class="right button7 btn valid-activity" id="btnPrint" style="display:none;" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"><%=$.trim(ASSIGNMENTS.c_s_PRINT_BTTN)%></button>
+					<div class="clear"></div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</section>          
+		<div class="clear"></div>
+	</div>
+</script>
+<!-- End: Non Score Able Template -->
+
+<!-- Start Grade Intro Animation -->
+	
+	<script type="text/template" id="grade_animation_intro_slide">
+	<%
+				var _sVideo = "http://vjs.zencdn.net/v/oceans.mp4";
+				var _videoccPath = '',
+					_videoadPath = '';
+				
+				if (video != null && video != "null") {
+					_sVideo = mediaPath + video;
+				}
+				if( videoccPath != null && videoccPath != "null" && typeof videoccPath !== 'undefined'){
+					_videoccPath =  mediaPath + videoccPath;
+				}
+				if( videoadPath != null && videoadPath != "null" && typeof videoadPath !== 'undefined'){
+					_videoadPath =  mediaPath + videoadPath;
+				}
+	%>
+		<div class="swiper-slide" reference-key="<%= referenceKey %>" id="<%= referenceKey %>" data-slide-type="projectorslide">
+			<div class="grade_animation_video_wrapper">
+				<div class="new_assignment_irr new_assignment_irr_sp_video">
+					<div class="video_container page_container_video">
+						<video id="video__<%= partIdx %>" class="video-js vjs-default-skin valid-activity"  data-setup='{"controls":true, "preload": false, "autoplay": false}' data-verbid="<%=TRACK_EVENT[5].Assignment['Videoplayed'].c_s_VERBID%>">
+							<source src="<%= _sVideo %>" type="video/mp4;" />
+						    <track id="captionsTrack" kind="captions" src="<%= _videoccPath %>" srclang="en" label="captions on" ></track>
+						    <track id="ADTrack" kind="descriptions" src="<%= _videoadPath %>" srclang="en" label="descriptions on" default></track>
+						</video>  
+						<div class="clear"></div>
+					</div>
+					<div class="clear"> </div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</script>
+	
+<!-- End Grade Intro Animation -->
+
+<!-- textslide Template -->
+    <script type="text/template" id="textslide">
+		<%
+			var pageTitleChk = _.where(data.metadata, {key: "slide_title"}),
+				sliderTypeArr = _.where(data.metadata, {key: "type"}),
+				sliderType = (sliderTypeArr.length)?sliderTypeArr[0].keyValue :'',
+				pageTitle = (pageTitleChk.length)?pageTitleChk[0].keyValue:'';
+		%>
+		<div class="swiper-slide backgound_images assignment_slider_wrapper" reference-key="<%= referenceKey %>" id="<%= referenceKey %>" data-slide-type="<%= sliderType %>">
+            <div class="main_wrapper">
+                <div class="gradient new_assignment_view multiple_choice_questions">
+                    <div class="slider_swiper_inner">
+                        <section class="container_space addclass_for_padd">
+							<div class="study_plain_title"><%= pageTitle %></div>
+							<div class="textslide media_content" >
+								<% if(textHtml){ %>
+									<p><%=textHtml %></p>
+								<% } %>
+								<% if(audio){ %>
+									<div class="audioPlayer">
+										 <audio id="player_<%= partIdx %>" class="player" controls="false" >
+										  <!-- Your browser does not support the <code>audio</code> element. -->
+										  <source src="<%= mediaPath+audio %>" type="audio/mp3">
+										 </audio>
+										 <span data-slide-idx="<%= partIdx %>" class="playPauseButton sprite2"></span>
+									 </div>
+									 <% } %>
+	
+									<% if(image){ %>
+									<img src="<%= mediaPath+image %>" alt="<%= imageAltText %>"/>
+									<% } %>
+							</div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </script>
+	<!-- End of textslide Template -->
+	
+	<!-- projectorslide Template -->
+    <script type="text/template" id="projectorslide">
+		<%
+		
+			var pageTitleChk = _.where(data.metadata, {key: "slide_title"}),
+				sliderTypeArr = _.where(data.metadata, {key: "type"}),
+				sliderType = (sliderTypeArr.length)?sliderTypeArr[0].keyValue :'',
+				pageTitle = (pageTitleChk.length)?pageTitleChk[0].keyValue:'',
+				pageImage = mediaPath+image,
+				imageAltText = image_alternative_text;
+				aboveTextHtmlChk = _.where(data.metadata, {key: "above_text_html"}),
+				aboveTextHtml = (aboveTextHtmlChk.length)?aboveTextHtmlChk[0].keyValue:'',
+				pageAudio = mediaPath+audio;
+				var _sVideoCCPath = "";
+				var _sVideoADPath = "";
+			
+				var _sVideo = "http://vjs.zencdn.net/v/oceans.mp4";
+				if (video != null && video != "null") {
+					_sVideo = mediaPath + video;
+					if(videoccPath!=null && videoccPath!="null"  && videoccPath!="undefined" && videoccPath!="")
+						_sVideoCCPath = mediaPath + videoccPath;
+					if(videoADPath!=null && videoADPath!="null" && videoADPath!="undefined" && videoADPath!="")
+						_sVideoADPath = mediaPath + videoADPath;
+				}
+				
+		%>
+		<div class="swiper-slide backgound_images assignment_slider_wrapper" reference-key="<%= referenceKey %>" id="<%= referenceKey %>" data-slide-type="<%= sliderType %>">
+            <div class="main_wrapper">
+                <div class="gradient new_assignment_view multiple_choice_questions">
+                    <div class="slider_swiper_inner">
+                        <section class="container_space addclass_for_padd" role="tabpanel">
+							<div class="study_plain_title"><%= pageTitle %></div>
+								<div class="projectorslide media_content" >
+									<div class="above_text_html"><%= aboveTextHtml %></div>
+									<% if(audio){ %>
+									<div class="audioPlayer">
+										 <audio id="player_<%= partIdx %>" class="player valid-activity" controls="false" data-verbid="<%=TRACK_EVENT[5].Assignment['Videoplayed'].c_s_VERBID%>">
+										  <!-- Your browser does not support the <code>audio</code> element. -->
+										  <source src="<%= pageAudio %>" type="audio/mp3">
+										 </audio>
+										 <span data-slide-idx="<%= partIdx %>" class="playPauseButton sprite2"></span>
+									 </div>
+									 <% } %>
+	
+									<% if(image){ %>
+									<img src="<%= pageImage %>" alt="<%= imageAltText %>"/>
+									<% } %>
+									<% if(video) { %>
+									<div class="grade_animation_video_wrapper">
+										<div class="new_assignment_irr new_assignment_irr_sp_video">
+											<div class="video_container page_container_video">
+												<!-- crossorigin="anonymous" -->
+												<video id="video__<%= partIdx %>" class="video-js vjs-default-skin valid-activity"  data-setup='{"controls":true, "preload": false, "autoplay": false}' data-verbid="<%=TRACK_EVENT[5].Assignment['Videoplayed'].c_s_VERBID%>">
+													<source src="<%= _sVideo %>" type="video/mp4;" />
+													<track id="captionsTrack" kind="captions" src="<%= _sVideoCCPath %>" srclang="en" label="captions on" ></track>
+													<track id="ADTrack" kind="descriptions" src="<%= _sVideoADPath %>" srclang="en" label="descriptions on" default></track>
+												</video>
+						  
+												<div class="clear"></div>
+												
+											</div>
+											<div class="clear"> </div>
+										</div>
+										<div class="clear"></div>
+									</div>
+									<% } %>
+								</div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </script>
+	<!-- End of projectorslide Template -->
+<!-- Word Study practice Video -->
+	<script type="text/template" id="word_study_practice_video_tpl">
+<%
+			var _sVideo = "http://vjs.zencdn.net/v/oceans.mp4";
+			var _sVideoCCPath = "";
+			var _sVideoADPath = "";
+			if (video != null && video != "null") {
+				_sVideo = mediaPath + video;
+				if(videoccPath!=null && videoccPath!="null"  && videoccPath!="undefined" && videoccPath!="")
+					_sVideoCCPath = mediaPath + videoccPath;
+				if(videoADPath!=null && videoADPath!="null" && videoADPath!="undefined" && videoADPath!="")
+					_sVideoADPath = mediaPath + videoADPath;
+			}
+			var phonixVideoWrapperClass = ((typeof phonixVideoWrapper != 'undefined') &&  phonixVideoWrapper===true ) ? "phonixVideoWrapper" : "";
+%>
+		<div class="question_box_space swiper-slide <%= phonixVideoWrapperClass %>" ><% //= data[0].slide_title%>
+			<div class="word_practice_video_wrapper">
+				
+				<div class="new_assignment_irr new_assignment_irr_sp_video">
+					<div class="video_container page_container_video">
+						<video id="video_1" class="video-js vjs-default-skin valid-activity" data-setup='{"controls":true, "preload": false, "autoplay": false,"techOrder": ["html5"]}' data-verbid="<%=TRACK_EVENT[5].Assignment['Videoplayed'].c_s_VERBID%>">
+							<source type="video/mp4;" src="<%= _sVideo %>" />
+							<track id="captionsTrack" kind="captions" src="<%= _sVideoCCPath %>" srclang="en" label="captions on" ></track>
+							<track id="ADTrack" kind="descriptions" src="<%= _sVideoADPath %>" srclang="en" label="descriptions on" default></track>
+						</video>
+						<div class="clear"></div>
+						   
+					</div>
+					<div class="clear"> </div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</script>
+	
+<!-- Word Study practice Video -->
+
+<!-- TEXT HELP MENU -->
+<script type="text/template" id="txtHelpMenuTpl">
+	<div id="textToHelpMenu" role="region" aria-label="textHelp popup" style="position:absolute;display:none;background:#000;">
+		<div id="tthSpeak" role="button" tabindex="0" class="textToHelpMenuButtons" onclick="playText(event);" unselectable="on">Speak</div>
+		<div id="tthTransSep" class="sep" unselectable="on"></div>
+		
+		<div id="tthDict" role="button" tabindex="0" class="textToHelpMenuButtons forWord" onclick="eventDic(event);" unselectable="on">Dictionary</div>
+		<div id="tthDictSep" class="sep forWord" unselectable="on"></div>
+		
+		<div id="tthPicDict" role="button" tabindex="0" class="textToHelpMenuButtons forWord" onclick="eventPicDic(event);" unselectable="on">Picture Dictionary</div>
+		<div id="tthPicDictSep" class="sep forWord" unselectable="on"></div>
+		
+		<div id="tthTrans" role="button" tabindex="0" class="textToHelpMenuButtons" onclick="eventTrans(event);" unselectable="on">Translate</div>
+		<% if (typeof SlideType == "undefined" || SlideType != "wtw"){ %>
+		<div id="tthNotesSep" class="sep" unselectable="on"></div><div id="tthNotes" role="button" tabindex="0" class="textToHelpMenuButtons" onclick="textHelpCreateNote(event);" unselectable="on">Notes</div>
+		
+		<div id="tthCopySep" class="sep" unselectable="on"></div><div id="tthCopy" role="button" tabindex="0" class="textToHelpMenuButtons" onclick="copyText(event);" unselectable="on">Copy</div>
+		<% } %>
+		<div class="arrow-down"></div>
+	</div>
+	<div id="txtAudioStop" class="audio_block" style="display:none;" onMouseDown="$rw_stopSpeech();">
+		<div class="audio_button">
+			<img src="ebookplayer/media/audio_img.png" alt="">
+		</div>
+	</div>
+</script>
+<!-- TEXT HELP MENU -->
+
+<!-- /*==== Word Their Way Template ====*/ -->
+	<script type="text/template" id="word_their_way">
+		<div id="word-their-way-swiper" class="wtw-template">
+			<div id="word-their-way-swiper-slide-container" class="swiper-wrapper">
+				<%
+				_.each(data, function(oSlide, iSlideIndex) {
+				var slidetypeClass = (oSlide.type !="sortdndtextslide" ? "image-wtw" :"");
+				%>
+				<div class="swiper-slide <%=slidetypeClass%>" style="background: #FFF;overflow:auto;" data-slide-type="<%= slideType %>" reference-key="<%= referenceKey %>" id="<%= referenceKey %>___<%= (iSlideIndex) %>">
+				</div>
+				<% }); %>
+			</div>
+		</div>
+    </script>
+
+	<script type="text/template" id="wtw_slide">
+
+		<div class="max-width-980">
+			<section class="WTW-area">
+				<div class="row">
+					<div class="matching_container_content mid_image " id="word-their-way-<%= iSlideIndex %>">
+
+						<!-- <img src="images/pic.jpg" alt="The Pulpit Rock"> -->
+						<%						
+						for(var tileIndex = 1; tileIndex <= Object.keys(oSlide.answers).length; tileIndex++){
+						if(oSlide.answers[""+tileIndex+""].example =="0"){
+						%>
+						<label id="answerTileContainer" class="wtw-drag-text dragImage swiper-no-swiping draggable_box">
+							<%
+							if(oSlide.type == "sortdndpictureslide"){
+								%>
+								 <span><img src="<%= AssigmentSlides.mediaPath + oSlide.answers[""+tileIndex+""].small_image %>" class='img_resize' alt="#"/></span>
+								<%
+							}else if(oSlide.type == "sortdndcombinedslide"){
+								if(oSlide.answers[""+tileIndex+""].text =="" && oSlide.answers[""+tileIndex+""].small_image != ""){
+								%>
+								 <span><img src="<%= AssigmentSlides.mediaPath + oSlide.answers[""+tileIndex+""].small_image %>" class='img_resize' alt="#"/></span>
+								<%
+								}else if(oSlide.answers[""+tileIndex+""].text !="" && oSlide.answers[""+tileIndex+""].small_image == ""){
+									%>
+									<%=oSlide.answers[""+tileIndex+""].text%>
+									<%
+								}else{
+								 alert("Empty Tile. No Text or Image Found");
+								}
+							}else{
+								%>
+								<%=oSlide.answers[""+tileIndex+""].text%>
+								<%
+							}
+							%>
+							<audio id="Mp3Me">
+				
+								<source src="<%= AssigmentSlides.mediaPath + oSlide.answers[""+tileIndex+""].instructionalAudio %>" type="audio/mpeg">
+							</audio>
+						</label>
+						<%
+						oSlide.answers[""+tileIndex+""] == "";
+						break;
+						}
+						}
+						%>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+					<div class="header_icon right">
+						<div class="help_icon right open"><img src="media/help.png" class="helpBtn_Icon"/></div>
+						<%
+						if(oSlide.type != "sortdndpictureslide"){
+						%>
+						<div class="plus_icon right open">
+							<img src="media/plus_icon.png" class="plusbtn"/>
+							<!--<img src="media/minus_icon.png" class="minusbtn"/>-->
+						</div>
+						<%
+						}
+						%>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="WTW-wrap wtw_preventDefaultBehaviour">
+					<div class="row">
+						<div  class="right_dragale_area">
+							<div class="drag_row">
+								<%
+								_.each(oSlide.questions, function(oSlideQuestion, iSlideQuestionIndex){
+									 var InstructionalAudioSource1 = "";
+									 InstructionalAudioSource1 = ((oSlideQuestion.instructionalAudio != "")? ""+ AssigmentSlides.mediaPath+""+ oSlideQuestion.instructionalAudio+"": "#");
+								%>
+								<div class="right_drag_box">
+									<div class="wtw-drop-container text-center <%= aColColorArr[ (parseInt(iSlideQuestionIndex)*2)-1] %>">
+										<div class="wtw-drop-header">
+											<%
+											if(oSlideQuestion.text !== "" && oSlideQuestion.small_image !== ""){
+											%>
+											<div class="header_fulltext"><%= oSlideQuestion.text %></div>
+												<div class="combined_option">
+													<div class="image_right right"><img class="imageheight" src="<%= AssigmentSlides.mediaPath + oSlideQuestion.small_image %>" alt="#" style="max-width:60px;"/></div>
+													<div class="text_area"> <%= oSlideQuestion.text %> </div>
+												</div>
+											<audio id="Mp3Me<%= iSlideQuestionIndex %>">
+												<source src="<%= InstructionalAudioSource1 %>" type="audio/mpeg">
+											</audio>
+											<%
+											} else if(oSlideQuestion.text == "" && oSlideQuestion.small_image != ""){
+											%>
+												<span><img class="imageheight" src="<%= AssigmentSlides.mediaPath + oSlideQuestion.small_image %>" alt="#" style="max-width:60px;"/></span>
+											<%
+											}else if(oSlide.type == "sortdndtextslide"  && oSlideQuestion.text != "" && oSlideQuestion.small_image == ""){
+											var firstSpanText ="",
+												secondSpanText= "";
+											%>
+											<div class="header_fulltext"><%= oSlideQuestion.text %></div>
+											<%
+
+											((oSlideQuestion.text.trim().length > 14)? function(){
+
+												var tempFirstSpanContent = "";
+												var sliptedArr = oSlideQuestion.text.trim().split(" ");
+												for(var i=0;i<sliptedArr.length;i++){
+												tempFirstSpanContent += sliptedArr[i]+" ";
+												if(tempFirstSpanContent.length < 14){
+												continue;
+												}else{
+												firstSpanText= tempFirstSpanContent.replace(sliptedArr[i],'').trim();
+												secondSpanText = oSlideQuestion.text.replace(firstSpanText,'').trim();
+												}
+												break;
+												}
+											}() : firstSpanText = oSlideQuestion.text.trim());
+
+											%>
+												<div class = "firstSpan"><%= firstSpanText %></div>
+												<div class = "secondSpan"style="max-height: 34px;"><%= secondSpanText %></div>
+
+											<%
+											} else{
+											%>
+											<%= oSlideQuestion.text %>
+											<%
+											}
+											if(oSlide.type == "sortdndpictureslide"){
+											var aRelatedAns1 = [];
+											for (var key in oSlideQuestion.answers){
+												aRelatedAns1.push(key);
+											}
+											_.each(oSlide.answers, function(oSlideAnswer, iSlideAnswerIndex) {
+											var arrayLength1 = aRelatedAns1.length;
+											for (var i = 0; i < arrayLength1; i++) {
+											if(aRelatedAns1[i] == iSlideAnswerIndex && oSlideAnswer.example == "1"){
+											%>
+											 <span><img src="<%= AssigmentSlides.mediaPath + oSlideAnswer.small_image %>" alt="#"/></span>
+											<%	
+											}
+											}
+											});
+											
+											}
+											%>
+										</div>
+										<div class="wtw-drop-body" data-colId="<%= iSlideQuestionIndex%>">
+											<%
+											var emptyRowCounter = 0;
+											var aRelatedAns = [];
+											var nNoOfRows= undefined;
+											nNoOfRows = ((oSlide.type == "sortdndpictureslide" || oSlide.type == "sortdndcombinedslide") ? nNoOfRows = 5 : nNoOfRows = 7) ;
+											for (var key in oSlideQuestion.answers) {
+												aRelatedAns.push(key);
+											}
+											_.each(oSlide.answers, function(oSlideAnswer, iSlideAnswerIndex) {
+												var arrayLength = aRelatedAns.length;
+												for (var i = 0; i < arrayLength; i++) {
+													if(aRelatedAns[i] == iSlideAnswerIndex && oSlideAnswer.example == "1"){
+														emptyRowCounter++;
+														if(oSlideAnswer.text =="" && oSlideAnswer.small_image != ""){
+												%>
+												<label class="wtw-drag-text wtw-dropped-text <%= aColColorArr[ (parseInt(iSlideQuestionIndex)*2)] %>"><span><img src="<%= AssigmentSlides.mediaPath + oSlideAnswer.small_image %>" class='img_resize' alt="#"/></span></label>
+												<%
+														}else if(oSlideAnswer.text !="" && oSlideAnswer.small_image == ""){
+												%>
+												<label class="wtw-drag-text wtw-dropped-text <%= aColColorArr[ (parseInt(iSlideQuestionIndex)*2)] %>"><%= oSlideAnswer.text %></label>
+												<%
+														}else{
+																	//console.log("InCorrect JSON: Answer can not have both Text and Image as Example");
+														}
+													}
+												}
+											});
+
+											/*** for images ****/
+											for (var ii = 0; ii < (nNoOfRows -emptyRowCounter); ii++) {
+												if(oSlide.type == "sortdndpictureslide" || oSlide.type == "sortdndcombinedslide"){
+											%>
+												<label class="wtw-drag-text wtw-dropped ui-droppable" data-RowId="<%= ii%>" style="min-height:35px;"></label>
+											<%
+												}else{
+											%>
+												<label class="wtw-drag-text wtw-dropped ui-droppable" data-RowId="<%= ii%>"></label>
+											<%
+												}
+											}
+											%>
+										</div>
+										<div class="wtw-drop-footer">
+											<button class="click-drop-arrow"><img src="media/up_arrow.png"/></button>
+										</div>
+									</div>
+								</div>
+								<%
+								});
+								%>
+								<div class="clear"></div>
+							</div>
+
+							<div class="wtw-button-area text-right">
+								<%
+								if(iSlideIndex != "1"){
+								%>
+								<button id="wtw-back-slide-btn" class=" btn btn-primary backBtn">Back</button>
+								<%
+								}
+								%>
+								<%
+								if(parseInt(iSlideIndex) != iTotalSlides){
+								%>
+								<button id="wtw-nxt-slide-btn" class=" btn btn-primary right nxtBtn">Next</button>
+								<%
+								}
+								%>
+								<%
+								if(parseInt(iSlideIndex) == iTotalSlides){
+								WordTheirWayView.lastSlide = true;
+								%>
+								<button id="wtw-submit-slide-btn" class=" btn btn-primary right submitBtn " style="background: darkgray;" disabled>Submit</button>
+								<%
+								}
+								%>
+								<button id="wtw-reset-slide-btn" class="btn btn-primary right resetBtn">Reset</button>
+								<div  class="showMarks_div">
+									<span class="icon left"></span>
+									<span class="feedBack_text left"></span>
+									<div class="clear"></div>
+								</div>
+								<div class="clear"></div>
+							</div>
+							<div class="clear"></div>
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+			</section>
+		</div>
+		<div class="clear"></div>
+		<!-- Text Help Div -->
+		<div id="textHelpDiv"></div>
+	</script>
+	<!-- /*== End Word Their Way Template ==*/ -->
+
+	
+	
+<!-- /* == START of Answer List Text Tooltip == */ -->
+<script type="text/template" id="answer_list_tooltip">
+	<div class="tooltip_box wtw_preventDefaultBehaviour">
+		<div class="tooltip wtw_preventDefaultBehaviour" id="word-list-<%= iSlideIndex %>">
+			<div class="option_row">
+				<% _.each(oSlide_tooltip1.answers, function(oSlideAnsr, iSlideAnsrIndex){ %>
+				<div class="optionR_one left"><p><%= oSlideAnsr.text %></p>
+
+				</div>
+				<%
+				});
+				%>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+	</div>
+</script>
+<!-- /* == END of Answer List Text Tooltip == */ -->
+	
+	
+<!-- /* == START of Instructional Text Tooltip == */ -->
+<script type="text/template" id="instructional_text_tooltip">
+	<div class="tooltip_box wtw_preventDefaultBehaviour">
+		<div class="tooltip wtw_preventDefaultBehaviour">
+			<div class="tooltip_content">
+			<% if(oSlide_tooltip.instructionalText != ""){ %>
+			<p><%= oSlide_tooltip.instructionalText %></p>
+			<% }else{%>
+			<p>Listen carefully to the sound of the word on the top of the screen. Then sort each word by rhyming sound. Drag and drop each tile into the correct column</p>
+			<% } %>
+			<div class="clear"></div>
+			</div>
+		</div> 
+		<div class="clear"></div>
+	</div>
+</script>
+<!-- /* == END of Instructional Text Tooltip == */ -->
+
+
+
+<!-- TEXT HELP SELECTED TEXT CONTAINER -->
+<script type="text/template" id="txtHelpSelectedContentTpl">
+	<div id="msTextHelp" style="position:absolute;top:-9999px;left:-9999px;"></div>
+</script>
+<!-- TEXT HELP SELECTED TEXT CONTAINER -->
+<script src="https://toolbar.speechstream.net/SpeechStream/3.9.5/speechstream.js" type="text/javascript"  data-speechstream-config="SavvasiLitv395R1"></script> 
+
+
+<!-- CLAS-99 -->
+<div id="unanswered-questions-drawer" class="drawer ">
+    <div class="drawer-header">
+        <span id="unanswered-questions-Title" class="ui-dialog-title"></span>
+        <button id="closethick-drawer-btn" class="close-btn ui-button-icon-primary ui-icon ui-icon-closethick" aria-label="Close Drawer"></button>
+    </div>
+    <div class="drawer-content">
+        <ul id="unanswered-questions-list"></ul>
+    </div>
+    <div class="drawer-footer">
+        <button class="btn btn-primary" id="close-drawer-btn">Close</button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#closethick-drawer-btn").click(function () {
+            $("#unanswered-questions-drawer").css("visibility", "hidden");
+        });
+		$("#close-drawer-btn").click(function () {
+            $("#unanswered-questions-drawer").css("visibility", "hidden");
+        });
+    });
+</script>
+<!-- End of CLAS-99 -->
+
+</html>

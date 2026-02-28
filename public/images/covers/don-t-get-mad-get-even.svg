@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="420" viewBox="0 0 300 420">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3498db"/>
+      <stop offset="50%" stop-color="#2980b9"/>
+      <stop offset="100%" stop-color="#2c3e50"/>
+    </linearGradient>
+  </defs>
+  <rect width="300" height="420" fill="url(#bg)" rx="4"/>
+  <!-- Decorative border -->
+  <rect x="12" y="12" width="276" height="396" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" rx="2"/>
+  <rect x="18" y="18" width="264" height="384" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="0.5" rx="2"/>
+  <!-- Decorative line -->
+  <line x1="50" y1="195" x2="250" y2="195" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+  <!-- Title -->
+  <text x="150" y="104" text-anchor="middle" fill="white" font-family="Georgia, 'Times New Roman', serif" font-size="26" font-weight="bold">Don‘t Get Mad,</text>
+  <text x="150" y="138" text-anchor="middle" fill="white" font-family="Georgia, 'Times New Roman', serif" font-size="26" font-weight="bold">Get Even</text>
+  <!-- Author -->
+  <text x="150" y="230" text-anchor="middle" fill="rgba(255,255,255,0.75)" font-family="Georgia, 'Times New Roman', serif" font-size="16">Lucy Jane Bledsoe</text>
+  <!-- Lexile badge -->
+  <text x="150" y="360" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-family="Arial, sans-serif" font-size="13">420L</text>
+</svg>

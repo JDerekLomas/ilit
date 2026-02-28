@@ -3,20 +3,7 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { loadStudentData, type StudentData } from "@/lib/storage";
-
-/** Lightweight catalog entry — no chapter content */
-interface CatalogBook {
-  id: string;
-  title: string;
-  author: string;
-  coverImage: string;
-  lexileLevel: number;
-  genre: string;
-  summary: string;
-  totalPages: number;
-  chapterCount: number;
-  wordCount: number;
-}
+import type { CatalogBook } from "@/lib/types";
 
 const FILTERS_LEFT = ["All Titles", "My Level", "My Books"] as const;
 const FILTERS_RIGHT = ["Recommended", "Reviewed", "Reserved"] as const;

@@ -13,13 +13,22 @@ export default function BookReaderPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Try static file first, fall back to on-demand API
     fetch(`/content/books/${bookId}.json`)
       .then((res) => {
-        if (!res.ok) throw new Error("Book not found");
+        if (!res.ok) throw new Error("not static");
         return res.json();
       })
       .then(setBook)
-      .catch((err) => setError(err.message));
+      .catch(() => {
+        fetch(`/api/books/${bookId}`)
+          .then((res) => {
+            if (!res.ok) throw new Error("Book not found");
+            return res.json();
+          })
+          .then(setBook)
+          .catch((err) => setError(err.message));
+      });
   }, [bookId]);
 
   if (error) {

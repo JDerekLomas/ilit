@@ -64,6 +64,22 @@ export interface Book {
   chapters: Chapter[];
 }
 
+/** A book from the full Savvas catalog (no chapter content) */
+export interface CatalogBook {
+  id: string;
+  /** Savvas GUID — used to fetch content on demand from CDN */
+  savvasId: string;
+  title: string;
+  author: string;
+  coverImage: string;
+  lexileLevel: number;
+  genre: string;
+  summary: string;
+  totalPages: number;
+  chapterCount: number;
+  wordCount: number;
+}
+
 export interface Chapter {
   title: string;
   pages: BookPage[];

@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="300" height="420" viewBox="0 0 300 420">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1B1464"/>
-      <stop offset="50%" stop-color="#3B3B98"/>
-      <stop offset="100%" stop-color="#182C61"/>
+      <stop offset="0%" stop-color="#2c2c54"/>
+      <stop offset="50%" stop-color="#474787"/>
+      <stop offset="100%" stop-color="#706fd3"/>
     </linearGradient>
   </defs>
   <rect width="300" height="420" fill="url(#bg)" rx="4"/>
@@ -19,5 +19,5 @@
   <!-- Author -->
   <text x="150" y="230" text-anchor="middle" fill="rgba(255,255,255,0.75)" font-family="Georgia, 'Times New Roman', serif" font-size="16">Arthur Conan Doyle</text>
   <!-- Lexile badge -->
-  <text x="150" y="360" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-family="Arial, sans-serif" font-size="13">870L</text>
+  <text x="150" y="360" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-family="Arial, sans-serif" font-size="13">530L</text>
 </svg>

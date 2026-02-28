@@ -8,6 +8,7 @@ import DragDropCheckpoint from "./DragDropCheckpoint";
 interface Props {
   slide: Slide;
   sentences: string[];
+  precedingText?: string;
   checkpoint: Checkpoint;
   onComplete: () => void;
   completed: boolean;
@@ -16,6 +17,7 @@ interface Props {
 export default function CheckpointSlide({
   slide,
   sentences,
+  precedingText,
   checkpoint,
   onComplete,
   completed,
@@ -52,7 +54,7 @@ export default function CheckpointSlide({
           />
         ) : (
           <div className="font-serif text-sm md:text-base leading-relaxed text-gray-800 space-y-4">
-            {(slide.text || sentences.join(" ")).split("\n\n").map((p, i) => (
+            {(slide.text || sentences.join(" ") || precedingText || "").split("\n\n").map((p, i) => (
               <p key={i}>{p}</p>
             ))}
           </div>

@@ -23,6 +23,22 @@ export default function InteractiveShell({ passage, onExit }: Props) {
   const slide = passage.slides[currentSlide];
   const totalSlides = passage.slides.length;
 
+  // For checkpoint slides with no text, gather text from preceding reading slides
+  const getPrecedingText = useCallback(
+    (index: number): string => {
+      const texts: string[] = [];
+      for (let i = index - 1; i >= 0; i--) {
+        const s = passage.slides[i];
+        if (s.type === "reading" && s.text) {
+          texts.unshift(s.text);
+          break; // Just the immediately preceding reading slide
+        }
+      }
+      return texts.join("\n\n");
+    },
+    [passage.slides]
+  );
+
   const goToSlide = useCallback(
     (index: number) => {
       if (index < 0 || index >= totalSlides) return;
@@ -129,6 +145,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
               <CheckpointSlide
                 slide={slide}
                 sentences={slide.sentences || []}
+                precedingText={getPrecedingText(currentSlide)}
                 checkpoint={slide.checkpoint!}
                 onComplete={handleCheckpointComplete}
                 completed={completedCheckpoints.has(currentSlide)}

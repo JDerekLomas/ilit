@@ -58,7 +58,7 @@ export default function SummarySlide({ slide }: Props) {
           onChange={(e) => setText(e.target.value)}
           disabled={submitted}
           placeholder="Type your summary here..."
-          className="w-full h-40 md:h-48 p-4 border-2 border-blue-300 bg-blue-50/50 rounded-lg resize-none font-serif text-sm md:text-base leading-relaxed focus:outline-none focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+          className="w-full h-40 md:h-48 p-4 border-2 border-gray-300 bg-white rounded-lg resize-none font-serif text-sm md:text-base leading-relaxed focus:outline-none focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
         />
         <button
           onClick={handleGetFeedback}

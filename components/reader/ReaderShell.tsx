@@ -275,11 +275,7 @@ export default function ReaderShell({ book, onExit }: Props) {
     <div
       className="fixed inset-0 overflow-hidden flex flex-col"
       style={{
-        background: [
-          "repeating-linear-gradient(90deg, #8B6914 0px, #7B5B12 2px, #A0734D 4px, #6B4226 7px, #D2A679 9px, #8B6914 12px)",
-          "linear-gradient(180deg, #6B4226 0%, #8B6914 30%, #A0734D 60%, #6B4226 100%)",
-        ].join(", "),
-        backgroundBlendMode: "overlay",
+        background: "url(/images/textures/wood-grain.png) repeat",
       }}
     >
       {/* Toolbar */}

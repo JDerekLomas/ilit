@@ -43,6 +43,10 @@ const EXISTING_ITEMS: Record<string, AssignmentItem[]> = {
     { id: "bomb-dogs", title: "Bomb Dogs: Canine Heroes", type: "interactive-reading" },
     { id: "turn-it-down", title: "Turn It Down!", type: "interactive-reading" },
     { id: "hidden-ads", title: "Hidden Ads", type: "interactive-reading" },
+    { id: "the-power-to-move", title: "The Power to Move", type: "interactive-reading" },
+    { id: "mentors-make-a-difference", title: "Mentors Make a Difference", type: "interactive-reading" },
+    { id: "having-friends-making-choices", title: "Having Friends, Making Choices", type: "interactive-reading" },
+    { id: "cell-phones-tools-or-troublemakers", title: "Cell Phones: Tools or Troublemakers?", type: "interactive-reading" },
   ],
   "Study Plan": [
     { id: "study-plan-1", title: "Study Plan Week 1", type: "vocabulary" },

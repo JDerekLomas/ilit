@@ -37,7 +37,7 @@ export default function ReadingSlide({
 
   return (
     <div className="w-full max-w-full sm:max-w-[90%] md:max-w-[48%] md:mr-auto self-stretch flex min-h-0">
-      <div className="bg-white rounded-xl shadow-2xl p-4 sm:p-5 md:p-7 overflow-y-auto flex-1 min-h-0">
+      <div className="bg-white rounded-xl border-[6px] border-black/30 p-4 sm:p-5 md:p-7 overflow-y-auto flex-1 min-h-0">
         {slide.heading && (
           <h2 className="font-serif font-bold text-lg md:text-xl mb-4 text-gray-900">
             {slide.heading}
@@ -55,7 +55,8 @@ export default function ReadingSlide({
         {onShowCheckpoint && !checkpointCompleted && (
           <button
             onClick={onShowCheckpoint}
-            className="mt-6 w-full py-2.5 bg-indigo-700 text-white font-medium rounded-full hover:bg-indigo-800 transition-colors"
+            className="mt-6 w-full py-2.5 text-white font-medium rounded transition-colors"
+            style={{ background: 'linear-gradient(to bottom, #1c8ed5 0%, #79bde6 3%, #1c8ed5 5%, #1c8ed5 95%, #025e97 100%)', boxShadow: '0 1px 0 0 #025e97, inset 0 -2px 0 0 #025e97, inset 0 0 0 1px #025e97' }}
           >
             Reading Checkpoint
           </button>

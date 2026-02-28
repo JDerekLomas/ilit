@@ -33,7 +33,7 @@ interface Props {
   onAnswer: (correct: boolean, score: number) => void;
   answered: boolean;
   isCorrect: boolean | null;
-  activeMarker: "yellow" | "pink";
+  activeMarker: "yellow" | "pink" | "eraser";
   attemptCount: number;
   onAttemptChange: (count: number) => void;
   highlightState: HighlightState;
@@ -75,6 +75,10 @@ export default function HighlightCheckpoint({
 
   const toggleSentence = (index: number) => {
     if (highlightState !== "selecting") return;
+    if (activeMarker === "eraser") {
+      eraseSentence(index);
+      return;
+    }
     setSelectedSentences((prev) => {
       const next = new Map(prev);
       if (next.has(index)) {
@@ -245,7 +249,8 @@ export default function HighlightCheckpoint({
             onClick={handleSubmit}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className="px-6 py-2.5 bg-indigo-700 text-white text-sm font-semibold rounded-full hover:bg-indigo-800 transition-colors shadow-md"
+            className="px-6 py-2.5 text-white text-sm font-semibold rounded shadow-md"
+            style={{ background: 'linear-gradient(to bottom, #1c8ed5 0%, #79bde6 3%, #1c8ed5 5%, #1c8ed5 95%, #025e97 100%)', boxShadow: '0 1px 0 0 #025e97, inset 0 -2px 0 0 #025e97, inset 0 0 0 1px #025e97' }}
           >
             Save and Continue
           </motion.button>

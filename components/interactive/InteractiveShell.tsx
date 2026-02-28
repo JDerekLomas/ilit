@@ -180,11 +180,12 @@ export default function InteractiveShell({ passage, onExit }: Props) {
       <div className="relative z-10 flex items-center justify-between px-4 py-3">
         <button
           onClick={onExit}
-          className={`px-4 py-1.5 text-white text-sm font-medium rounded-full transition-colors ${
-            allDone
-              ? "bg-[#66CC00] hover:bg-[#5ab800]"
-              : "bg-indigo-700 hover:bg-indigo-800"
-          }`}
+          className="px-4 py-1.5 text-white text-sm font-medium rounded-full transition-colors"
+          style={{
+            background: allDone
+              ? "linear-gradient(to bottom, #48c05d 0%, #42d059 3%, #10c42e 5%, #18c835 95%, #007b14 100%)"
+              : "linear-gradient(to bottom, #1c8ed5 0%, #79bde6 3%, #1c8ed5 5%, #1c8ed5 95%, #025e97 100%)",
+          }}
         >
           {allDone ? "Done" : "Save & Exit"}
         </button>
@@ -211,7 +212,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
         <button
           onClick={() => goToSlide(currentSlide - 1)}
           disabled={currentSlide === 0}
-          className="absolute left-1 sm:left-2 md:left-4 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-white/90 text-gray-700 border-[2.5px] border-white shadow-[0_0_15px_rgba(0,0,0,0.3)] disabled:opacity-20 hover:bg-white transition-colors"
+          className="absolute left-1 sm:left-2 md:left-4 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-black/30 text-white border-[2.5px] border-white shadow-[0_0_15px_rgba(0,0,0,0.3)] disabled:opacity-20 hover:bg-black/40 transition-colors"
         >
           <ChevronLeft />
         </button>
@@ -220,7 +221,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
         <button
           onClick={() => goToSlide(currentSlide + 1)}
           disabled={currentSlide === totalSlides - 1}
-          className="absolute right-1 sm:right-2 md:right-4 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-white/90 text-gray-700 border-[2.5px] border-white shadow-[0_0_15px_rgba(0,0,0,0.3)] disabled:opacity-20 hover:bg-white transition-colors"
+          className="absolute right-1 sm:right-2 md:right-4 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-black/30 text-white border-[2.5px] border-white shadow-[0_0_15px_rgba(0,0,0,0.3)] disabled:opacity-20 hover:bg-black/40 transition-colors"
         >
           <ChevronRight />
         </button>
@@ -281,12 +282,12 @@ export default function InteractiveShell({ passage, onExit }: Props) {
             <button
               key={i}
               onClick={() => goToSlide(i)}
-              className={`w-2 h-2 rounded-full transition-all ${
+              className={`w-[9px] h-[9px] rounded-full transition-all ${
                 i === currentSlide
-                  ? "bg-white scale-150 shadow-md"
+                  ? "bg-black shadow-[0_3px_2px_0_rgba(0,0,0,0.3)]"
                   : isCompleted
                   ? "bg-green-400"
-                  : "bg-white/40 hover:bg-white/60"
+                  : "bg-[#666] hover:bg-[#888]"
               }`}
             />
           );

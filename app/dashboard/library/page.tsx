@@ -41,7 +41,7 @@ export default function LibraryPage() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#1a1a2e]">
+    <div className="flex flex-col h-full bg-[#0a0a12]">
       {/* Filter bar */}
       <div className="flex items-center justify-between px-4 pt-3 pb-2">
         <div className="flex gap-0.5">
@@ -59,25 +59,36 @@ export default function LibraryPage() {
             </button>
           ))}
         </div>
-        <div className="flex gap-0.5">
-          {FILTERS_RIGHT.map((f, i) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-3 py-1.5 text-xs font-medium transition-colors border ${
-                filter === f
-                  ? "bg-white text-black border-white"
-                  : "bg-transparent text-white/70 border-white/30 hover:text-white hover:border-white/50"
-              } ${i === 0 ? "rounded-l-md" : ""} ${i === FILTERS_RIGHT.length - 1 ? "rounded-r-md" : ""}`}
-            >
-              {f}
-            </button>
-          ))}
+        <div className="flex items-center gap-2">
+          <div className="flex gap-0.5">
+            {FILTERS_RIGHT.map((f, i) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-3 py-1.5 text-xs font-medium transition-colors border ${
+                  filter === f
+                    ? "bg-white text-black border-white"
+                    : "bg-transparent text-white/70 border-white/30 hover:text-white hover:border-white/50"
+                } ${i === 0 ? "rounded-l-md" : ""} ${i === FILTERS_RIGHT.length - 1 ? "rounded-r-md" : ""}`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+          <button
+            className="w-8 h-8 flex items-center justify-center rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+            aria-label="Search"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </button>
         </div>
       </div>
 
       {/* 3D Book Carousel */}
-      <div className="relative flex-shrink-0" style={{ height: 320 }}>
+      <div className="relative flex-shrink-0" style={{ height: 360 }}>
         {/* Dark carousel background */}
         <div className="absolute inset-0 bg-black" />
 
@@ -93,7 +104,7 @@ export default function LibraryPage() {
             const isSelected = offset === 0;
 
             // Tighter shelf-style positioning matching original I-LIT
-            const translateX = offset * 95;
+            const translateX = offset * 80;
             const translateZ = isSelected ? 60 : -absOffset * 30;
             const rotateY = offset * -20;
             const scale = isSelected ? 1.05 : Math.max(0.75, 1 - absOffset * 0.08);
@@ -118,7 +129,7 @@ export default function LibraryPage() {
                 >
                   {/* Book cover — larger to match original */}
                   <div
-                    className={`w-[160px] h-[230px] rounded-sm overflow-hidden shadow-2xl relative ${
+                    className={`w-[180px] h-[250px] rounded-sm overflow-hidden shadow-2xl relative ${
                       isSelected ? "ring-2 ring-yellow-400/60" : ""
                     }`}
                     style={{
@@ -146,7 +157,7 @@ export default function LibraryPage() {
 
                   {/* Spine edge (visible on angled books) */}
                   <div
-                    className="absolute top-0 h-[230px] w-[14px] bg-gradient-to-r from-gray-800 to-gray-600"
+                    className="absolute top-0 h-[250px] w-[14px] bg-gradient-to-r from-gray-800 to-gray-600"
                     style={{
                       left: -14,
                       transform: "rotateY(-90deg)",

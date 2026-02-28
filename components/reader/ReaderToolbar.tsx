@@ -4,6 +4,21 @@ import { useState, useRef, useEffect } from "react";
 
 export type HighlightColor = "cyan" | "magenta" | "green" | "strike" | "clear" | "none";
 
+export const TRANSLATE_LANGUAGES = [
+  "Spanish",
+  "French",
+  "Chinese (Simplified)",
+  "Arabic",
+  "Vietnamese",
+  "Korean",
+  "Portuguese",
+  "Russian",
+  "Tagalog",
+  "Haitian Creole",
+] as const;
+
+export type TranslateLanguage = (typeof TRANSLATE_LANGUAGES)[number] | null;
+
 interface Props {
   title: string;
   fontSize: "sm" | "md" | "lg";
@@ -17,6 +32,8 @@ interface Props {
   screenMaskEnabled: boolean;
   onToggleScreenMask: () => void;
   onCollectHighlights: () => void;
+  translateLang: TranslateLanguage;
+  onTranslateLangChange: (lang: TranslateLanguage) => void;
 }
 
 const HIGHLIGHT_COLORS: { color: HighlightColor; label: string; bg: string; textLabel?: string }[] = [
@@ -40,14 +57,21 @@ export default function ReaderToolbar({
   screenMaskEnabled,
   onToggleScreenMask,
   onCollectHighlights,
+  translateLang,
+  onTranslateLangChange,
 }: Props) {
   const [showAnnotation, setShowAnnotation] = useState(false);
+  const [showTranslate, setShowTranslate] = useState(false);
   const annotationRef = useRef<HTMLDivElement>(null);
+  const translateRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (annotationRef.current && !annotationRef.current.contains(e.target as Node)) {
         setShowAnnotation(false);
+      }
+      if (translateRef.current && !translateRef.current.contains(e.target as Node)) {
+        setShowTranslate(false);
       }
     };
     document.addEventListener("mousedown", handler);
@@ -122,6 +146,45 @@ export default function ReaderToolbar({
                   </span>
                   <span className="text-gray-700">Collect highlights</span>
                 </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Translate */}
+        <div ref={translateRef} className="relative">
+          <ToolButton
+            onClick={() => setShowTranslate(!showTranslate)}
+            title={translateLang ? `Translate: ${translateLang}` : "Translate"}
+            active={translateLang !== null}
+          >
+            <TranslateIcon />
+          </ToolButton>
+          {showTranslate && (
+            <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-xl border border-gray-200 min-w-[180px] z-50 overflow-hidden">
+              <div className="px-3 py-2 bg-gray-50 border-b border-gray-200">
+                <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Select Language</h3>
+              </div>
+              <div className="max-h-64 overflow-y-auto">
+                {TRANSLATE_LANGUAGES.map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => {
+                      onTranslateLangChange(translateLang === lang ? null : lang);
+                      setShowTranslate(false);
+                    }}
+                    className={`w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0 ${
+                      translateLang === lang ? "font-bold bg-blue-50" : ""
+                    }`}
+                  >
+                    <span className="text-gray-700">{lang}</span>
+                    {translateLang === lang && (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    )}
+                  </button>
+                ))}
               </div>
             </div>
           )}
@@ -204,6 +267,19 @@ function PenIcon() {
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 20h9" />
       <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+    </svg>
+  );
+}
+
+function TranslateIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 8l6 6" />
+      <path d="M4 14l6-6 2-3" />
+      <path d="M2 5h12" />
+      <path d="M7 2v3" />
+      <path d="M22 22l-5-10-5 10" />
+      <path d="M14 18h6" />
     </svg>
   );
 }

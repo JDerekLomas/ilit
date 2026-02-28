@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState, useCallback, useRef } from "react";
 import type { FlatPage, PageAnnotations, AnnotationColor } from "./types";
-import type { HighlightColor } from "./ReaderToolbar";
+import type { HighlightColor, TranslateLanguage } from "./ReaderToolbar";
 import TextHelpToolbar from "./TextHelpToolbar";
 
 interface Props {
@@ -12,6 +12,7 @@ interface Props {
   activeHighlight: HighlightColor;
   annotations: PageAnnotations;
   onAnnotateWord: (wordKey: string, color: AnnotationColor | "clear") => void;
+  translateLang: TranslateLanguage;
 }
 
 const fontSizeClasses = {
@@ -39,6 +40,7 @@ export default function BookPageView({
   activeHighlight,
   annotations,
   onAnnotateWord,
+  translateLang,
 }: Props) {
   const paragraphs = page.text.split("\n\n");
   const [selectionHighlight, setSelectionHighlight] = useState<{
@@ -198,6 +200,7 @@ export default function BookPageView({
           scope={textHelp.scope}
           anchorRect={textHelp.anchorRect}
           onClose={closeTextHelp}
+          translateLang={translateLang}
         />
       )}
     </div>

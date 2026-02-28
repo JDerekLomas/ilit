@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { Book } from "@/lib/types";
 import type { FlatPage, BookAnnotations, AnnotationColor } from "./types";
 import BookPageView from "./BookPage";
-import ReaderToolbar, { type HighlightColor } from "./ReaderToolbar";
+import ReaderToolbar, { type HighlightColor, type TranslateLanguage } from "./ReaderToolbar";
 import TableOfContents from "./TableOfContents";
 import PageSlider from "./PageSlider";
 import CollectedHighlights from "./CollectedHighlights";
@@ -28,6 +28,7 @@ export default function ReaderShell({ book, onExit }: Props) {
   const [screenMaskEnabled, setScreenMaskEnabled] = useState(false);
   const [annotations, setAnnotations] = useState<BookAnnotations>({});
   const [showCollected, setShowCollected] = useState(false);
+  const [translateLang, setTranslateLang] = useState<TranslateLanguage>(null);
 
   // Load annotations from localStorage on mount
   useEffect(() => {
@@ -211,6 +212,8 @@ export default function ReaderShell({ book, onExit }: Props) {
         screenMaskEnabled={screenMaskEnabled}
         onToggleScreenMask={() => setScreenMaskEnabled((v) => !v)}
         onCollectHighlights={() => setShowCollected(true)}
+        translateLang={translateLang}
+        onTranslateLangChange={setTranslateLang}
       />
 
       {/* Book frame + nav arrows */}
@@ -257,6 +260,7 @@ export default function ReaderShell({ book, onExit }: Props) {
                       onAnnotateWord={(wordKey, color) =>
                         handleAnnotateWord(leftPage.pageNumber, wordKey, color)
                       }
+                      translateLang={translateLang}
                     />
                   )}
                 </div>
@@ -278,6 +282,7 @@ export default function ReaderShell({ book, onExit }: Props) {
                         onAnnotateWord={(wordKey, color) =>
                           handleAnnotateWord(rightPage.pageNumber, wordKey, color)
                         }
+                        translateLang={translateLang}
                       />
                     ) : (
                       <div className="h-full" />

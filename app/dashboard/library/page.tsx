@@ -5,13 +5,37 @@ import { useRouter } from "next/navigation";
 import { loadStudentData, type StudentData } from "@/lib/storage";
 import type { CatalogBook } from "@/lib/types";
 
+/** Extended catalog entry with parsed genres for UI filtering */
+interface LibraryBook extends CatalogBook {
+  /** All genres as an array */
+  genres: string[];
+  /** Description text */
+  description: string;
+}
+
 const FILTERS_LEFT = ["All Titles", "My Level", "My Books"] as const;
 const FILTERS_RIGHT = ["Recommended", "Reviewed", "Reserved"] as const;
 
+const GENRE_FILTERS = [
+  "All",
+  "Fiction",
+  "Adventure",
+  "Action",
+  "History",
+  "Mystery",
+  "Nonfiction",
+  "Science Fiction",
+  "Sports",
+  "Horror",
+  "Fantasy",
+  "Humor",
+] as const;
+
 export default function LibraryPage() {
-  const [books, setBooks] = useState<CatalogBook[]>([]);
+  const [books, setBooks] = useState<LibraryBook[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [filter, setFilter] = useState("All Titles");
+  const [genre, setGenre] = useState("All");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [studentData, setStudentData] = useState<StudentData | null>(null);
@@ -25,8 +49,13 @@ export default function LibraryPage() {
     fetch("/content/books/catalog.json")
       .then((r) => r.json())
       .then((data: CatalogBook[]) => {
-        setBooks(data);
-        setSelectedIndex(Math.floor(data.length / 2));
+        const libraryBooks: LibraryBook[] = data.map((b) => ({
+          ...b,
+          genres: b.genre.split(",").map((g) => g.trim()).filter(Boolean),
+          description: b.summary,
+        }));
+        setBooks(libraryBooks);
+        setSelectedIndex(Math.floor(libraryBooks.length / 2));
       });
     setStudentData(loadStudentData());
   }, []);
@@ -36,9 +65,16 @@ export default function LibraryPage() {
     if (searchOpen) searchInputRef.current?.focus();
   }, [searchOpen]);
 
-  // Filter books based on active filter and search
+  // Filter books based on active filter, genre, and search
   const filteredBooks = useMemo(() => {
     let result = books;
+
+    // Genre filter
+    if (genre !== "All") {
+      result = result.filter((b) =>
+        b.genres.some((g) => g.toLowerCase() === genre.toLowerCase())
+      );
+    }
 
     // Search filter
     if (searchQuery.trim()) {
@@ -70,7 +106,7 @@ export default function LibraryPage() {
     }
 
     return result;
-  }, [books, filter, searchQuery, studentData]);
+  }, [books, filter, genre, searchQuery, studentData]);
 
   // Clamp selectedIndex when filtered list changes
   useEffect(() => {
@@ -164,6 +200,23 @@ export default function LibraryPage() {
         </div>
       </div>
 
+      {/* Genre filter chips */}
+      <div className="flex gap-1.5 px-3 sm:px-4 pb-2 overflow-x-auto scrollbar-hide">
+        {GENRE_FILTERS.map((g) => (
+          <button
+            key={g}
+            onClick={() => { setGenre(g); setSelectedIndex(0); }}
+            className={`px-2.5 py-1 text-[11px] sm:text-xs font-medium rounded-full whitespace-nowrap transition-colors ${
+              genre === g
+                ? "bg-cyan-500 text-white"
+                : "bg-white/10 text-white/60 hover:text-white hover:bg-white/20"
+            }`}
+          >
+            {g}
+          </button>
+        ))}
+      </div>
+
       {/* Search bar — slides in when open */}
       {searchOpen && (
         <div className="px-3 sm:px-4 pb-2">
@@ -190,6 +243,14 @@ export default function LibraryPage() {
           </div>
         </div>
       )}
+
+      {/* Book count */}
+      <div className="px-3 sm:px-4 pb-1">
+        <p className="text-white/30 text-[10px] sm:text-xs">
+          {filteredBooks.length} of {books.length} titles
+          {genre !== "All" && ` in ${genre}`}
+        </p>
+      </div>
 
       {/* 3D Book Carousel */}
       {filteredBooks.length === 0 ? (
@@ -231,12 +292,11 @@ export default function LibraryPage() {
                 const sign = offset >= 0 ? 1 : -1;
 
                 // Progressive gap compression (approximates easeInOutSine curve)
-                // Center books spread wide, edge books compress together
                 const baseGap = 125;
                 const compression = 0.06;
                 const xPx = sign * (absOffset * baseGap - absOffset * (absOffset - 1) / 2 * baseGap * compression);
 
-                // Scale shrinks with distance (original: autoScale 65 + distance factor)
+                // Scale shrinks with distance
                 const scale = Math.max(0.75, 1 - absOffset * 0.03);
 
                 return (
@@ -285,11 +345,20 @@ export default function LibraryPage() {
             />
           </div>
 
-          {/* Selected book title */}
+          {/* Selected book title + genres */}
           {selectedBook && (
             <div className="text-center py-2 sm:py-3">
               <h2 className="text-white text-lg sm:text-xl font-bold">{selectedBook.title}</h2>
               <p className="text-white/50 text-xs sm:text-sm">{selectedBook.author}</p>
+              {selectedBook.genres.length > 0 && (
+                <div className="flex justify-center gap-1 mt-1 flex-wrap px-4">
+                  {selectedBook.genres.slice(0, 4).map((g) => (
+                    <span key={g} className="text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-white/40">
+                      {g}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -343,11 +412,11 @@ export default function LibraryPage() {
                   Progress
                 </div>
                 <div className="flex-1 flex flex-col justify-center px-3 sm:px-6 py-2">
-                  <StatRow label="Total Words" value={selectedBook?.wordCount.toLocaleString() ?? "—"} />
-                  <StatRow label="Total Pages" value={selectedBook?.totalPages.toString() ?? "—"} />
-                  <StatRow label="Total Books" value="—" />
+                  <StatRow label="Total Words" value={selectedBook?.wordCount ? selectedBook.wordCount.toLocaleString() : "—"} />
+                  <StatRow label="Total Pages" value={selectedBook?.totalPages ? selectedBook.totalPages.toString() : "—"} />
+                  <StatRow label="Total Books" value={books.length.toString()} />
                   <div className="border-t border-white/10 mt-1 pt-1">
-                    <StatRow label="IR Lexile Level" value={selectedBook?.lexileLevel.toString() ?? "—"} />
+                    <StatRow label="IR Lexile Level" value={selectedBook?.lexileLevel ? selectedBook.lexileLevel.toString() : "—"} />
                   </div>
                 </div>
               </div>
@@ -381,6 +450,15 @@ export default function LibraryPage() {
               </button>
             </div>
           </div>
+
+          {/* Description */}
+          {selectedBook?.description && (
+            <div className="px-3 sm:px-4 pb-4 flex justify-center">
+              <p className="text-white/40 text-xs sm:text-sm leading-relaxed max-w-[903px] line-clamp-3">
+                {selectedBook.description}
+              </p>
+            </div>
+          )}
         </>
       )}
     </div>

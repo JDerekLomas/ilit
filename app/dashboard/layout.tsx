@@ -57,8 +57,8 @@ export default function DashboardLayout({
       </main>
 
       {/* Bottom navigation — responsive sizing */}
-      <nav className="fixed bottom-0 inset-x-0 z-50 bg-black border-t border-gray-700 safe-area-bottom">
-        <div className="flex justify-around items-center h-14 max-w-lg mx-auto px-1 sm:px-2">
+      <nav className="fixed bottom-0 inset-x-0 z-50 bg-black border-t border-gray-700" style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
+        <div className="flex items-center h-14 max-w-lg mx-auto px-1 sm:px-2">
           {tabs.map((tab) => {
             const isActive =
               pathname === tab.href ||
@@ -67,7 +67,7 @@ export default function DashboardLayout({
               <Link
                 key={tab.label}
                 href={tab.href}
-                className={`flex flex-col items-center gap-0.5 px-1 sm:px-2 py-1 rounded-lg transition-colors min-w-0 ${
+                className={`flex-1 flex flex-col items-center gap-0.5 py-1 relative transition-colors min-w-0 ${
                   isActive
                     ? "text-white"
                     : "text-gray-400 hover:text-gray-200"
@@ -75,9 +75,24 @@ export default function DashboardLayout({
               >
                 <tab.icon active={isActive} />
                 <span className="text-[9px] sm:text-[10px] font-medium truncate">{tab.label}</span>
+                {isActive && (
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[2px] bg-cyan-400 rounded-full" />
+                )}
               </Link>
             );
           })}
+          {/* Overflow menu placeholder */}
+          <button
+            className="flex-shrink-0 flex flex-col items-center justify-center px-2 py-1 text-gray-500 hover:text-gray-300 transition-colors"
+            aria-label="More options"
+            title="More options"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="5" r="2" />
+              <circle cx="12" cy="12" r="2" />
+              <circle cx="12" cy="19" r="2" />
+            </svg>
+          </button>
         </div>
       </nav>
     </div>

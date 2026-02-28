@@ -5,6 +5,7 @@ Modernized reading intervention app inspired by Savvas I-LIT. Target: grades 4-8
 ## Stack
 - Next.js 15 + App Router, TypeScript, Tailwind CSS v4, Framer Motion
 - Static content (no AI API calls) — all passages, books, vocabulary are in `content/`
+- Production URL: https://ilit.vercel.app
 - Deploy: `vercel --prod` (always safe, no confirmation needed)
 - Type check before deploy: `npx tsc --noEmit`
 

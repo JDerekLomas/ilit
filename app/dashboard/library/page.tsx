@@ -212,8 +212,8 @@ export default function LibraryPage() {
       ) : (
         <>
           <div
-            className="relative border-b-[25px] border-[#222224]"
-            style={{ height: "clamp(260px, 45vh, 420px)" }}
+            className="relative"
+            style={{ height: "clamp(200px, 32vh, 300px)" }}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
@@ -223,40 +223,41 @@ export default function LibraryPage() {
             {/* Edge borders */}
             <div className="absolute left-0 top-0 bottom-0 w-3 z-10 pointer-events-none" style={{ background: "url(/images/textures/left_border.png) repeat-y 0 0" }} />
             <div className="absolute right-0 top-0 bottom-0 w-3 z-10 pointer-events-none" style={{ background: "url(/images/textures/right_border.png) repeat-y right 0" }} />
+
+            {/* Horizontal bookshelf strip */}
             <div
               ref={carouselRef}
-              className="relative h-full flex items-center justify-center overflow-hidden"
-              style={{ perspective: 1500 }}
+              className="relative h-full flex items-end justify-center overflow-hidden px-4"
+              style={{ paddingBottom: 12 }}
             >
               {filteredBooks.map((book, i) => {
                 const offset = i - selectedIndex;
-                const absOffset = Math.abs(offset);
                 const isSelected = offset === 0;
-                // easeInOutSine positioning: books bunch near center, spread at edges
-                const normalizedPos = offset / (filteredBooks.length || 1);
-                const sineX = Math.sin(normalizedPos * Math.PI * 0.5);
-                const xPx = sineX * 380;
-                const zPx = -5 * absOffset * 8;
+                // Book width and gap — tightly packed
+                const bookW = 100; // px base width
+                const gap = 6;
+                const xPx = offset * (bookW + gap);
 
                 return (
                   <button
                     key={book.id}
                     onClick={() => setSelectedIndex(i)}
-                    className="absolute transition-all duration-500 ease-out"
+                    className="absolute transition-all duration-300 ease-out origin-bottom"
                     style={{
-                      width: "clamp(110px, 14vw, 200px)",
-                      height: "clamp(155px, 19.5vw, 280px)",
-                      transform: `translateX(${xPx}px) translateZ(${isSelected ? 50 : zPx}px) scale(${isSelected ? 1.08 : Math.max(0.78, 1 - absOffset * 0.05)})`,
-                      zIndex: 50 - absOffset * 10,
-                      opacity: absOffset > 5 ? 0 : 1,
+                      width: bookW,
+                      height: isSelected ? "85%" : "75%",
+                      transform: `translateX(${xPx}px)`,
+                      zIndex: isSelected ? 20 : 10 - Math.abs(offset),
+                      filter: isSelected ? "none" : "brightness(0.85)",
                     }}
                   >
                     <div
-                      className="w-full h-full rounded-[5px] overflow-hidden relative"
+                      className="w-full h-full rounded-[3px] overflow-hidden relative"
                       style={{
-                        border: "3px solid #fff",
-                        background: "#fff",
-                        boxShadow: "0px 2px 13px rgba(50, 50, 50, 0.86)",
+                        border: isSelected ? "3px solid #fff" : "2px solid rgba(255,255,255,0.5)",
+                        boxShadow: isSelected
+                          ? "0 4px 20px rgba(0,0,0,0.7)"
+                          : "0 2px 8px rgba(0,0,0,0.5)",
                       }}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -265,7 +266,7 @@ export default function LibraryPage() {
                         alt={book.title}
                         className="absolute inset-0 w-full h-full object-cover"
                         draggable={false}
-                        loading={absOffset > 2 ? "lazy" : undefined}
+                        loading={Math.abs(offset) > 6 ? "lazy" : undefined}
                       />
                     </div>
                   </button>
@@ -273,25 +274,8 @@ export default function LibraryPage() {
               })}
             </div>
 
-            {/* Nav arrows */}
-            <button
-              onClick={() => goTo(-1)}
-              className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-white/60 hover:text-white hover:bg-black/60 transition-colors z-20"
-              aria-label="Previous book"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="15 18 9 12 15 6" />
-              </svg>
-            </button>
-            <button
-              onClick={() => goTo(1)}
-              className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-white/60 hover:text-white hover:bg-black/60 transition-colors z-20"
-              aria-label="Next book"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </button>
+            {/* Shelf edge / shadow */}
+            <div className="absolute bottom-0 left-0 right-0 h-6 z-10 pointer-events-none" style={{ background: "linear-gradient(to bottom, transparent, #222224)", borderBottom: "4px solid #1a1a1c" }} />
           </div>
 
           {/* Selected book title */}

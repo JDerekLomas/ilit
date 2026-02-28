@@ -124,19 +124,16 @@ export default function ConnectPage() {
 
           {/* Right column: Star display */}
           <div className="sm:w-[48%] sm:ml-auto flex flex-col items-center justify-center text-center">
-            {/* Star image */}
+            {/* Star image — use original Savvas asset */}
             <div style={{ margin: "55px 0" }}>
-              <svg
-                width="160"
-                height="160"
-                viewBox="0 0 24 24"
-                fill={totalStars > 0 ? "#f59e0b" : "none"}
-                stroke={totalStars > 0 ? "#f59e0b" : "#dc2626"}
-                strokeWidth="1.5"
-                strokeLinejoin="round"
-              >
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={totalStars > 0 ? "/images/stars/star_big_fill.png" : "/images/stars/star_big_border.png"}
+                alt={totalStars > 0 ? "Filled star" : "Empty star"}
+                width={200}
+                height={200}
+                style={{ imageRendering: "auto" }}
+              />
             </div>
 
             {/* Star count text */}

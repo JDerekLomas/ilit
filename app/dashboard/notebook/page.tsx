@@ -211,10 +211,17 @@ export default function NotebookPage() {
 
   if (!data) return null;
 
-  // Show locked cover
+  // Show locked cover — dark tiled texture background matching original
   if (isLocked) {
     return (
-      <div className="flex-1 flex items-center justify-center">
+      <div
+        className="flex-1 flex items-center justify-center"
+        style={{
+          backgroundImage: "url(/images/notebook/lading_page_bg.jpg)",
+          backgroundRepeat: "repeat",
+          backgroundColor: "#1a1a1a",
+        }}
+      >
         <NotebookCover onUnlock={handleUnlock} />
       </div>
     );

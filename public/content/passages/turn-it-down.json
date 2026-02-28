@@ -3,7 +3,7 @@
   "title": "Turn It Down!",
   "author": "I-LIT Staff",
   "lexileLevel": 600,
-  "backgroundImage": "/images/passages/turn-it-down-bg.jpg",
+  "backgroundImage": "/images/passages/turn-it-down-bg-1.jpg",
   "slides": [
     {
       "type": "reading",
@@ -17,11 +17,13 @@
     },
     {
       "type": "reading",
+      "backgroundImage": "/images/passages/turn-it-down-bg-2.jpg",
       "heading": "How Hearing Works",
       "text": "To understand hearing damage, it helps to know how your ears work. Sound travels through the air as vibrations. These vibrations enter your ear and move through a canal to your eardrum. The eardrum shakes, and the vibrations pass to three tiny bones in your middle ear. These bones are the smallest bones in your entire body.\n\nDeep inside your ear, there is a small, snail-shaped organ called the cochlea. Inside the cochlea, there are thousands of tiny hair cells. These hair cells pick up the vibrations and turn them into signals. The signals travel along a nerve to your brain, and your brain understands them as sound. This all happens in less than a second. It is an amazing process that most people never think about.\n\nWhen sounds are too loud, the strong vibrations can bend and break these tiny hair cells. Unlike other cells in your body, these hair cells do not grow back. Once damaged, they are gone forever. This kind of hearing loss is permanent. It cannot be reversed with medicine or surgery."
     },
     {
       "type": "checkpoint",
+      "backgroundImage": "/images/passages/turn-it-down-bg-2.jpg",
       "checkpoint": {
         "type": "drag-drop",
         "skill": "Cause and Effect",
@@ -42,16 +44,19 @@
     },
     {
       "type": "reading",
+      "backgroundImage": "/images/passages/turn-it-down-bg-3.jpg",
       "heading": "Earbuds and Headphones",
       "text": "Today, many young people listen to music through earbuds or headphones. Earbuds are small and easy to carry. They fit right inside the ear. Headphones cover the whole ear. Both can produce very loud sound. A recent study found that one in five teenagers already has some hearing loss. Many experts believe earbuds and headphones are a big reason why.\n\nListening with earbuds or headphones can be dangerous because the sound goes directly into the ear canal. There is no space for the sound to spread out. This means the full force of the sound hits the delicate parts of your ear. Over time, even medium-loud music can add up and cause real harm.\n\nExperts say you should follow the 60/60 rule: listen at no more than 60 percent volume for no more than 60 minutes at a time. After 60 minutes, give your ears a break. If someone standing next to you can hear your music through your earbuds, it is too loud. Turn it down right away."
     },
     {
       "type": "reading",
+      "backgroundImage": "/images/passages/turn-it-down-bg-3.jpg",
       "heading": "Protecting Your Hearing",
       "text": "The good news is that there are simple ways to protect your hearing. First, turn down the volume on your devices. You do not need to blast your music to enjoy it. Second, take breaks from loud sounds. Give your ears time to rest and recover. Even a few minutes of quiet can help.\n\nIf you go to a concert or a sporting event, wear earplugs. You can buy simple foam earplugs at most stores for just a few dollars. They lower the volume without blocking all the sound. You can still hear the music or the game. Many professional musicians wear special earplugs on stage to protect their own hearing.\n\nTry to move away from speakers and loud machinery whenever you can. Distance makes a big difference. The farther you are from the source of the sound, the quieter it is. Just moving a few steps back can lower the decibels reaching your ears.\n\nFinally, pay attention to warning signs. If your ears ring after being exposed to loud sounds, that is your body telling you something is wrong. The ringing means some of your hair cells may have been harmed. Take it seriously and protect your ears the next time. Your hearing is a gift. Once you lose it, you cannot get it back."
     },
     {
       "type": "checkpoint",
+      "backgroundImage": "/images/passages/turn-it-down-bg-3.jpg",
       "sentences": [
         "Listening with earbuds or headphones can be dangerous because the sound goes directly into the ear canal.",
         "There is no space for the sound to spread out.",
@@ -79,6 +84,7 @@
     },
     {
       "type": "summary",
+      "backgroundImage": "/images/passages/turn-it-down-bg-3.jpg",
       "summaryPrompt": "Write a summary of the text you have just read. Tap on the white space below to type your answer.",
       "expectedKeyConcepts": [
         "sound is measured in decibels",

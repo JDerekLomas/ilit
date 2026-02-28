@@ -13,6 +13,8 @@ export interface Slide {
   type: "reading" | "checkpoint" | "summary";
   /** Section heading shown above text (e.g., "Finding Explosives") */
   heading?: string;
+  /** Per-slide background image (overrides passage-level backgroundImage) */
+  backgroundImage?: string;
   /** The passage text for this slide */
   text?: string;
   /** Pre-split sentences for highlight checkpoints — UI needs sentence boundaries */

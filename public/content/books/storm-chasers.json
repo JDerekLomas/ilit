@@ -1,0 +1,21 @@
+{
+  "id": "storm-chasers",
+  "title": "Storm Chasers",
+  "author": "Maya Torres",
+  "coverImage": "/images/covers/storm-chasers.jpg",
+  "lexileLevel": 620,
+  "genre": "Adventure",
+  "summary": "When a record-breaking tornado season hits Oklahoma, twelve-year-old Aiden joins his meteorologist mom on a dangerous chase that changes everything.",
+  "totalPages": 12,
+  "chapters": [
+    {
+      "title": "The Warning",
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "The sky turned green at four o'clock. Aiden had seen green skies before — he lived in Oklahoma, after all. But this green was different. Darker. Angrier.\n\nHis mom grabbed her laptop and headed for the truck. Dr. Maria Torres was a storm researcher at the National Weather Center. Most days she sat at a desk looking at computer models. But on days like today, she went out to meet the storms face to face.\n\n\"Can I come?\" Aiden asked. He always asked. She always said no.\n\nBut today she looked at the sky, then at him. \"Get your boots. And your helmet.\"\n\nAiden didn't wait for her to change her mind."
+        }
+      ]
+    }
+  ]
+}

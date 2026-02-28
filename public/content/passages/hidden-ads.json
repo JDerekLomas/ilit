@@ -3,7 +3,7 @@
   "title": "Hidden Ads",
   "author": "I-LIT Staff",
   "lexileLevel": 700,
-  "backgroundImage": "/images/passages/hidden-ads-bg.jpg",
+  "backgroundImage": "/images/passages/hidden-ads-bg-1.jpg",
   "slides": [
     {
       "type": "reading",
@@ -41,21 +41,25 @@
     },
     {
       "type": "reading",
+      "backgroundImage": "/images/passages/hidden-ads-bg-2.jpg",
       "heading": "Product Placement",
       "text": "Another form of hidden advertising is product placement. This happens when a company pays to have its product appear in a movie, television show, or video game. A character in a movie might drink a specific brand of soda during an important scene. A hero in a video game might drive a real-world brand of car. The product is woven into the story so that viewers see it without feeling like they are watching a commercial. You might not even think about why that particular brand appeared on screen. Product placement has been around for decades, but it has become more common in recent years. Companies now spend billions of dollars on product placement alone. Studies show that people are more likely to remember a brand when they see it used by a character they admire."
     },
     {
       "type": "reading",
+      "backgroundImage": "/images/passages/hidden-ads-bg-2.jpg",
       "heading": "Sponsored Content",
       "text": "Sponsored content is another sneaky form of advertising. A company pays a website or app to create an article or video that looks like regular content but actually promotes a product. For example, a gaming website might publish a review of a new video game that was actually written or paid for by the game company itself. The review might praise the game's graphics and gameplay without mentioning any problems. The article might have a small label that says \"sponsored\" or \"paid partnership,\" but many readers miss it. The writing style matches the rest of the website, so readers assume they are getting an honest opinion. In reality, the content was created to make the product look good."
     },
     {
       "type": "reading",
+      "backgroundImage": "/images/passages/hidden-ads-bg-3.jpg",
       "heading": "The Power of Data",
       "text": "Companies also use data to target ads to specific people. When you browse the internet, companies track what you search for, what you click on, and what you buy. They collect this information using small files called cookies that are stored on your device. They use all of this data to build a profile of your interests and habits. Then they show you ads for things you are likely to want. If you searched for basketball shoes last week, you might start seeing ads for basketball shoes on every website you visit. This is not a coincidence. It is the result of careful data collection and analysis. This kind of targeted advertising is powerful because it feels personal. The ads seem to know exactly what you want, which makes you more likely to click on them."
     },
     {
       "type": "checkpoint",
+      "backgroundImage": "/images/passages/hidden-ads-bg-3.jpg",
       "checkpoint": {
         "type": "highlight",
         "skill": "Identify Key Details",
@@ -100,11 +104,13 @@
     },
     {
       "type": "reading",
+      "backgroundImage": "/images/passages/hidden-ads-bg-3.jpg",
       "heading": "Being a Smart Consumer",
       "text": "The good news is that once you know about hidden ads, you can start watching for them. Ask yourself a few simple questions when you see content online. Is this post or video sponsored by a company? Is someone being paid to show this product? Does this article seem like it is trying to sell me something rather than inform me? You can also check for labels like \"ad\" or \"sponsored\" on social media posts and articles. Being a smart consumer means thinking critically about the messages you see every day. You do not have to avoid all advertising. Ads can actually help you discover new products that you enjoy. But you should be aware of when someone is trying to influence what you buy. The more you practice spotting hidden ads, the better you will become at making your own choices about what to spend your money on."
     },
     {
       "type": "summary",
+      "backgroundImage": "/images/passages/hidden-ads-bg-3.jpg",
       "summaryPrompt": "Write a summary of the text you have just read. Tap on the white space below to type your answer.",
       "expectedKeyConcepts": [
         "companies target teens because they spend money and develop brand loyalty",

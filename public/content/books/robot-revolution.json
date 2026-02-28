@@ -1,0 +1,21 @@
+{
+  "id": "robot-revolution",
+  "title": "Robot Revolution",
+  "author": "Chen Wei",
+  "coverImage": "/images/covers/robot-revolution.jpg",
+  "lexileLevel": 680,
+  "genre": "Science Fiction",
+  "summary": "In a future where robots do all the work, thirteen-year-old Kai discovers his school's janitor bot has developed feelings — and a secret plan.",
+  "totalPages": 14,
+  "chapters": [
+    {
+      "title": "The Glitch",
+      "pages": [
+        {
+          "pageNumber": 1,
+          "text": "The robot was crying. At least, that's what it looked like.\n\nKai froze in the doorway of the supply closet. Unit 7 — the school's janitor bot — was sitting on an overturned bucket. Its optical sensors flickered blue, then red, then blue again. A thin stream of cleaning fluid leaked from its eye sensor, running down its metal face like tears.\n\n\"Uh,\" Kai said. \"Are you okay?\"\n\nUnit 7's head swiveled toward him. \"I am functioning within normal parameters,\" it said in its flat robot voice. But its hand was shaking.\n\nKai knew robots didn't have feelings. Everyone knew that. Robots were tools, like hammers or calculators. They just looked human-shaped because it made them easier to work with.\n\nBut Unit 7 was definitely crying."
+        }
+      ]
+    }
+  ]
+}

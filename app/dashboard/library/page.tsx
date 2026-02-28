@@ -5,11 +5,15 @@ import { useRouter } from "next/navigation";
 import type { Book } from "@/lib/types";
 
 const BOOK_IDS = [
+  "storm-chasers",
   "little-big-top",
   "crash-dive",
   "dream-dead",
   "jungle-jenny",
   "prince-pauper",
+  "robot-revolution",
+  "lost-city",
+  "ocean-secrets",
 ];
 
 const FILTERS_LEFT = ["Titles", "My Level", "My Books"] as const;
@@ -17,7 +21,7 @@ const FILTERS_RIGHT = ["Recommended", "Reviewed", "Reserved"] as const;
 
 export default function LibraryPage() {
   const [books, setBooks] = useState<Book[]>([]);
-  const [selectedIndex, setSelectedIndex] = useState(2);
+  const [selectedIndex, setSelectedIndex] = useState(4);
   const [filter, setFilter] = useState("Titles");
   const router = useRouter();
   const carouselRef = useRef<HTMLDivElement>(null);

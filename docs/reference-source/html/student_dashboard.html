@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+        <title>iLiT</title>
+        
+        <link href="css/jquery-ui.css" media="all" rel="stylesheet"/>
+        
+        <link href="css/fonts/fonts.css" media="all" rel="stylesheet"/>        
+        
+        <!--[if gte IE 9]>
+        <style type="text/css">
+            .gradient {
+				filter: none !important;
+			}
+        </style>
+        <![endif]-->
+        <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.js"></script>
+        <script type="text/javascript" src="js/underscore-min.js"></script>
+        <script type="text/javascript" src="js/jquery.ui.touch-punch.min.js"></script>
+        
+		<script type="text/javascript" src="js/iSeriesBase.js"></script>
+        <script type="text/javascript" src="js/util.js"></script>
+        <script type="text/javascript" src="js/globals.js"></script>
+        <script type="text/javascript" src="js/constants.js"></script>
+        
+        <script type="text/javascript" src="js/client_native_communication.js"></script>
+		
+		<script type="text/javascript" src="js/page_template.js"></script>
+		<script type="text/javascript" src="js/dashboard.js"></script>
+		<script type="text/javascript">
+			var $dashboard;
+			$(document).ready(function () {
+			
+				$dashboard = new Dashboard({
+					'container':	'#main-container',
+					'template':		'#container',
+					'title':		'Dashboard',
+					'demo-image':	'iLit20_Sproto_Dashboard.jpg'
+				});
+			});
+		</script>
+    </head>
+    <body>
+		<div class="wrapper">
+			<div class="backgound_images bg12"></div>
+			<div class="main_wrapper">
+				<section class="container_space dashboard_instructor">
+					<div id="main-container"></div>
+				</section>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+		<div id="dialog-message"></div>
+    
+    </body>
+	<script type="text/template" id="container">
+		<img id="dashboard_2" data-click-state="1" src="<%= imgSrc %>" alt="<%= module %>" />  
+	</script> 
+</html>

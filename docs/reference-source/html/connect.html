@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv='cache-control' content='no-cache'>
+	<meta http-equiv='expires' content='0'>
+	<meta http-equiv='pragma' content='no-cache'>
+	<title>iLiT</title>	        
+    <script>
+		var cache_timestamp = (new Date()).getTime();
+    </script> 			
+	<link href="css/fonts/fonts.css" media="all" rel="stylesheet" />	
+	<script>
+		document.write('<link href="css/video-js.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+		document.write('<link href="css/connect_dev.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+	</script>
+	<link href="css/jquery-ui.css" media="all" rel="stylesheet"/>
+	<link href="css/jquery.raty.css" media="all" rel="stylesheet" />
+	<script>
+		document.write('<link href="css/buzz.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+		document.write('<link href="css/buzz_dev.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+	</script>
+	<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.js"></script>
+	<script type="text/javascript" src="js/underscore-min.js"></script>	
+	<script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.touch-punch.min.js"></script>
+	<script type="application/javascript" src="js/fastclick.js"></script>
+	<script src="js/video.js" type="text/javascript"></script>
+	<script>
+		document.write('<script type="text/javascript" src="js/iSeriesBase.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		document.write('<script type="text/javascript" src="js/util.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		document.write('<script type="text/javascript" src="js/constants.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+	</script>
+	<script type="text/javascript" src="js/jquery.raty.js"></script>
+	<script>
+		document.write('<script type="text/javascript" src="js/message_handler.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		document.write('<script type="text/javascript" src="js/application.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		document.write('<script type="text/javascript" src="js/connect.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		document.write('<script type="text/javascript" src="js/chromeapp_communication.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		document.write('<script type="text/javascript" src="js/client_native_communication.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+	</script>
+	
+	<!--[if gte IE 9]>
+	  <style type="text/css">
+			.gradient {
+			   filter: none !important;
+			}
+	  </style>
+	<![endif]-->
+	<script type="text/javascript">
+	
+		$.fn.raty.defaults.path = 'media';
+		
+		/* Buzz Info notes data*/
+		objBuzzCommentsJsonData = {
+			rootFolderPath:'/path/to/curricullam',
+			gradeId:8,
+			mediaPath:'',
+			jsPath:'js/buzz_info.js'
+		};
+		
+		window.CheckBuzzCommentsDetails = function() {
+			if (objBuzzCommentsJsonData != null) {
+				loadJS("js/buzz_info.js", buzzInfoJsLoaded);
+			}
+			else {
+				setTimeout(CheckBuzzCommentsDetails, 500);
+			}
+		};
+		
+		/**
+		* Check Buzz Info Js Content loaded or not 
+		* @returns void
+		*/
+		window.buzzInfoJsLoaded =  function () {
+			if (objBuzzCommentData != null) {
+				GetStudentListInfo();
+				setTimeout(function() {
+				scheduleStudentDataCheck();
+				}, 200);
+			}
+			else {
+				setTimeout(function() {
+					buzzInfoJsLoaded();
+				}, 500);
+			}
+		};
+		
+		/**
+		* Get Student List
+		* @method scheduleStudentDataCheck
+		* @return 
+		*/
+		window.scheduleStudentDataCheck = function() {
+
+		if (objStudentListJsonData != null) {
+			if (objStudentListJsonData.Status == "200") {
+				Application.init(VIEWTYPE.c_s_CONNECT);
+				$('.wrapper').animate({'opacity' : '1'}, 800);
+			} else {
+				if (objStudentListJsonData.Error.ErrorCode != 'U1065') {
+					//alert(objStudentListJsonData.Error.ErrorUserDescription);
+				}
+			}
+		} else {
+			setTimeout(scheduleStudentDataCheck, 100);
+		}
+		};
+		
+		$(document).ready(function () {
+			
+			objConnectData = $_GET(CONNECT.c_s_SCREEN_TYPE) ? $_GET(CONNECT.c_s_SCREEN_TYPE) : "poll"; // buzz
+
+			if(objConnectData == "buzz"){
+				if(oPlatform.isIOS()) {
+				loadJS('js/NativeBridge.js', CheckBuzzCommentsDetails);
+				}else {
+				setTimeout(CheckBuzzCommentsDetails, 400);
+				}
+			}else{
+				if (oPlatform.isIOS()) {
+					loadJS('js/NativeBridge.js', function () {
+						Application.init(VIEWTYPE.c_s_CONNECT);
+					});					
+				}
+				else {
+					Application.init(VIEWTYPE.c_s_CONNECT);
+				}
+			}
+
+		});		
+		
+	</script>
+	 
+</head>
+<body class="lessonview connectview">
+	<!-- main template goes here -->
+	<section id="main_container">		
+	</section>
+	<!-- DIALOG BOX --->
+	<div id="dialog-message" title="Alert!" class="Ilit_alert_box"></div>	
+    <div id="dialog-message-network" title="Alert!" class="Ilit_alert_box"></div>	
+</body>
+
+<!-- POLL VIEW MAIN TEMPLATE  -->
+<script type="text/template" id="pollMainTemplate">
+	<div class="wrapper">
+		<div class="assignment_background">
+		
+			<!-- render header panel-->
+			 <div id="headerpanel"></div>
+			 
+             <div class="view_assignment">
+				<div class="main_wrapper">
+					<div class="classconference_wrapper">
+						<div class="clear"></div>
+						<div class="view_assignment_container_part">
+							<div class="view_container_part middle">
+								<!-- Poll List -->
+								<div class="outside_reading_wrap margin-left" id="pollList"></div>				
+				
+								<!-- Poll Form -->
+								<div class="content_space" id="pollForm"></div>								
+								<div class="clear"></div>
+							</div>
+							<div class="clear"></div>
+						</div>
+						<div class="clear"></div>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>			
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</script>
+
+<!-- POLL VIEW HEADER  -->
+<script type="text/template" id="pollHeaderTemplate">
+	<header>
+		<div class="header_inner">
+			<nav class="top_navbar">
+				<div class="left button_content">										
+					<button class="left button9 active valid-activity" id="bttnCloseConnect">Done</button>
+				 </div>				   
+				<div class="clear"></div>
+			</nav>
+		<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+	</header>
+</script>
+
+<!-- POLL VIEW ADD/EDIT FORM  -->
+<script type="text/template" id="pollFormTemplate">
+	<div class="pollview-form">
+		<h2><%= CONNECT.c_s_CREATE_POLL_TITLE %></h2>
+		<div class="textbox_heading_content">
+		<span><%= CONNECT.c_s_QUESTION_TXT %></span></div>
+		<div class="input-box-cont">
+			<div class="text_box_area text_box_area_ct">
+			<textarea autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="question_textarea valid-activity" id="questionBox" <%= readOnlyAccessForInPollCoTeacher %>></textarea>
+			</div>
+		</div>
+		<input type="hidden" id="pollID" value="<%= data.pollID %>">
+
+		<div class="textbox_heading_content">
+		<span><%= CONNECT.c_s_OPTIONS_TXT %></span></div>
+		
+		<div class="input-box-cont">
+			<div class="text_box_area text_box_area_ct">
+			<input class="poll-option valid-activity" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" <%= readOnlyAccessForInPollCoTeacher %> />
+			</div>
+		</div>
+
+		<div class="input-box-cont">
+			<div class="right addInputBox valid-activity">+</div>
+			<div class="text_box_area text_box_area_ct">
+			<input class="poll-option valid-activity" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" <%= readOnlyAccessForInPollCoTeacher %> />
+			</div>
+			
+		</div>
+						
+	</div>
+
+	<div class="bottom_button_area" style="">
+		<div class="right">
+		<button class="button7 btn valid-activity" id="cancelBttn" style="display:none;"><%= CONNECT.c_s_CANCEL_TXT %></button>
+		<button class="button7 btn btndisabled disabled valid-activity" id="nextBttn"><%= CONNECT.c_s_SAVE_NEXT_TXT %></button></div>		
+		<div class="clear"></div>
+	</div>
+</script>
+
+<!-- POLL VIEW LIST -->
+<script type="text/template" id="pollListTemplate">
+	<div class="outside_reading_wrapinn boxes_read">
+		<div class="outside_reading_heading">											
+			<div class="read_out_text"><%= CONNECT.c_s_LIST_POLLS_TXT %></div>								
+			<div class="clear"></div>
+		</div>
+		
+		<div class="outside_reading_cont first_box_wrap" >
+		<div class="outside_reading_cont_inner4poll">
+			<div class="outside_reading__Notes outside_reading__Notes2">
+				<%	_.each (data, function (poll, key) { %>					
+					<div class="poll-list-cont">
+						<div class="poll-name valid-activity" id="<%= poll.PollID %>"><p><%= CodeToSpecialChar(decodeURIComponent(poll.PollTitle)) %></p></div>
+						<%
+							if(objProductDetailJsonData.userRoleInClass !== GENERAL.c_s_USER_TYPE_CO_TEACHER){
+						%>
+							<div class="delete_icon sprite valid-activity" data-id="<%= poll.PollID %>"></div>
+						<%
+							}
+						%>
+					</div>
+				<% }) %>
+			</div>								
+		</div>
+		<div class="clear"></div>
+	</div>
+		<div class="clear"></div>
+	</div> 
+	<div class="clear"></div>
+</script>
+
+<!-- POLLSLIDE SEND SURVEY TEMPLATE -->
+<script type="text/template" id="pollslideTemplate">
+	<div class="wrapper">
+		<div class="assignment_background">
+			<!-- render header panel-->
+			<div id="headerpanel"></div>
+			<div class="container_space">
+				<div class="content_space">
+					<!-- SEND POLL SCREEN --->        
+					<div class="survey_box">
+						<div class="area_btn">							
+							<button class="right button7 margin_left btn start_survey valid-activity" data-poll-id="<%= data.pollID%>" id="sendPoll"><%= $.trim(CONNECT.c_s_SEND_POLL_TXT) %></button>
+							
+							<button class="right button7 btn start_project valid-activity" data-poll-id="<%= data.pollID%>" id="projectPoll"><%= CONNECT.c_s_PROJECT_TXT %></button>
+							<div class="clear"> </div>
+						</div>
+						<div class="natural_box_space margin_top swiper-scrollbar">
+							<div class="question-caption"><%= CONNECT.c_s_QUESTION_TXT %></div>
+							<div class="title_bg"><%= CodeToSpecialChar(decodeURIComponent(data.question)) %></div>
+							<div class="question_box_space">
+								<ul class="question_part">
+									<% 
+									var num = 64;
+									var cnt = 0;
+									var answers = JSON.parse(decodeURIComponent(data.answers));
+									_.each(answers, function(ans,j){
+										num++;
+										cnt++; 
+										var response_id = 'response_'+String.fromCharCode(num);
+										var margin_none = (answers.length == cnt)?'class="margin_none"':'';                                    
+									%>
+										<li <%= margin_none %>>								
+											<div class="answer_key left"><%= String.fromCharCode(num) %></div>                                        
+											<div style="display:none;" class="no_box right" id="<%= response_id %>">0</div>
+											<div class="bar-graph-cont"><div class="bar-color<%= cnt %>" id="bar_<%= response_id %>" style="width: 0px">&nbsp;</div></div>
+											<div class="middle ansdiv"><%= CodeToSpecialChar(ans) %></div>
+											<div class="clear"></div>
+										</li>
+									<%
+									});
+									%>
+									</ul>
+								<div class="clear"> </div>
+							</div>
+						</div>					
+						<div class="clear"></div>
+					</div>     
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>  
+</script>
+
+<!-- SEND POLL VIEW HEADER  -->
+<script type="text/template" id="sendPollHeaderTemplate">
+	<header>
+		<div class="header_inner">
+			<nav class="top_navbar">
+				<div class="left button_content">										
+					<button class="left button9 active valid-activity" id="BtnBackToList">Back to List</button>
+				 </div>
+				<div class="right button_content">										
+					<button class="right button9 active valid-activity" id="BtnBackToLesson">Close</button>
+				 </div>
+				<div class="clear"></div>
+			</nav>
+		<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+	</header>
+</script>
+<!-- Buzz student list template -->
+<script type="text/template" id="studentListTemplate">
+
+<div class="outside_reading_wrapinn boxes_read">
+                                        <div class="outside_reading_heading">
+
+                                            <div class="read_out_text"><%=CONNECT.c_s_STUDENT_LIST_TITLE%></div>
+
+                                            <div class="clear"></div>
+                                        </div>
+                                        <!--/*<div class="drow_heading"></div>*/-->
+                                        <div class="outside_reading_cont first_box_wrap">
+                                            <div class="outside_reading_cont_inner">
+
+                                                <div>
+                                                    <div class="drow_heading"></div>
+                                                    <div class="student_shorting">
+                                                        <div class="Popup_student_inner">
+                                                            <% if($(studentList).length > 0) {%>
+                                                            <ul>
+                                                                <li id="linkSelectAll" class="valid-activity">
+                                                                    <!--  class="active" -->
+                                                                    <div class="select_all_students_img"><img src="media/multiple_user.png" alt=""></div>
+                                                                    <div class="middle studentlist" ><%=CONNECT.c_s_ALL_STUDENTS_TXT%></div>
+                                                                    <div class="right"><img alt="1" src="media/star-on.png" title="bad" width="16px"></div>
+                                                                    <div class="clear"></div>
+                                                                </li>
+																<% $.each(studentList,function(idx,valx){ 																
+																	if(valx.UserRole == "S") {
+																%>			 
+																	<li data-student-id="<%=valx.UserID%>" data-group-id="<%=valx.GroupID%>" data-active-group="<%=valx.ActiveGroup%>" class="">
+																		<!--  class="active" -->
+																		<div class="uicheck_icon sprite"></div>
+																		<div class="middle studentlist"><%=valx.UserDisplayName%></div>
+																		<div class="right"><%=valx.UserStarCount%></div>
+																		<div class="clear"></div>
+																	</li>
+																<%
+																	}																
+																}); 
+																%>
+                                                            </ul>
+															<% } %>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                        <div class="clear"></div>
+                                                    </div>
+                                                </div>
+												
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div class="clear"></div>
+
+
+</script>
+<!-- Buzz student list template -->
+<!-- Buzz comment template -->
+<script type="text/template" id="commentsTemplate">
+ <div class="outside_reading_wrapinn boxes_read">
+                                        <div class="outside_reading_heading">
+                                            <button class="right button9 plus valid-activity" id="<%=CONNECT.c_s_COMMENT_BTN%>"><strong>+</strong></button>
+                                            <div class="read_out_text"><%=CONNECT.c_s_COMMENT_TITLE%> </div>
+
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="drow_heading"></div>
+                                        <div class="outside_reading_cont">
+                                            <div class="outside_reading_cont_inner">
+
+                                                <div class="outside_reading_commentsNotes" id="<%=CONNECT.c_s_COMMENT_AREA%>">
+
+                                                </div>
+
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <div class="clear"></div>
+</script>
+<!-- Buzz comment template -->
+<!-- Buzz personal comment template -->
+<script type="text/template" id="personalCommentsTemplate">
+<div class="outside_reading_wrapinn boxes_read">
+                                            <div class="outside_reading_heading">
+
+                                                <div class="read_out_text"><%=CONNECT.c_s_PERSONAL_COMMENT_TITLE%></div>
+
+                                                <div class="clear"></div>
+                                            </div>
+
+                                            <div class="drow_heading"></div>
+                                            <div class="outside_reading_cont">
+                                                <div class="outside_reading_cont_inner">
+
+                                                    <div class="outside_reading__Notes personal_Notes">
+														<textarea class="valid-activity" id="<%= CONNECT.c_s_PERSONAL_COMMENT_AREA %>" maxlength="<%= CONNECT.c_s_PERSONALCMT_CHAR_LIMIT %>" <%= readOnlyAccessInBuzzForCoTeacher %>></textarea>
+													</div>
+
+                                                </div>
+                                                <div class="clear"></div>
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="clear"></div>
+</script>
+<!-- Buzz personal comment template -->
+<!-- Buzz and star rating template -->
+<script type="text/template" id="buzzTemplate">
+<div class="outside_reading_wrapinn boxes_read">
+                                            <div class="buzzoutside_reading_heading">
+                                                <div id="score-callback" data-score="0"></div>
+                                                <div class="clear"></div>
+
+                                            </div>
+                                            <div class="clear"></div>
+
+                                            <div class="outside_reading_cont">
+                                                <div class="outside_reading_cont_inner">
+
+                                                    <div class="outside_reading__Notes">
+
+                                                    </div>
+                                                    <div class="clear"></div>
+                                                    <div Class="buzz">
+                                                        <button id="<%=CONNECT.c_s_BUZZ_BTN%>" class="button7 btn valid-activity" type="button"><%=CONNECT.c_s_BUZZ_TITLE%></button>
+                                                    </div>
+                                                </div>
+                                                <div class="clear"></div>
+
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+                                        <div class="clear"></div>
+</script>
+<!-- Buzz and star rating template -->
+<!-- Buzz header template -->
+<script type="text/template" id="buzzheaderTemplate">
+<nav class="top_navbar">
+                            <div class="left unitname">
+                                <button class="left button9 active valid-activity" id="<%=CONNECT.c_s_DONE_BUZZ_BTN%>"><%=CONNECT.c_s_DONE_BUZZ_BTN_TXT%></button>
+                            </div>
+
+                            <div class="right button_content">
+                                <!-- <button class="left button9">History</button>
+                                    <button class="left button9 active">Done</button> -->
+									<button class="left button9 valid-activity" id="<%=CONNECT.c_s_RESET_BUZZ_BTN%>"><%=CONNECT.c_s_RESET_BUZZ_BTN_TXT%></button>
+                            </div>
+
+                            <!-- <div class="lesson_week profile_name_content">
+                                    <div class="profile_view"><img src="media/avatar.png"  alt=""></div>
+                                   <div class="middle profile_text">Student Name Here</div> 
+                                 
+                                 </div> -->
+
+                            <div class="clear"></div>
+                        </nav>
+                        <div class="clear"></div>
+
+</script>
+<!-- Buzz header template -->
+<!-- Buzz comment notes template -->
+<script type="text/template" id="commentsNotestemplate">
+        <div style="display: none;  left:inherit; " class="lesson_tooltip left_arrow_tolls outerlessontooltip" id="<%=CONNECT.c_s_COMMENT_LIST%>">
+		<div class="page_arrow sprite" ></div>
+		<div style="display: block;  " class="lesson_tooltip left_arrow_tolls" >
+		
+
+		<div class="Tooltip_menu_wrap" >
+			<div class="Tooltip_menu_wrap_inn">
+				<% 
+						/*if(_.isEmpty(confdata)){
+						var additionalNotes = "";
+						var ProcessNotes = "";
+						}else{
+							confdetails = confdata;
+							try {
+								var additionalNotes = decodeURIComponent(confdetails.AdditionalNotes);
+							} catch (ex) {
+								var additionalNotes = confdetails.AdditionalNotes;
+							}
+							var ProcessNotes = confdetails.ProcessNotes;
+						}*/
+				%>
+				<ul>
+				<%  
+					/*if(ProcessNotes != "") { 
+						nodes = ProcessNotes;
+					}*/
+					
+					$.each(data.comments,function(idx,valx){ 
+						     //console.log(valx);
+				%>			 
+							<li class = "notelist valid-activity" note_id="<%=idx%>"><%=valx.title%></li>
+						<%	 
+					}); 
+				%>
+				</ul>
+				
+			</div>
+		</div>
+		</div>
+		</div>
+</script>
+<!-- Buzz comment notes template -->
+<!-- Buzz main template -->
+<script type="text/template" id="buzzMainTemplate">
+<div class="wrapper">
+            <div class="assignment_background">
+                <header>
+                    <div class="header_inner" id="renderBuzzHeaderArea">
+                        
+                    </div>
+                    <div class="clear"></div>
+                </header>
+                <div class="view_assignment">
+                    <div class="main_wrapper">
+
+                        <div class="view_assignment_container_part">
+
+                            <div class="view_container_part middle">
+                                <div class="outside_reading_wrap" id="renderStudentsArea">
+                                    
+                                </div>
+
+                                <div class="outside_reading_wrap second_box_wrap" style="margin:0;" id="renderCommentsArea">
+                                   
+                                </div>
+
+                                <div class="Conferencing_part_rgt_panel">
+                                    <div class="outside_reading_wrap" id="renderPersonalCommentsArea">
+                                        
+                                    </div>
+									
+									 <div class="clear"></div>
+                                    <div class="outside_reading_wrap" id="renderBuzzArea">
+                                        
+                                    </div>
+									
+									<div class="prjtopstars">
+                                        <button id="<%=CONNECT.c_s_PRJBTN%>" class="button7 btn valid-activity" type="button"><%=CONNECT.c_s_PRJBTN_TXT%></button>
+                                    </div>
+									
+                                    <div class="clear"></div>
+                                </div>
+
+                                <div class="clear"></div>
+
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+
+                        <div class="clear"></div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+
+              
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+		
+		<div id="commentspopuparea"></div>
+		<div id="projectTopStrPopup" style="display:none"></div>
+</script>
+<!-- Buzz main template -->
+
+<script type="text/template" id="projectTopstarTemplate">
+	
+		<div class="popup_yellow">
+		<div class="overley"></div> 
+		<div class="popup_yellow_content">
+			<div class="popup_yellow_inner ">
+				<div id="topstarPopUpCloseBtn" class="close_yew sprite3 valid-activity"></div>
+				<div class="pop_title"><div class="pop_title_inn">BUZZ!</div></div>
+				<div class="popup_content_yellow"><div class="topstarstudent_shorting valid-activity">
+                                                        <div class="Popup_student_inner">
+                                                            <% if($(studentList).length > 0) {%>
+                                                            <ul>
+                                                                <li >
+                                                                    <!--  class="active" -->
+                                                                    <div ></div>
+                                                                    <div class="middle studentlist" ></div>
+                                                                    <div class="right"><img alt="1" src="media/star-on.png" title="bad" width="16px"></div>
+                                                                    <div class="clear"></div>
+                                                                </li>
+																<% $.each(studentList,function(idx,valx){ 
+																	if(valx.UserRole == "S")  {
+																	
+																%>			 
+																	<li data-student-id="<%=valx.UserID%>" <% /*if (idx == 0) { %>class="active" <% } */ %> data-student-name="<%=valx.UserDisplayName%>" data-student-rating="<%=valx.UserStarCount%>">
+																		<!--  class="active" -->
+																		<div class="uicheck_icon sprite"></div>
+																		<div class="middle studentlist"><%=valx.UserDisplayName%></div>
+																		<div class="right" id="star_<%=valx.UserID%>"><%=valx.UserStarCount%></div>
+																		<div class="clear"></div>
+																	</li>
+																<%
+																	}																
+																}); 
+																%>
+                                                            </ul>
+															<% } %>
+                                                            <div class="clear"></div>
+															<div class="prjbtncls">
+																<button id="sendprjbtn" class="button7 btn valid-activity" type="button" style="display:none;">Project</button>
+																<button id="stopprjbtn" class="button7 btn valid-activity" type="button" style="display:none;">Stop Project</button>
+															</div>
+                                                        </div>
+                                                        <div class="clear"></div>
+                                                    </div></div>
+			</div>
+		</div>
+	</div>
+</script>
+</html>

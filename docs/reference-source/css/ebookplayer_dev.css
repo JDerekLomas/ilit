@@ -1,0 +1,111 @@
+.overlay-wrapper {
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	background: rgba(0,0,0, 0.3);
+}
+
+.loader_wrapper {
+	height: 80px;
+	width: 100px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -50px;
+	margin-top: -40px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.contentBoxRight {
+    -webkit-overflow-scrolling: touch;
+}
+
+.toc_tooltip .toc_tooltip_middle {
+    -webkit-overflow-scrolling: touch;
+}
+
+.mainpage_book li, .mainpage_book ol {list-style-type: none;}
+.middle{overflow:hidden; cursor: pointer;}
+
+.table_name{cursor: pointer;}
+
+.mainpage_book li span:hover{color: #007AFF;}
+.contentMainInner {
+    position: relative;
+    opacity: 0;
+	
+	font-size: 17px !important; line-height: 30px !important; 
+}
+
+#epubViewerWrapper {
+    -moz-background-clip: padding;    
+    -webkit-background-clip: padding;  
+    background-clip: padding-box;
+    border: 6px solid rgba(0, 0, 0, 0.8);
+    font-size: 17px !important; 
+    line-height: 30px !important; 
+    position: relative;
+}
+
+#epubViewerWrapper .ebookContentWrapper {
+    position: absolute;
+    width: 96%;    
+}
+
+#toc_container #toclist li{ padding: 0;}
+#toc_container #toclist li span{ padding: 10px; display:block; }
+
+#toclist li {	
+    /*You just need this if you are only concerned with android and not desktop browsers.*/
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.toc_tooltip li.active span{ color:#fff; background: #007AFF;}
+.toc_tooltip li.active ul li span{ color:#000; background: none;}
+#toc_container #toclist li ul#toclist { padding-left: 10px;}
+#toc_container #toclist li ul#toclist li.active span.toc_headings.sub{ color:#007AFF; background: none;}
+.ftr_middle {font-size: 13px;color: #fff;text-align: center;padding-top: 10px;}
+
+.bookBoxWrap_out {border-bottom: none;}
+
+/*Changes For Epub Design*/
+.fmhT{
+    font-weight: bold;
+    font-size: 15px;
+    border-bottom: #eee 6px double;
+}
+
+.ct {
+    float: left;
+    font-weight: bold;
+    top: -3px;
+}
+
+.cst {
+    font-weight: bold;
+    font-size: 15px;
+    border-bottom: #eee 6px double;
+    padding-left: 17px;
+}
+
+.tx {    
+    text-align: justify;
+    text-indent: 1em;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+#bookContainer {
+	-ms-touch-action: none;
+}
+
+.navBookTitle {
+    color: #FFFFFF;
+    font-weight: normal;
+    overflow: hidden;
+    padding-top: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

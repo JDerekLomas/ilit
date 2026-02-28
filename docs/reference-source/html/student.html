@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en" class=" js no-touch">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv='expires' content='0'>
+	<meta http-equiv='pragma' content='no-cache'>
+	<title>BTS2019 - iLit Inspire Literacy Student TabLit</title>
+	<!-- <link href="css/style.css" media="all" rel="stylesheet" /> -->
+	<link href="css/jquery-ui.css" media="all" rel="stylesheet" />
+	
+	<link rel="shortcut icon" type="image/ico" href="media/favicon_stud.png" />
+	<script src="js/modernizr.custom.34982.js"></script>
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+	<script src="js/underscore-min.js"></script>
+	<script src="js/recorderjs/recorder.js"></script>
+	<script type="text/javascript">
+		var cache_timestamp = (new Date()).getTime();
+		document.write('<script type="text/javascript" src="js/recording.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		document.write('<script type="text/javascript" src="js/config.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		document.write('<script type="text/javascript" src="js/common.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		document.write('<script type="text/javascript" src="js/student_login.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		document.write('<script type="text/javascript" src="js/student.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		document.write('<script type="text/javascript" src="js/a11y-web.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		document.write('<link media="all" rel="stylesheet" href="css/buzz-popup.css?'+cache_timestamp+ '"/>');
+	</script>
+	<!-- myEld implementation  -->
+	<script type="text/javascript">
+	  var deviceBrowser = /CrOS|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);	
+		switch(PRODTYPE){
+			case GENERAL.c_s_PROD_TYPE_MYELD:
+				document.write('<link media="all" rel="stylesheet" href="css/style-myeld.css?'+ cache_timestamp + '">');
+				document.write('<link media="all" rel="stylesheet" href="css/a11y.css?'+ cache_timestamp + '">');
+			break;
+			
+			case GENERAL.c_s_PROD_TYPE_ILIT:
+				document.write('<link media="all" rel="stylesheet" href="css/style.css?'+ cache_timestamp + '">');
+				document.write('<link media="all" rel="stylesheet" href="css/a11y.css?'+ cache_timestamp + '">');
+			break;
+			
+			case GENERAL.c_s_PROD_TYPE_WTW:
+				document.write('<link media="all" rel="stylesheet" href="css/style-wtw.css?'+ cache_timestamp + '">');
+			break;
+				
+			default:
+				document.write('<link media="all" rel="stylesheet" href="css/style.css?'+ cache_timestamp + '">');
+		}
+	</script>
+		<!--[if gte IE 9]>
+		<style type="text/css">
+		.gradient {
+		   filter: none !important;
+		}
+		</style>
+		<![endif]-->
+
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','js/analytics.js','ga');
+
+		createGoogleTrackerObject(GTRACKID); // id is account specific, second parameter is optional; based on the tracking code account provides
+
+	</script>
+	<!-- End Google Analytics -->
+</head>
+
+<body class="student">
+	<div  aria-hidden="true" id="dynamicTextForSR" aria-live="assertive" class="assistive-text"></div>
+	<div class="wrapper" aria-live="assertive">
+		
+		<article class="afterLoginWrapper">
+			<section>
+				<div class="iframeWrap">
+					<iframe id="wrapperFrame" name="wrapperFrame" src=""> iFrame to load tab related respective html</iframe>
+				</div>
+				<div class="clear"></div>
+			</section>
+			<!-- CLAS-1073 added below role and aria-label -->
+			<!-- <footer> -->
+			<footer role="navigation" aria-label="Global">
+				<div class="footer_inner">
+					<!-- CLAS-1069 start accessibility -->
+					<div class="loader stud"></div>
+					<div class="footer_in" id="footer-btn-cont">						
+					</div>
+					<!-- CLAS-1069 end accessibility -->
+					<div id="infoToolTip" class="lesson_tooltip btm_tooltip logout_setting_tooltip" aria-hidden="true">
+						<div class="page_arrow sprite"></div>
+						
+						<div class="Tooltip_menu_wrap">
+						<div class="Tooltip_menu_wrap_inn">
+							<div class="logout_deatils">
+								<div class="middle">
+									<p class="logout_title"><strong>Version:</strong> <span id="appVerNum">1.0</span>[<span id="deployServer">D</span>]<!-- [<span id="appZipVersionNum">1.0</span>] --></p>
+									<!-- <p><strong>ProductCode:</strong> <span class="productCode"></span></p> -->
+									<p><strong>Class:</strong> <span class="className"></span></p></p>
+									<p><strong>Configuration:</strong> <span class="connectedState">A - A</span></p>
+									<p class="userName"></p>
+								</div>
+							</div>
+							<div class="footer_button_area">
+								<button aria-label="switch class" id="btnSwitchClass" onClick="switchClass();" class="button7 logout btn" aria-label="Switch Class">Switch</button>
+								<button aria-label="logout" id="btnLogout" onClick="checkLogout();" class="button7 logout btn" aria-label="Logout">Logout</button>
+							</div>
+						</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<button class="logout_setting sprite right footerTab valid-activity" type="button" aria-label="Switch class setting" aria-haspopup="true" aria-expanded="false" role="button" data-verbid="S-SL"></button>
+
+					 <!-- CLAS-1069 start Accessibility -->
+					 <!-- <div class="loader stud"></div>
+					 <div class="footer_in" id="footer-btn-cont">						
+					</div> -->
+					<!-- CLAS-1069 end Accessibility -->
+				</div>
+			</footer>
+			<div class="clear"></div>
+		</article>
+	</div>
+	<!------ survey overlay starts -------------------------->
+	<div class="surveyOverlay">
+		<div class="surveyInner"   id="dialog1" aria-labelledby="dialog1_label"  aria-modal="true">
+			 	<!-- iLIT-5089 && iLIT-iLIT-5091 -->
+			<h1 class="surveyHeader" id="dialog1_label">Survey</h1>
+			<div class="clear"></div>
+			<div class="surveyTitle">Question</div>
+			<div class="clear"></div>
+			<div class="natural_box_space margin_top">
+				<div class="question_box_space">
+					<div class="new_assignment_title">what you are reading better</div>
+						<div class="new_assignment_irr">
+							<ul class="question_part">
+								<li>
+									<div class="check_box_view sprite left"></div>
+									<div class="answer_key left">A</div>
+									<div class="middle">to understand what you are reading better</div>
+									<div class="clear"></div>
+								</li>
+								<li>
+									<div class="answer_key left">B</div>
+									<div class="check_box_view active sprite left"></div>
+									<div class="middle">to understand what you are reading better</div>
+									<div class="clear"></div>
+								</li>
+								<li>
+									<div class="answer_key left">C</div>
+									<div class="check_box_view sprite left"></div>
+									<div class="middle">to understand what you are reading better</div>
+									<div class="clear"></div>
+								</li>
+								<li>
+									<div class="answer_key left">D</div>
+									<div class="check_box_view sprite active left"></div>
+									<div class="middle">to understand what you are reading better</div>
+									<div class="clear"></div>
+								</li>
+							</ul>
+							<div class="clear"></div>
+							<div class="area_btn">
+								<div class="left "></div>
+								<button aria-label="submit" class="right button7 btn valid-activity" id="btnSurveySubmit" data-verbid="S-SS">Submit</button>
+								<div class="clear"> </div>
+							</div>
+							<div class="clear"></div>
+							<div class="submitSurveyMsg">Submitted Successfully</div>
+						</div>						
+					<div class="clear"> </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!------ survey overlay ends -------------------------->
+	<!------ broadcast overlay starts -------------------------->
+	<div class="broadcastOverlay">
+		<div class="topBar">
+			<button aria-label="back" id="broadcastBackBtn" class="btnBack sprite left" type="button"></button>
+			<div class="middle"><div></div></div>
+		</div>
+		<div class="broadcastWrapper">
+			<!-- CLAS-1074 adding title in iframe -->
+			<!-- <iframe id="broadcastFrame" name="broadcastFrame" src=""></iframe> -->
+			<iframe id="broadcastFrame" name="broadcastFrame" src="" title="Broadcast Page"></iframe>
+		</div>
+	</div>
+	<!------ broadcast overlay ends -------------------------->
+	<!------ pdf reader overlay starts -------------------------->
+	<div class="pdfReaderOverlay">
+		<div class="topBar">
+			<button aria-label="back" id="pdfReaderBackBtn" class="btnBack sprite left valid-activity" data-verbid="IL" type="button"></button>
+			<div class="middle"></div>
+		</div>
+		<div class="pdfReaderWrapper">
+			<!-- CLAS-1074 adding title in iframe -->
+			<!-- <iframe id="pdfReaderFrame" name="pdfReaderFrame" src=""></iframe> -->
+			<iframe id="pdfReaderFrame" name="pdfReaderFrame" src="" title="PDF reader"></iframe>
+		</div>
+	</div>
+	<!------ pdf reader overlay ends -------------------------->
+	
+	<!-- for book review -->
+	<div class="bookReviewWrapper" style="display:none">
+		<div class="loader"></div>
+		<!-- CLAS-1074 adding title in iframe -->
+		<!-- <iframe id="bookReviewFrame" name="bookReviewFrame" src=""></iframe> -->
+		<iframe id="bookReviewFrame" name="bookReviewFrame" src="" title="BookReview"></iframe>
+	</div>
+
+	<!-------For Class list popup------->
+	<div class="gradeSelect" tabindex="-1" role="dialog" aria-modal="true" aria-label="Select Class dialog" aria-labelledby="classPopupTitle" >
+		<form id="frm_SelectGrade" action="#" method="post">
+			<div class="selectGradeOverlayUI" style="cursor: default;"></div>
+			<div class="classListWrapper assignments_wrapper studentLogin">
+				<div class="assignments_wrapper_inner">
+					<div id="classPopupTitle" class="assignment_title">Select Class</div>
+					<div id="classSelectionPopup" class="assignments_container  assig_cont_bts2017">
+						<div class="classListHeader" >
+							<div id="_classNameHeader_" class="classDetContainer classNameHeader">Class Name</div>
+							<div id="_classIdHeader_" class="classDetContainer classIdHeader">Class ID</div>
+							<div id="_classSectionHeader_" class="classDetContainer classSectionHeader">Section Name</div>
+						</div>
+						<div class="classSortHeader">
+<!-- 							<span aria-label="sort class up" tabindex="-1" onkeydown="triggerClickOnThisElem(event, this)" class="sprite sortUp" data-direction="up"></span>
+							<span aria-label="sort class down" tabindex="-1" onkeydown="triggerClickOnThisElem(event, this)" class="sprite sortDown" data-direction="down"></span> -->
+						</div>
+						<div class="clear"></div>
+						<ul id="classListUL" role="listbox" aria-hidden="true" class="assignments_container_ui">
+							<!--<li class=""><span class="ar_rt right sprite"></span><div class="middle classList " productgradeid="31a5bec9-0a87-4bbb-8f3f-99e02d6dae4f" classid="1d725347-dcf9-4754-a8e7-3c9fe2d09b90">Grade 8</div><div class="clear"></div></li>-->
+						</ul>
+						<div class="clear"></div>
+						<div class="gradeSelectBtnArea right" onkeydown="handleClassKeyActions(event, this)">
+							<!-- ILIT-3429: <button tabindex="0" aria-label="unhide class" class="button7 btnclassselect btn disabled" type="button" id="btnUnhideClasses" disabled="disabled">Unhide</button>-->
+							<button tabindex="0" aria-label="cancel " class="button7 btnclassselect btn" type="button" id="btnCancelClassSelect">Cancel</button>
+							<button tabindex="0" aria-label="select class" class="button7 btnclassselect btn " type="button" id="btnClassSelect">Select</button>
+							<div class="clear"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-------End of Class list popup------->
+
+</body>
+<script type="text/template" id="footer-buttons-student">
+	<div class="footer_in_overlay"></div>
+	<% 	//if (strStartsWith(productCode, ILIT20PREFIX, true) == true) { %>
+	<button tabindex="0" aria-label="review" onkeydown="triggerClickOnThisElem(event, this)" class="Review sprite footerTab valid-activity" type="button" data-verbid="S-RE"> <div class="unreviewed" style = "display:none;"></div><span>Review</span></button> 
+	<% //} %>
+	<button tabindex="0" aria-label="library" onkeydown="triggerClickOnThisElem(event, this)" class="Library sprite footerTab valid-activity" type="button" data-verbid="S-LBTO"><span>Library</span></button>
+	<% 	if (strStartsWith(productCode, ILIT20PREFIX, true) == true) { %>
+	<!-- <button class="Dashboard sprite footerTab" type="button"><span>Dashboard </span></button> -->
+	<% } %>
+	<button tabindex="0" aria-label="notebook" onkeydown="triggerClickOnThisElem(event, this)" class="Notebooks sprite footerTab valid-activity" type="button" data-verbid="S-NTO"><span>Notebook</span></button>
+	<button tabindex="0" aria-label="assignments" onkeydown="triggerClickOnThisElem(event, this)" class="Assignments sprite footerTab valid-activity" type="button" data-verbid="S-ATO"><span>Assignments</span></button>
+	<button tabindex="0" aria-label="connect" onkeydown="triggerClickOnThisElem(event, this)" class="Connect sprite footerTab valid-activity" type="button" data-verbid="S-CO"><span>Connect</span></button>
+</script>
+<script type="text/template" id="class-switcher">
+	<div class="gradeSelect" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="classPopupTitle" aria-describedby="classSelectionPopup" >
+		<form id="frm_SelectGrade" action="#" method="post">
+			<div class="selectGradeOverlayUI" style="cursor: default;"></div>
+			<div class="classListWrapper assignments_wrapper studentLogin">
+				<div class="assignments_wrapper_inner">
+					<div id="classPopupTitle" class="assignment_title">Select Class</div>
+
+					<div id="classSelectionPopup"  class="assignments_container  assig_cont_bts2017">
+						<div  tabindex="0" class="classListHeader" >
+							<div id="_classNameHeader_" class="classDetContainer classNameHeader">Class Name</div>
+							<div id="_classIdHeader_" class="classDetContainer classIdHeader">Class ID</div>
+							<div id="_classSectionHeader_" class="classDetContainer classSectionHeader">Section Name</div>
+						</div>
+						<div class="classSortHeader">
+							<!-- <span aria-label="sort class up" tabindex="-1" onkeydown="triggerClickOnThisElem(event, this)" class="sprite sortUp" data-direction="up"></span>
+							<span aria-label="sort class down" tabindex="-1" onkeydown="triggerClickOnThisElem(event, this)" class="sprite sortDown" data-direction="down"></span> -->
+						</div>
+						<div class="clear"></div>
+						<ul id="classListUL" role="listbox" aria-activedescendant="" aria-hidden="true" class="assignments_container_ui">
+								<%= classSwitcherHtml %>
+						</ul>
+						<div class="clear"></div>
+						<div class="gradeSelectBtnArea right">
+							<!-- ILIT-3429: <button tabindex="0" aria-label="unhide class" class="button7 btnclassselect btn disabled" type="button" id="btnUnhideClasses" disabled="disabled">Unhide</button>-->
+							<button tabindex="0" aria-label="cancel select class" class="button7 btnclassselect btn" type="button" id="btnCancelClassSelect">Cancel</button>
+							<button tabindex="0" aria-label="select class" class="button7 btnclassselect btn " type="button" id="btnClassSelect">Select</button>
+							<div class="clear"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>	
+</script>
+<!-- start for district dropdown -->
+<script type="text/template" id="districtListTpl">
+	<select id="districtDDL">
+		<option value="">Select Organization</option>
+		<%
+		for(var iI=0; iI<districtList.length; iI++){
+			%>
+			<option value="<%= districtList[iI].DistrictID %>" data-distSuffix="<%= districtList[iI].DistSuffix %>">
+				<%= districtList[iI].DistName %>
+			</option> 
+			<%
+		}
+		%>
+	</select>
+</script>
+
+<!-- end for district dropdown -->
+
+<script type="text/template" id="tplLoginWrapper">
+	<article class="loginWrapper">
+			<header role="banner" class="login_bg_top student">
+				<section role="img" aria-label="ilit logo inspire litracy. Student tablit" class="header_inner student"></section>
+				<section  class="login_heading student"></section>
+			</header>
+			<section role="main" class="login_wrapper student">
+				
+				<div class="login_box login_box_student">
+					
+					<div class="login_box_middle_bg">
+						 <form aria-label="login form" id="frm_ValidateLogin" action="" method="post">
+							 <fieldset>
+							 <legend></legend>
+							 <div class="Organization_select_block">
+							 <label class="Organization_label">Organization</label>
+							<div class="login_box_cont Organization_select">
+								<div id="districtList" class="ui-widget" >
+										<div class="loader districtList"></div>
+								</div>	
+								<div tabindex="0" role="button" aria-expanded="false" aria-label="Select organization more information icon" class="help tooltip" onkeydown="triggerClickOnThisElem(event, this)"><img src="media/help.png" alt="Select organization More Information">
+								  <span id="tip" role="tooltip" class="tooltiptext">Each user belongs to a class that is associated with a district or organization. Select your district or organization by starting to type the name using the search functionality or scroll to find.</span>
+								</div>
+							</div>	
+							<div class="clear"></div>
+							</div>
+							
+							<div class="Username_input_block">
+							<label class="Username_label">Username</label>
+							<div class="login_box_cont Organization_input">
+								<div class="main_login main_input">
+										<input tabindex="0" aria-label="enter username" type="text" onBlur="if(this.value==&#39;&#39;){this.value=&#39;Enter Username&#39;};" onFocus="if(this.value==&#39;Enter Username&#39;){this.value=&#39;&#39;};" value="Enter Username" class="login_field" name="txt_UserName" id="txt_UserName"> 
+										
+								 </div>
+							</div>
+							<div class="clear"></div>
+							</div>
+							
+							
+							<div class="Password_input_block">
+							<label class="Password_label">Password</label>
+							<div class="login_box_cont Organization_Password">
+								<div class="main_login main_Password">
+										<input tabindex="0" onkeydown="triggerClickOnThisElem(event, this)" 
+										aria-label="enter password" 
+										type="password" 
+										onBlur="if(this.value==&#39;&#39;){this.placeholder=&#39;Enter Password&#39;};" 
+										onFocus="this.type=&#39;password&#39;;if(this.placeholder==&#39;Enter Password&#39;){this.placeholder=&#39;&#39; ;this.click()};" 
+										placeholder="Enter Password"
+										class="login_field" 
+										name="txt_Password" 
+										id="txt_Password">
+								 </div>
+							</div>
+							<div class="clear"></div>
+							</div>
+							
+						
+							<div class="continue_button startTagButton student" >
+								<button aria-label="login" tabindex="0" style="opacity: 0.01; height:100%; width:100%"  class="continue_buttonhover" value=""></button>
+								<div class="loader login" style="display: none;"></div>
+							</div>
+							</fieldset>
+						</form>
+						<div class="clear"></div>
+						<div class="aria_link login-easy-bridge-student" tabindex="0" aria-label="EasyBridge Customer?" role="link" onkeydown="triggerClickOnThisElem(event, this)" id="login_easy_bridge">EasyBridge Customer?</div>
+					</div>
+					<div class="login_box_bottom_bg"></div>
+			  </div>
+			
+			
+		  </section>
+		  <div class="clear"></div>
+		  <footer class="footer_container" >
+				<div tabindex="-1" aria-hidden="true" aria-label="pearson logo" class="pearson_logo"></div>
+				<div tabindex="-1" class="copyright">Copyright © 2020 Savvas Learning Company LLC. All rights reserved.</div>
+				<div tabindex="-1" class="verNo"></div>
+		  </footer>
+		  <div class="clear"></div>
+	</article>
+</script>
+
+<!-- login wrapper for wtw -->
+<script type="text/template" id="tplLoginWrapperWTW">
+	<article class="loginWrapper">
+		<header class="login_bg_top">
+			<section class="header_inner header_inner_student"></section>
+			<section class="login_heading"></section>
+		</header>
+		<section class="login_wrapper">
+			<div class="login_box">
+				<div class="login_box_middle_bg">					
+					 <form id="frm_ValidateLogin" action="#" method="post">
+						<fieldset>
+						<div class="login_content">
+						<div class="login_box_cont">
+							<div id="districtList" class="ui-widget">
+								<select role="listbox" id="district">
+									<option role="option" value="">Select Organization</option>										
+								</select>
+							</div>
+						</div>
+						<div class="clear"></div>
+						<div class="login_box_cont">
+							<div class="main_login">
+								<input tabindex="0" aria-label="enter username" type="text" placeholder="Enter Username" value="" class="login_field" name="txt_UserName" id="txt_UserName" required>
+								<input tabindex="0" onkeydown="triggerClickOnThisElem(event, this)" aria-label="enter password" type="password" placeholder="Enter Password" value="" class="login_field" name="txt_Password" id="txt_Password" required>
+							</div>
+						</div>
+						</div>
+						<div class="clear"></div>
+						<div class="continue_button continue_button_student startTagButton">
+							<button aria-label="login" tabindex="0" style="opacity: 0;" class="continue_buttonhover" value=""></button>
+							<div class="loader login" style="display: none;"></div>
+						</div>
+						</fieldset>
+					</form>
+					<div class="clear"></div>
+					<div class="aria_link login-easy-bridge-student" tabindex="0" role="button" aria-label="EasyBridge Customer?" onkeydown="triggerClickOnThisElem(event, this)" id="login_easy_bridge">EasyBridge Customer?</div>
+				</div>
+				<div class="alert alert-danger" id="error_alert"  style="display: none;"><strong>Oh snap!</strong><br><span class="errorMesg"></span></div>
+			</div>
+		</section>
+		<div class="clear"></div>
+		<!--<footer class="footer_container">
+			<div class="pearson_logo"></div>
+			<div class="copyright">Copyright © 2020 Savvas Learning Company LLC. All rights reserved.<div class="verNo">ver 5.1</div></div>
+		</footer>-->
+		<div class="clear"></div>
+	</article>
+</script>
+<!-- custom alert popup -->
+<div aria-hidden="true" id="dialog-message" title="Alert!" class="Ilit_alert_box"></div>
+<!-- device detection alert implementation  -->
+	<script type="text/javascript">	
+	  $("document").trigger("mousemove");
+        var isLaptopWithTouchScreen = false;
+        window.addEventListener('mousemove', function() {
+            isLaptopWithTouchScreen = true;
+        });       
+		var sTitle = "Alert";
+        if (navigator.userAgent.match(/Android/i)) {		
+			_alert({
+				divId:		'dialog-message',
+				title:		sTitle,
+				message:	DeviceDetect.c_s_ANDROID
+			});
+        } else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+         	_alert({
+				divId:		'dialog-message',
+				title:		sTitle,
+				message:	DeviceDetect.c_s_IOS
+			});
+            /*for windows device browser*/
+        } else if (navigator.msMaxTouchPoints > 0) {
+            if (!isLaptopWithTouchScreen) {				
+			   _alert({
+				divId:		'dialog-message',
+				title:		sTitle,
+				message:	DeviceDetect.c_s_WINDOWS
+			});
+            }
+            /*for chomebook browser*/
+        } /*else if (navigator.userAgent.match(/CrOS/)) { // code comment due to issue id : ILIT-5100           
+			  _alert({
+				divId:		'dialog-message',
+				title:		sTitle,
+				message:	DeviceDetect.c_s_CHROMEBOOK
+			});
+        }*/
+	</script>
+
+<!-- Issue: ClassView-561  => Disabled console from keyboard shortcut & Mouse right click-->
+ <script >
+	 //CMD + OPT + I
+	 var LCmd_Option_I_Key = {91: false, 18: false, 73: false};
+	 var RCmd_Option_I_Key = {93: false, 18: false, 73: false};
+	 var FF_Cmd_Option_I_Key = {224: false, 18: false, 73: false};
+	 //CMD + OPT + C
+	 var LCmd_Option_C_Key = {91: false, 18: false, 67: false};
+	 var RCmd_Option_C_Key = {93: false, 18: false, 67: false};
+	 var FF_Cmd_Option_C_Key = {224: false, 18: false, 67: false};
+	//CMD + OPT + J
+	 var LCmd_Option_J_Key = {91: false, 18: false, 74: false};
+	 var RCmd_Option_J_Key = {93: false, 18: false, 74: false};
+	 var FF_Cmd_Option_J_Key = {224: false, 18: false, 74: false};
+	 //CMD + OPT + U
+	 var LCmd_Option_U_Key = {91: false, 18: false, 85: false};
+	 var RCmd_Option_U_Key = {93: false, 18: false, 85: false};
+	 var FF_Cmd_Option_U_Key = {224: false, 18: false, 85: false};
+	//CMD + OPT + A
+	 var LCmd_Option_A_Key = {91: false, 18: false, 65: false};
+	 var RCmd_Option_A_Key = {93: false, 18: false, 65: false};
+	 var FF_Cmd_Option_A_Key = {224: false, 18: false, 65: false};
+
+	// disable right click
+	document.addEventListener('contextmenu', event => event.preventDefault());
+	$(document).keydown(function(e) {
+
+		// disable F12 key
+		if(e.keyCode == 123) {
+			return false;
+		}
+
+		// disable I key
+		if(e.ctrlKey && e.shiftKey && (e.keyCode == 73)){
+			return false;
+		}
+
+		// disable C key
+		if(e.ctrlKey && e.shiftKey && (e.keyCode == 67)){
+			return false;
+		}
+
+		// disable J key
+		if(e.ctrlKey && e.shiftKey && (e.keyCode == 74)) {
+			return false;
+		}
+
+		
+		
+		//ILIT-6416      ILIT-6417
+		//For IOS
+		//For Left Command + Option + I Key
+		if (e.keyCode in LCmd_Option_I_Key) {
+			LCmd_Option_I_Key[e.keyCode] = true;
+			if (LCmd_Option_I_Key[91] && LCmd_Option_I_Key[18] && LCmd_Option_I_Key[73]) {
+				return false;
+			}
+		}
+		//For Right Command + Option + I Key
+		if (e.keyCode in RCmd_Option_I_Key) {
+			RCmd_Option_I_Key[e.keyCode] = true;
+			if (RCmd_Option_I_Key[93] && RCmd_Option_I_Key[18] && RCmd_Option_I_Key[73]) {
+				return false;
+			}
+		}
+		//For FireFox Command + Option + I Key
+		if (e.keyCode in FF_Cmd_Option_I_Key) {
+			FF_Cmd_Option_I_Key[e.keyCode] = true;
+			if (FF_Cmd_Option_I_Key[224] && FF_Cmd_Option_I_Key[18] && FF_Cmd_Option_I_Key[73]) {
+				return false;
+			}
+		}
+
+
+
+		//For Left Command + Option + C Key
+		if (e.keyCode in LCmd_Option_C_Key) {
+			LCmd_Option_C_Key[e.keyCode] = true;
+			if (LCmd_Option_C_Key[91] && LCmd_Option_C_Key[18] && LCmd_Option_C_Key[67]) {
+				return false;
+			}
+		}
+		//For Right Command + Option + C Key
+		if (e.keyCode in RCmd_Option_C_Key) {
+			RCmd_Option_C_Key[e.keyCode] = true;
+			if (RCmd_Option_C_Key[93] && RCmd_Option_C_Key[18] && RCmd_Option_C_Key[67]) {
+				return false;
+			}
+		}
+		//For FireFox Command + Option + C Key
+		if (e.keyCode in FF_Cmd_Option_C_Key) {
+			FF_Cmd_Option_C_Key[e.keyCode] = true;
+			if (FF_Cmd_Option_C_Key[224] && FF_Cmd_Option_C_Key[18] && FF_Cmd_Option_C_Key[67]) {
+				return false;
+			}
+		}
+
+
+
+		//For Left Command + Option + J Key
+		if (e.keyCode in LCmd_Option_J_Key) {
+			LCmd_Option_J_Key[e.keyCode] = true;
+			if (LCmd_Option_J_Key[91] && LCmd_Option_J_Key[18] && LCmd_Option_J_Key[74]) {
+				return false;
+			}
+		}
+		//For Right Command + Option + J Key
+		if (e.keyCode in RCmd_Option_J_Key) {
+			RCmd_Option_J_Key[e.keyCode] = true;
+			if (RCmd_Option_J_Key[93] && RCmd_Option_J_Key[18] && RCmd_Option_J_Key[74]) {
+				return false;
+			}
+		}
+		//For FireFox Command + Option + J Key
+		if (e.keyCode in FF_Cmd_Option_J_Key) {
+			FF_Cmd_Option_J_Key[e.keyCode] = true;
+			if (FF_Cmd_Option_J_Key[224] && FF_Cmd_Option_J_Key[18] && FF_Cmd_Option_J_Key[74]) {
+				return false;
+			}
+		}
+
+
+
+		//For Left Command + Option + U Key
+		if (e.keyCode in LCmd_Option_U_Key) {
+			LCmd_Option_U_Key[e.keyCode] = true;
+			if (LCmd_Option_U_Key[91] && LCmd_Option_U_Key[18] && LCmd_Option_U_Key[85]) {
+				return false;
+			}
+		}
+		//For Right Command + Option + U Key
+		if (e.keyCode in RCmd_Option_U_Key) {
+			RCmd_Option_U_Key[e.keyCode] = true;
+			if (RCmd_Option_U_Key[93] && RCmd_Option_U_Key[18] && RCmd_Option_U_Key[85]) {
+				return false;
+			}
+		}
+		//For FireFox Command + Option + U Key
+		if (e.keyCode in FF_Cmd_Option_U_Key) {
+			FF_Cmd_Option_U_Key[e.keyCode] = true;
+			if (FF_Cmd_Option_U_Key[224] && FF_Cmd_Option_U_Key[18] && FF_Cmd_Option_U_Key[85]) {
+				return false;
+			}
+		}
+
+
+
+		//For Left Command + Option + A Key
+		if (e.keyCode in LCmd_Option_A_Key) {
+			LCmd_Option_A_Key[e.keyCode] = true;
+			if (LCmd_Option_A_Key[91] && LCmd_Option_A_Key[18] && LCmd_Option_A_Key[65]) {
+				return false;
+			}
+		}
+		//For Right Command + Option + A Key
+		if (e.keyCode in RCmd_Option_A_Key) {
+			RCmd_Option_A_Key[e.keyCode] = true;
+			if (RCmd_Option_A_Key[93] && RCmd_Option_A_Key[18] && RCmd_Option_A_Key[65]) {
+				return false;
+			}
+		}
+		//For FireFox Command + Option + A Key
+		if (e.keyCode in FF_Cmd_Option_A_Key) {
+			FF_Cmd_Option_A_Key[e.keyCode] = true;
+			if (FF_Cmd_Option_A_Key[224] && FF_Cmd_Option_A_Key[18] && FF_Cmd_Option_A_Key[65]) {
+				return false;
+			}
+		}
+
+
+	});
+
+	$(document).keyup(function(e) {
+		//ILIT-6416      ILIT-6417
+		LCmd_Option_I_Key = {91: false, 18: false, 73: false};
+		RCmd_Option_I_Key = {93: false, 18: false, 73: false};
+		FF_Cmd_Option_I_Key = {224: false, 18: false, 73: false};
+
+		LCmd_Option_C_Key = {91: false, 18: false, 67: false};
+		RCmd_Option_C_Key = {93: false, 18: false, 67: false};
+		FF_Cmd_Option_C_Key = {224: false, 18: false, 67: false};
+
+		LCmd_Option_J_Key = {91: false, 18: false, 74: false};
+		RCmd_Option_J_Key = {93: false, 18: false, 74: false};
+		FF_Cmd_Option_J_Key = {224: false, 18: false, 74: false};
+
+		LCmd_Option_U_Key = {91: false, 18: false, 85: false};
+	    RCmd_Option_U_Key = {93: false, 18: false, 85: false};
+	    FF_Cmd_Option_U_Key = {224: false, 18: false, 85: false};
+
+		LCmd_Option_A_Key = {91: false, 18: false, 65: false};
+	    RCmd_Option_A_Key = {93: false, 18: false, 65: false};
+	    FF_Cmd_Option_A_Key = {224: false, 18: false, 65: false};
+	});
+
+
+</script> 
+
+</html>

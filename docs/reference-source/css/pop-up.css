@@ -1,0 +1,42 @@
+.Ilit_alert_box.ui-dialog  {
+	-moz-box-shadow: 0 2px 9px 3px #888; -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.3); box-shadow: 0 6px 12px rgba(0,0,0,.3);
+	background: none; border:0;
+	border-radius:8px 8px; -moz-border-radius:8px 8px; -webkit-border-radius:8px 8px ; -o-border-radius:8px 8px;-ms-border-radius:8px 8px;
+	padding: 0.5em 0.7em; font-size:14px; color:#444; padding:0px;
+}
+.Ilit_alert_box.ui-dialog .ui-dialog-titlebar {border: 0; box-shadow: 0 1px 3px rgba(0,0,0, .2); font-size: 18px; color: #000  !important; border-bottom: 1px solid #ddd; background: #eeeeee; padding:14px;border-radius:8px 8px 0 0; -moz-border-radius:8px 8px 0 0; -webkit-border-radius:8px 8px 0 0; -ms-border-radius:8px 8px 0 0;-o-border-radius:8px 8px 0 0;}
+.Ilit_alert_box.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close { margin-right:6px; display: none; }
+.ui-dialog .ui-dialog-content{ font-size: 16px; line-height: 22px;}
+body .ui-dialog .ui-dialog-buttonpane{
+	padding:2px 10px !important; position:relative; background-image:none !important; margin:0; border:0; box-shadow:0 0px 3px 0 rgba(0,0,0, .2) !important; font-size:18px; color:#000  !important; border-top:1px solid #ddd; background-color:#eeeeee; padding:14px; border-radius:0 0 8px 8px;
+	-moz-border-radius:0 0 8px 8px; -webkit-border-radius:0 0 8px 8px; -ms-border-radius:0 0 8px 8px;-o-border-radius:0 0 8px 8px;
+}
+.ui-dialog-buttonpane.ui-widget-content{ background-image: none !important; }
+.ui-dialog-content.ui-widget-content{
+	background:#fff !important; box-shadow:0 0px 3px 0 rgba(0,0,0, .2) !important;  height:auto !important; padding:1.5em 1em !important;
+	border-radius:0px;
+}
+.ui-button-text-only .ui-button-text{ padding: 0;}
+
+
+body .ui-dialog-buttonset button.ui-button.ui-state-default{
+	background: #3444ad; /* Old browsers */
+	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzM0NDRhZCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMzNDQ0YWQiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top,  #3444ad 0%, #3444ad 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3444ad), color-stop(100%,#3444ad)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #3444ad 0%,#3444ad 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #3444ad 0%,#3444ad 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #3444ad 0%,#3444ad 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #3444ad 0%,#3444ad 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3444ad', endColorstr='#3444ad',GradientType=0 ); /* IE6-8 */
+	border:0; border-radius:5px;  -moz-border-radius:5px; -webkit-border-radius:5px; -o-border-radius:5px; -ms-border-radius:5px;
+	-webkit-box-shadow:0 1px 0px 0 #1a2b96,inset 0 -2px 0 0 #1a2b96,inset 0 0 0 1px #3444ad;
+	-ms-box-shadow:0 1px 0px 0 #1a2b96,inset 0 -2px 0 0 #1a2b96,inset 0 0 0 1px #3444ad;
+	box-shadow:0 1px 0px 0 #1a2b96,inset 0 -2px 0 0 #1a2b96,inset 0 0 0 1px #3444ad;
+	font-size:15px; padding:10px 20px; color:#fff; text-decoration:none; min-width:90px; margin-right:10px; font-weight:bold;  border: 0;
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { border:0; }
+body .ui-dialog-buttonset button.ui-button.ui-state-default:not(.disabled):hover{color:white;background:#3d57b4; }
+body .ui-dialog-buttonset button.ui-button.ui-state-default:not(.disabled):active,
+.bookTitle:not(.disabled):active{ color:white;background:#3d57b4; }

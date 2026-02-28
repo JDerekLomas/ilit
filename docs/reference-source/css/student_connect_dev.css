@@ -1,0 +1,189 @@
+html {	-webkit-text-size-adjust: none; /* Prevent font scaling in landscape */}
+body, html{-webkit-overflow-scrolling: touch;}
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+}
+body {
+    line-height:1;
+	font-family:Helvetica, Arial, sans-serif;
+	font-size:21px;
+	color:#4e4e4e;
+	font-weight:normal;
+	min-height:100%;
+	background-color: #E0E1E1;
+}
+article,aside,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section {
+    display:block;
+}
+nav ul {
+    list-style:none;
+}
+blockquote, q {
+    quotes:none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content:'';
+    content:none;
+}
+p{line-height:28px;}
+a {
+    margin:0;
+    padding:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+}
+/* change colours to suit your needs */
+ins {
+    background-color:#ff9;
+    color:#000;
+    text-decoration:none;
+}
+/* change colours to suit your needs */
+mark {
+    background-color:#ff9;
+    color:#000;
+    font-style:italic;
+    font-family:Helvetica, Arial, sans-serif;
+}
+del {
+    text-decoration: line-through;
+}
+abbr[title], dfn[title] {
+    border-bottom:1px dotted;
+    cursor:help;
+}
+table {
+    border-collapse:collapse;
+    border-spacing:0;
+}
+/* change border colour to suit your needs */
+hr {
+    display:block;
+    height:1px;
+    border:0;
+    border-top:1px solid #cccccc;
+    margin:1em 0;
+    padding:0;
+}
+input, select {
+    vertical-align:middle;
+}
+ul, li{ list-style:none;}
+
+
+input:focus[type="text"]
+{
+    outline: none;
+	-webkit-appearance: none;
+}
+input[type="text"] {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-focus-ring-color:  rgba(0, 0, 0, 0); outline:none;}
+.clear {
+	padding:0;
+	margin:0;
+	font-size:0;
+	line-height:0;
+	clear:both;
+}
+
+.backgound_images img {    width: 100%; max-height:100%;}
+.bg13 {   background: url(../media/bg3.jpg) no-repeat center bottom; height: 100%; background-size: cover;}
+.buzz_wrapper {	background: #fff;    padding: 22px 18px;    box-shadow: 0 5px 10px rgba(0,0,0,.2); border-radius: 6px; height: 500px;} 
+.buzz_wrapper_inner{ }
+.buzz_container li{ padding:10px 15px; font-size:17px; color:#000; cursor:pointer;}
+.buzz_container li:last-child{ border-bottom:0;}
+#connectStudent .main_wrapper {    margin: 0 auto;    max-width: 1003px;    padding-top: 25px;}
+#connectStudent .buzz_container .inner_content{ float:left; width:48%;}
+#connectStudent .buzz_container .buzzDiv{  float:right; width:48%; text-align:center;}
+
+
+#connectStudent table {margin-bottom: 20px;
+    max-width: 100%;
+    width: 100%;
+    background-color: transparent;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+#connectStudent table > tbody > tr:nth-of-type(2n+1) {
+    background-color: #f9f9f9;
+}
+
+
+#connectStudent table > tbody > tr:nth-of-type(2n+1) {
+    background-color: #f9f9f9;
+}
+
+#connectStudent table > tbody > tr > td, #connectStudent table > tbody > tr > th, #connectStudent table > tfoot > tr > td{
+    border: 1px solid #ddd;
+}
+#connectStudent table > tbody > tr > td, #connectStudent table > tbody > tr > th{
+    border-top: 1px solid #ddd;
+    line-height: 1.42857;
+    padding: 8px;
+    vertical-align: top; font-size:16px;
+}
+#connectStudent table > thead > tr > th{
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 8px;
+    vertical-align: top;
+    font-size: 16px;
+}
+
+
+.heading1 { text-align:center; margin-bottom:20px;}
+.buzzDiv .heading1 { font-style:italic; font-size:30px; font-weight:bold;}
+.refresh_icon  {
+    width: 34px;
+    height: 34px;
+    background-position: -299px -614px;
+    display: block;
+    cursor: pointer;
+    border: 0;
+    padding: 0;
+    margin: 0 20px 0 0;
+	background-color: #6F9229;
+}
+.buzz_container .refresh_icon {background-position:-380px -614px;}
+.buzz_container .heading1 { padding-top:9px;}
+.star{ margin:55px 0;}
+.heading2{ font-size:24px;}
+.heading2 b{ font-size: 30px;    font-weight: bold;}
+.comment_show {
+	height : 470px;
+	overflow : auto;
+}
+.commenttooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}

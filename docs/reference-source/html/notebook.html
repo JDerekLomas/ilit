@@ -1,0 +1,2258 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<meta http-equiv='cache-control' content='no-cache'>
+		<meta http-equiv='expires' content='0'>
+		<meta http-equiv='pragma' content='no-cache'>
+        <title>iLiT</title>
+		<script> 
+			var cache_timestamp = (new Date()).getTime();
+			document.write('<link href="css/notebook.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');			
+		</script>
+        <link href="css/jquery-ui.css" media="all" rel="stylesheet"/>
+		<script>
+			document.write('<link href="css/notebook_dev.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+		</script>
+        <link href="css/fonts/fonts.css" media="all" rel="stylesheet"/>        
+        <link href="css/video-js.css" type="text/css" rel="stylesheet"/>
+		<script>
+			document.write('<link href="css/a11y.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+		</script>
+        <!--[if gte IE 9]>
+        <style type="text/css">
+            .gradient {
+				filter: none !important;
+			}
+        </style>
+        <![endif]-->
+        <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.js"></script>
+        <script type="text/javascript" src="js/underscore-min.js"></script>
+        <script type="text/javascript" src="js/jquery.ui.touch-punch.min.js"></script>
+        <script src="js/video.js" type="text/javascript"></script>
+		<script>
+			document.write('<script type="text/javascript" src="js/iSeriesBase.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/util.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/globals.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/constants.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/message_handler.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/application.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/notebook.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/client_native_communication.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/chromeapp_communication.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/a11y.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+		</script>
+
+        <script type="text/javascript">
+			$(document).ready(function () {
+				// Loader Image
+				var loaderImg = '<div style=" font-size: 13px;"><img src="media/loader.gif" style="margin-bottom: 15px;"><br />LOADING</div>';
+				$('body').css({'background-color': '#FFF'});
+				$('.wrapper').hide();
+				$("#loaderContainer")
+					.css({
+						'background-color':	'#FFF',
+						'text-align':		'center',
+						'top':				'45%',
+						'left':				'50%',
+						'position':			'absolute'
+					})
+					.html(loaderImg);
+				
+				if (oPlatform.isIOS()) {
+					loadJS('js/NativeBridge.js', function() {
+						Application.init(VIEWTYPE.c_s_NOTEBOOK);
+					});
+				}else if(location.hash === "#chromeApp") { //  for chrome app
+					if(window.top.appOrigin){
+						window.appOrigin = window.top.appOrigin;
+						Application.init(VIEWTYPE.c_s_NOTEBOOK);
+						return;
+					}
+					window.addEventListener('message', onMessage);
+					function onMessage(e) {
+						window.appWindow = e.source;
+						window.appOrigin = e.origin;
+						Application.init(VIEWTYPE.c_s_NOTEBOOK);
+					}
+					if(typeof chrome.runtime.id !== 'undefined'){
+						Application.init(VIEWTYPE.c_s_NOTEBOOK);
+					}
+				}
+				else {
+					Application.init(VIEWTYPE.c_s_NOTEBOOK);
+				} 
+				
+				$("#loaderContainer").hide();
+				$('body').css({'background-color': '#E0E1E1'});
+				$('.wrapper').show();
+				$('.wrapper').animate({'opacity' : '1'}, 800);
+				
+				$GLOBALS.unset('MyWorkData');
+            });
+			$(window).load(function () { 		
+				//onPageLoadComplete(GENERAL.c_s_PAGE_TYPE_NOTEBOOK);
+			});
+            $(window).resize(function () {
+                tabViewResize = function (tabType) {
+					switch (tabType) {
+						case NOTEBOOK.c_s_TAB_JOURNAL:
+							JournalView.resize();
+						break;
+						case NOTEBOOK.c_s_TAB_PORTFOLIO: 
+							PortfolioView.resize();
+						break;
+						case NOTEBOOK.c_s_TAB_WORDBANK: 
+							WordBankView.resize();
+						break;
+						default:
+							ClassNotesView.resize();
+						break;
+					}
+				}
+				if (NotebookView.tabType != null) {
+					tabViewResize(NotebookView.tabType);
+				}
+				else {
+					NotebookView.resize();
+				}
+            });
+        </script>
+    </head>
+    <body>
+        <div id="loaderContainer"></div>
+		<div class="wrapper" id="noteBookWrapper"></div>
+		<div id="viewAssignmentPopupArea" style="display: none;">
+			<iframe src="" frameborder="0" width="100%" height="100%" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true">
+			<p>Your browser does not support iframes.</p>
+			</iframe>
+		</div>
+		
+	   <div id="viewResourcePopupArea" style="display: none;" tabindex="-1" aria-hidden="true">
+		
+		</div>
+		
+		<div id="dialog-message" title="Alert!" class="Ilit_alert_box" style="display:none;">
+		<p>Under Construction</p>
+		</div>
+		<!-- DIALOG BOX -->
+        <div id="dialog-message-network" title="Alert!" class="Ilit_alert_box"></div>
+		<div id="viewCurrentReadingPopupArea" style="display: none;">
+			<iframe src="" frameborder="0" width="100%" height="100%" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true">
+			</iframe>
+		</div>
+		<div id="textToHelpMenu" style="position:absolute;display:none;background:#000;">
+			<div id="tthPaste" class="textToHelpMenuButtons" unselectable="on">Paste</div>
+			<!-- <div class="arrow-down"></div> -->
+		</div>
+    </body>
+	
+	<script type="text/template" id="noteBookLeftPanel">
+		<ul class="notes_list_wrapper" role="menubar">
+<% 
+		if(journaldata != null){  
+			sortedjournalData = _.sortBy(journaldata, function(num){return num.RefUnitNumber;});
+			var groupunitsData = _.groupBy(sortedjournalData, 'RefUnitNumber'),
+				sProductCode =  NotebookView.sProductCode;
+%>
+				<% _.each(groupunitsData, function (units, idx){  %>
+				<li>
+					<% 
+					if(!sProductCode.match(GENERAL.c_s_ILIT_20) && !sProductCode.match(GENERAL.c_s_PROD_TYPE_WTW)) { %>
+					<a href="#" tabindex="0" aria-label="Unit <%=units[0].RefUnitNumber%>">
+						<span class="middle">Unit <%=units[0].RefUnitNumber%></span>
+						<span class="right nt_arrow sprite"></span>
+					</a>
+					<% }
+					else if(sProductCode.match(GENERAL.c_s_PROD_TYPE_WTW)){
+						var oUnitData= _.where(NotebookView.UnitNameArray, {"unitNumber": ""+units[0].RefUnitNumber+""})[0] || {};
+					%>
+						<a href="#" tabindex="0" aria-label="<%=oUnitData.unitName%>"><span class="middle"><%=oUnitData.unitName%></span></a>
+					<%
+					}
+					%>
+					<ul style="display:none;" role="menu">
+<%
+							units = _.sortBy(units, function(num){ return num.LastUpdatedOn; });
+							units = units.reverse();
+							_.each(units, function (jnotes,idn) {
+								/*
+								createddate = jnotes.LastUpdatedOn.split("/"); 2015-06-09T09:36:40.530186
+								lastUpdateDate = jnotes.LastUpdatedOn.split("T");
+								createddate    = lastUpdateDate[0].split("-");
+								sNoteTitle = decodeURIComponent(jnotes.NoteTitle);
+								totalTxt       = createddate[1]+"/"+createddate[2]+" "+stripHtmlTagsFromString(sNoteTitle);
+								totalTxt = totalTxt.replace(/<a\b[^>]*>/i,"");
+								totalTxt = totalTxt.replace(/<\/a>/i, "");
+								*/
+								
+								sRevisionId = jnotes.RevisionId.toString();								
+								sYear = sProductCode.match(GENERAL.c_s_ILIT_20) ? "/" + sRevisionId.substr(2, 2) : "";
+								sMonth = sRevisionId.substr(4, 2);
+								sDate = sRevisionId.substr(6, 2);
+								sNoteTitle = decodeURIComponent(jnotes.NoteTitle);
+								totalTxt = sMonth + "/" + sDate + sYear + " " + stripHtmlTagsFromString(sNoteTitle);
+								if (totalTxt.length > NOTEBOOK.c_s_NOTEBOOK_VIEW_MENU_TXT_LENGTH) {
+									totalTxt = totalTxt.slice(0,NOTEBOOK.c_s_NOTEBOOK_VIEW_MENU_TXT_LENGTH) + ".."; 
+								}
+%>
+						<li>
+							<a href="javascript:void(0);" tabindex="0" id="noteid_<%=idx%>_<%=idn%>" note-id ="<%=jnotes.NoteID%>" ref-id ="<%=jnotes.NoteRefID%>" ref-unitno="<%=jnotes.RefUnitNumber%>" aria-label="<%= totalTxt %>" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookLeft'].c_s_VERBID%>" class="valid-activity"><%= totalTxt %></a>
+						</li>
+<%
+							});
+%>
+					</ul>
+				</li>
+				<%	}); %>
+			
+		<%
+		} else {
+		%>
+				<li>
+					<% if(!sProductCode.match(GENERAL.c_s_ILIT_20)) { %>
+					<a href="#" tabindex="0" aria-label="<%=NOTEBOOK.c_s_NOTEBOOK_DEFAULT_SELECTED_UNIT%>">
+						<span class="middle"><%=NOTEBOOK.c_s_NOTEBOOK_DEFAULT_SELECTED_UNIT%></span>
+						<span class="right nt_arrow sprite"></span>
+					</a>
+					<% } %>
+				</li>	
+		
+		<% } %>
+		</ul>
+		<div class="clear"></div>
+	</script>
+	
+	<script type="text/template" id="noteBookLeftPanelPortfolio">
+	<ul class="notes_list_wrapper" role="menubar">
+<%
+	var lession_counter = 0,
+		total_weekwise_lessions = 0;
+		
+	if (PortfolioView.tabType == NOTEBOOK_PORTFOLIO_TABS[0].c_s_CODE) { // My Work section
+		if (portfoliodata != null) {
+			sortedjournalData = _.sortBy(
+				portfoliodata,
+				function (num) {
+					return num.ItemUnitNumber;
+				}
+			);
+			var groupunitsData = _.groupBy(sortedjournalData, "ItemUnitNumber");
+			if (_.isEmpty(groupunitsData)) {
+				if(!productCode.match(GENERAL.c_s_ILIT_20) && !productCode.match(GENERAL.c_s_PROD_TYPE_WTW)) { 
+					for(var i = 1; i <= totalUnits; i++) {
+	%>
+					<li id="unitlessionlist_<%= i %>">
+						<a href="#" tabindex="0" id="unitid_<%=i%>" data-value="<%=i%>">
+							<span class="middle">Unit <%=i%></span>
+							<span class="right nt_arrow sprite"></span>
+						</a>
+					</li>
+	<%
+					}
+				}else if(productCode.match(GENERAL.c_s_PROD_TYPE_WTW)){
+					for(var i = 1; i <= totalUnits; i++) {	
+					var oUnitData= _.where(NotebookView.UnitNameArray, {"unitNumber": ""+i+""})[0] || {};
+	%>
+					<li id="unitlessionlist_<%= i %>">
+						<a href="#" tabindex="0" id="unitid_<%=i%>" data-value="<%=i%>">
+							<span class="middle"><%=oUnitData.unitName%></span>
+							<span class="right nt_arrow sprite"></span>
+						</a>
+					</li>
+	<%
+					}
+				}
+			}
+			else {
+				for(var i = 1; i <= totalUnits; i++) {
+%>
+				<li id="unitlessionlist_<%=i%>">
+					<% if(!productCode.match(GENERAL.c_s_ILIT_20) && !productCode.match(GENERAL.c_s_PROD_TYPE_WTW)) { %>
+					<a href="#" tabindex="0" id="unitid_<%=i%>" data-value="<%=i%>">
+						<span class="middle">Unit <%=i%></span>
+						<span class="right nt_arrow sprite"></span>
+					</a>
+<%					
+					}else if(productCode.match(GENERAL.c_s_PROD_TYPE_WTW)){
+						var oUnitData= _.where(NotebookView.UnitNameArray, {"unitNumber": ""+i+""})[0] || {};
+					%>
+						<a href="#" tabindex="0" id="unitid_<%=i%>" data-value="<%=i%>">
+							<span class="middle"><%= oUnitData.unitName %></span>
+							<span class="right nt_arrow sprite"></span>
+						</a>
+<%	
+					}
+					_.each(groupunitsData, function (units, idx) {
+						total_weekwise_lessions = 0;
+						if (i == units[0].ItemUnitNumber) {
+%>
+					<ul style="display:none;" id="lessionlist_<%= i %>" role="menu">
+<% 
+							itemdata = _.sortBy(units, function (num) { return num.ItemWeekNumber; });
+							//remove week 0
+							var groupitemdata = _.filter(itemdata, function (obj) { return (obj.ItemWeekNumber != 0); });
+							groupitemdata = _.groupBy(groupitemdata, "ItemWeekNumber");
+							var groupbenchmarkdata = _.filter(itemdata, function(obj){ return (obj.ItemWeekNumber  ==0); });
+							groupbenchmarkdata = _.groupBy(groupbenchmarkdata, "ItemWeekNumber");
+							var groupwrcdata = _.filter(itemdata, function(obj){ return (obj.ItemWeekNumber  ==0); });
+							groupwrcdata = _.groupBy(groupwrcdata, "ItemWeekNumber");
+							_.each(groupitemdata, function (items,idn) {
+								lession_counter = total_weekwise_lessions + 1;
+								total_lessions = 0;
+								//count Lessions
+								_.each(items, function (lession, idl) {
+									total_weekwise_lessions++;
+									//console.log(lession);
+								});
+								if(lession_counter == total_weekwise_lessions) {
+									display_lession = lession_counter;
+								}
+								else {
+									display_lession = lession_counter+"-"+total_weekwise_lessions;
+								}
+								display_lession = ((5*items[0].ItemWeekNumber) -4)+"-"+ 5*items[0].ItemWeekNumber;
+%>
+						<li>
+							<a href="javascript:void(0);" tabindex="0" id="noteid_<%=idx%>_<%=idn%>" unit-no="<%=items[0].ItemUnitNumber%>" week-number ="<%=items[0].ItemWeekNumber%>" lession-ref="<%=display_lession%>" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookLeft'].c_s_VERBID%>" class="valid-activity">
+								<% if(productCode.match(GENERAL.c_s_ILIT_20)) { %>
+									<%= PLANNER.c_s_WEEK_TXT %> <%= items[0].ItemWeekNumber %>
+								<% } else {
+								NOTEBOOK.c_s_PORTFOLIO_LESSION_LABEL =(productCode.match(GENERAL.c_s_PROD_TYPE_WTW) ? "Sort" : "Lessons");
+								%>
+								
+								<%= NOTEBOOK.c_s_PORTFOLIO_LESSION_LABEL %>
+								<%= display_lession %>
+								<% } %>
+							 </a>
+						</li>
+<%
+							});
+							// Benchmark data
+							if(!productCode.match(GENERAL.c_s_ILIT_20)) {  //ILIT-760
+							_.each(groupbenchmarkdata, function (items,idn) {
+								
+%>
+						<li>
+							<a href="javascript:void(0);" tabindex="0" id="noteid_<%=idx%>_<%=idn%>" unit-no="<%=items[0].ItemUnitNumber%>" week-number ="<%=items[0].ItemWeekNumber%>" lession-ref="<%=NOTEBOOK.c_s_BENCHMARK_ASSEMENT%>" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookLeft'].c_s_VERBID%>" class="valid-activity">
+								<%= NOTEBOOK.c_s_BENCHMARK_ASSEMENT %>
+							</a>
+						</li>
+<%
+							
+							});
+							}
+							// Weekly reading checks data
+							if(!productCode.match(GENERAL.c_s_ILIT_20)) {  //ILIT-760
+							_.each(groupwrcdata, function (items,idn) {
+%>
+						<li>
+							<a href="javascript:void(0);" tabindex="0" id="noteid_<%=idx%>_<%=idn%>" unit-no="<%=items[0].ItemUnitNumber%>" week-number ="<%=items[0].ItemWeekNumber%>" lession-ref="<%=NOTEBOOK.c_s_WRC_ASSEMENT%>" a-type="wrc" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookLeft'].c_s_VERBID%>" class="valid-activity">
+								<%=NOTEBOOK.c_s_WRC_ASSEMENT%>
+							 </a>
+						</li>
+<%
+							});
+							}
+%>
+					</ul>
+<%
+						}
+					});
+%>
+				</li>
+<%
+				}
+			}
+		}
+		else {
+%>
+				<li>
+					<a href="#" tabindex="0">
+						<span class="middle"><%=NOTEBOOK.c_s_NOTEBOOK_DEFAULT_SELECTED_UNIT%></span>
+						<span class="right nt_arrow sprite"></span>
+					</a>
+				</li>	
+		
+		<%
+		} 
+	}
+%>
+		</ul>
+		<div class="clear"></div>
+	</script>
+	
+<script type="text/template" id="notebook-portfolio-left">
+<%
+	var sSubType = null,
+		iUnit = -1,
+		iWeek = -1,
+		iMinDayNumber = -1,
+		iMaxDayNumber = -1,
+		iLessonPerWeek = 5,
+		sLesson = null,
+		oItem = null,
+		iCurrentUnit = parseInt(currentUnit);
+		
+	if (!_.isEmpty(resources)) {
+%>
+	<ul class="notes_list_wrapper" role="menubar">
+<%
+		for (var sGroupKey in groups) {
+			if (typeof resources[sGroupKey] == "object" && resources[sGroupKey] != null) {
+%>	
+		<li>
+			<a href="#" tabindex="0" class="groups valid-activity" data-group="<%= sGroupKey %>" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookLeft'].c_s_VERBID%>">
+				<span class="middle"> <%= groups[sGroupKey] %> </span>
+				<span class="right nt_arrow sprite"></span>
+			</a>
+<%
+				if (
+					typeof resources[sGroupKey]["resources"] == "object" &&
+					resources[sGroupKey]["resources"] instanceof Array &&
+						resources[sGroupKey]["resources"].length > 0
+				) {
+%>
+			<ul role="menu" <% if (sGroupKey != "lessonScreen") { %> class="links-cont" data-group="<%= sGroupKey %>"<% } else { %> class="sub-groups-cont"<% } %>>
+<%
+					switch (sGroupKey) {
+						case "lessonScreen":
+							sSubType = null;
+							iNumRecords = resources[sGroupKey]["resources"].length;
+							var bHasRecords = false;
+							for (var iI = 0; iI < iNumRecords; iI++) {
+								oItem = resources[sGroupKey]["resources"][iI];
+								if (parseInt(oItem.unitNumber) > iCurrentUnit) {
+									continue;
+								}
+								if (sSubType != oItem.subType) {
+									iUnit = -1; // Reset Unit
+									if (sSubType != null) {
+%>
+					</ul>
+				</li>
+<%
+									}
+									sSubType = oItem.subType;
+%>
+				<li>
+					<a href="#" tabindex="0" class="sub-groups valid-activity" data-index="<%= sSubType %>" data-group="<%= sGroupKey %>" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookLeft'].c_s_VERBID%>">
+						<span class="middle"> <%= (subTypes[sSubType] || sSubType) %> </span>
+						<span class="right nt_arrow sprite"></span>
+					</a>
+					<ul class="links-cont" role="menu">
+<%
+								}
+								if (oItem.unitNumber != iUnit) {
+									iUnit = oItem.unitNumber;
+									iWeek = parseInt(oItem.weekNumber);
+									iMaxDayNumber = iWeek * iLessonPerWeek;
+									iMinDayNumber = iMaxDayNumber - 4;
+									sLesson = (NotebookView.sProductCode.match(GENERAL.c_s_PROD_TYPE_WTW) ? "Sort " + iMinDayNumber + " - " + iMaxDayNumber : "Lessons " + iMinDayNumber + " - " + iMaxDayNumber );
+									bHasRecords = true;
+%>
+						<li>
+							<a href="#" tabindex="0" class="links valid-activity" data-sub-type="<%= sSubType %>" data-unit="<%= iUnit %>" data-week="<%= iWeek %>" data-group="<%= sGroupKey %>" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookLeft'].c_s_VERBID%>">
+								<%
+								if(NotebookView.sProductCode.match(GENERAL.c_s_PROD_TYPE_WTW)){
+									var oUnitData= _.where(NotebookView.UnitNameArray, {"unitNumber": ""+oItem.unitNumber+""})[0] || {};
+								%>
+										<%= oUnitData.unitName %>, <%= sLesson %>
+								<%
+								}else{
+								%>
+										Unit <%= oItem.unitNumber %>, <%= sLesson %>
+								<%
+								}
+								%>
+							</a>
+						</li>
+<%
+								}
+								else {
+									if (iWeek != oItem.weekNumber) {
+										iWeek = parseInt(oItem.weekNumber);
+										iMaxDayNumber = iWeek * iLessonPerWeek;
+										iMinDayNumber = iMaxDayNumber - 4;
+										sLesson = (NotebookView.sProductCode.match(GENERAL.c_s_PROD_TYPE_WTW) ? "Sort " + iMinDayNumber + " - " + iMaxDayNumber : "Lessons " + iMinDayNumber + " - " + iMaxDayNumber );
+										bHasRecords = true;
+%>
+						<li>
+							<a href="#" tabindex="0" class="links valid-activity" data-sub-type="<%= sSubType %>" data-unit="<%= iUnit %>" data-week="<%= iWeek %>" data-group="<%= sGroupKey %>" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookLeft'].c_s_VERBID%>">
+								<%
+								if(NotebookView.sProductCode.match(GENERAL.c_s_PROD_TYPE_WTW)){
+									var oUnitData= _.where(NotebookView.UnitNameArray, {"unitNumber": ""+oItem.unitNumber+""})[0] || {};
+								%>
+									 <%= oUnitData.unitName %>, <%= sLesson %>
+								<%
+								}else{
+								%>
+										Unit <%= oItem.unitNumber %>, <%= sLesson %>
+								<%
+								}
+								%>
+							</a>
+						</li>
+<%
+									}
+								}
+							}
+							
+							if (bHasRecords === true) {
+%>
+					</ul>
+				</li>
+<%
+							}
+						break;
+						case "routineCards":
+							for (var iI = 0; iI < resources[sGroupKey]["resources"].length; iI++) {
+%>
+				<li>
+					<a href="#" tabindex="0" data-index="<%= iI %>" data-group="<%= sGroupKey %>" class="links valid-activity" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookLeft'].c_s_VERBID%>">
+						<%= resources[sGroupKey]["resources"][iI].itemDisplayName %>
+					</a>
+				</li>
+<%
+							}
+						break;
+						case "bookClub":
+							for (var iI = 0; iI < resources[sGroupKey]["resources"].length; iI++) {
+%>
+				<li>
+					<a href="#" tabindex="0" data-index="<%= iI %>" data-group="<%= sGroupKey %>" class="links valid-activity" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookLeft'].c_s_VERBID%>">
+						<%= resources[sGroupKey]["resources"][iI].itemDisplayName %>
+					</a>
+				</li>
+<%
+							}
+						break;
+						case "standards":
+							for (var iI = 0; iI < resources[sGroupKey]["resources"].length; iI++) {
+%>
+				<li>
+					<a href="#" tabindex="0" data-index="<%= iI %>" data-group="<%= sGroupKey %>" class="links valid-activity" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookLeft'].c_s_VERBID%>">
+						<%= resources[sGroupKey]["resources"][iI].itemDisplayName %>
+					</a>
+				</li>			
+<%
+							}
+						break;
+					} 
+%>
+			</ul>
+<%
+				}
+			}
+%>			
+		</li>
+<%
+		}
+%>		
+	</ul>
+<%
+	}
+%>	
+</script>
+	
+	<script type="text/template" id="noteBookRightPanel">
+<%
+	$.each(tabData, function (idx, val) {		
+		var activeClass = (val.c_s_CODE == activeIdx)? " active": GENERAL.c_s_SPECIAL_CHARACTERS_BLANK;
+		
+		if ((NotebookView.sProductCode.match(GENERAL.c_s_ILIT_20) || NotebookView.sProductCode.match(GENERAL.c_s_PROD_TYPE_WTW)) && val.c_s_CODE == "Resources") { 
+			return;
+		}
+%>
+		<div tabindex="0" role="button" id="<%= val.c_s_CODE %>" aria-label="<%= val.c_s_NAME %>" class="tabs_s <%= val.c_s_CSS %><%= activeClass %> valid-activity" data-value="<%= val.c_s_CODE %>" aria-selected ="false" data-verbid="<%=TRACK_EVENT[3].Notebook[val.c_s_CODE].c_s_VERBID%>">
+			<div class="tabs_s_text sprite3 valid-activity" data-verbid="<%=TRACK_EVENT[3].Notebook[val.c_s_CODE].c_s_VERBID%>"><%= val.c_s_NAME %></div>
+			<div class="tabs_arrow">
+				<div class="tabs_arrow_inn"></div>
+			</div>
+		</div>
+<%
+	});
+%>
+		<div class="clear"></div>
+	</script>
+	<script type="text/template" id="noteBookJournalEditorPanel">
+<%
+	var sNoteText = (
+		(typeof data == "undefined")?
+		GENERAL.c_s_SPECIAL_CHARACTERS_BLANK:
+		data[0].NoteText
+	);
+%>
+		<div class="textareaholder">
+			<textarea id="notebookdescription" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>" class="valid-activity"><%= sNoteText %></textarea>
+		</div>
+		<div class="clear"></div>
+	</script>
+	
+	<script type="text/template" id="noteBookJournalTitlePanel">
+<%
+	var sNoteTitle = stripHtmlTagsFromString(
+		(typeof data == "undefined")?
+		GENERAL.c_s_SPECIAL_CHARACTERS_BLANK:
+		data[0].NoteTitle
+	);
+%>
+		<div class="left left_title"><%= NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_TITLE %></div>
+		<div class="middle">
+			<input name="notetile" type="text" id="<%= NOTEBOOK.c_s_NOTEBOOK_NOTE_TITLE %>" value="<%= sNoteTitle %>" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>" class="valid-activity">
+		</div>
+		<div class="clear"></div>
+	</script>
+	
+	<script type="txt/template" id="noteBookWordBankEditorPanel">
+<%
+	var sNoteTitle = stripHtmlTagsFromString(
+			(typeof data == "undefined")?
+			GENERAL.c_s_SPECIAL_CHARACTERS_BLANK:
+			data[0].NoteTitle
+		),
+		sNoteText = (
+			(typeof data == "undefined")?
+			GENERAL.c_s_SPECIAL_CHARACTERS_BLANK:
+			data[0].NoteText
+		);
+%>
+		<div class="notes_book_content" >
+			<div  class="notes_book_title">
+				<div class="notes_book_lt left"><%= NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_WORD %></div>
+				<div class="middle valid-activity" id="<%= NOTEBOOK.c_s_NOTEBOOK_WORDBANK_TITLE %>" contenteditable="true"  style="display: block;" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>">
+					<%= sNoteTitle %>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="notes_book_container">
+				<div class="note_comments">
+					<div class="notes_book_lt left"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_DEFINITITION%></div>
+					<div class="middle valid-activity"  id="<%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_DESCRIPTION%>" contenteditable="true" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>">
+						<%= sNoteText %>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="note_comments">
+					<div class="notes_book_lt left"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_SENTENCE%></div>
+					<div class="middle valid-activity"  id="<%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_SENTENCE%>" contenteditable="true" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"> 
+						<%= sNoteText %>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</script>
+	<script type="text/template"  id="notebooksaveoperation">
+		
+		<button class="btn button7 " id="<%= NOTEBOOK.c_s_NOTEBOOK_CANCEL_NOTE %>">
+			<%= NOTEBOOK.c_s_NOTEBOOK_WORDBANK_CANCEL_TEXT %>
+		</button>
+		<button class="btn button7 right" id="<%= NOTEBOOK.c_s_NOTEBOOK_SAVE_NOTE %>" data-value="">
+			<%= NOTEBOOK.c_s_NOTEBOOK_WORDBANK_SAVE_TEXT %>
+		</button>
+		<div class="clear"></div>
+	</script>
+	
+	
+	<!--- journal inner  template-->
+	<script type="text/template" id="journalInnerTemplate">
+<%
+	if (journalData.length > 0) {
+		$.each(journalData, function (idx, val) {
+			try {
+				val.NoteText = val.NoteText ? decodeURIComponent(val.NoteText).replace(/<br>/gi, "\n") : "";
+				val.NoteTitle = stripHtmlTagsFromString(decodeURIComponent(val.NoteTitle));
+			}
+			catch (ex) {
+				val.NoteText = val.NoteText ? val.NoteText.replace(/<br>/gi, "\n") : "";
+				val.NoteTitle = stripHtmlTagsFromString(val.NoteTitle);
+			}
+%>
+		<div class="container_notes_wrapper_title" id="<%= NOTEBOOK.c_s_JOURNAL_TITLE_PANEL_CONTAINER %>">
+			<div class="left left_title"><%= NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_TITLE %></div>
+			<div class="middle"><input name="notetile" type="text" id="<%=NOTEBOOK.c_s_NOTEBOOK_NOTE_TITLE%>" value="<%= val.NoteTitle %>" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>" class="valid-activity"></div>
+			<div class="clear"></div>
+		</div>
+		<div class="notes_wrapper_content_inner" id="<%= NOTEBOOK.c_s_JOURNAL_EDITOR_PANEL_CONTAINER %>">
+			<div class="textareaholder">
+				<textarea id="notebookdescription" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>" class="valid-activity"><%= val.NoteText %></textarea>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="button_bar_wrapper" id="<%= NOTEBOOK.c_s_JOURNAL_EDITOR_SAVE_CONTAINER %>">
+			<button class="btn button7" aria-label="Cancel Note" id="<%= NOTEBOOK.c_s_NOTEBOOK_CANCEL_NOTE_BTTN %>" style="display:none;">
+				<%= NOTEBOOK.c_s_NOTEBOOK_WORDBANK_CANCEL_TEXT %>
+			</button>
+			<button class="btn button7 valid-activity" aria-label="Save Note" id="<%= NOTEBOOK.c_s_NOTEBOOK_SAVE_NOTE_BTTN %>" data-value="" style="display:none;" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>" >
+				<%= NOTEBOOK.c_s_NOTEBOOK_WORDBANK_SAVE_TEXT %>
+			</button>
+			<div class="clear"></div>
+		</div>
+<%
+		});
+	}
+	else {
+%>	
+		<div class="container_notes_wrapper_title" id="<%=NOTEBOOK.c_s_JOURNAL_TITLE_PANEL_CONTAINER%>" style="display:none;">
+			<div class="left left_title"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_TITLE%></div>
+			<div class="middle"><input name="notetile" type="text" id="<%=NOTEBOOK.c_s_NOTEBOOK_NOTE_TITLE%>" value="" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>" class="valid-activity"></div>
+			<div class="clear"></div>
+		</div>
+		<div class="notes_wrapper_content_inner" id="<%=NOTEBOOK.c_s_JOURNAL_EDITOR_PANEL_CONTAINER%>" >
+		<div class="note_title_head" id="journal_empty_lebel" style="display:none;">
+		<div class="notebook_blank_msg"><img src="media/alert-icon.png" alt="" height="34" /> <br />  <br /> <%=NOTEBOOK.c_s_NOTEBOOK_JOURNAL_RECORD_EMPTY_TEXT%></div></div>
+			<div class="textareaholder"  style="display:none;">
+				<textarea id="notebookdescription" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>" class="valid-activity"></textarea>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="button_bar_wrapper" id="<%=NOTEBOOK.c_s_JOURNAL_EDITOR_SAVE_CONTAINER%>">
+			<button class="btn button7" aria-label="Cancel Note" id="<%=NOTEBOOK.c_s_NOTEBOOK_CANCEL_NOTE_BTTN%>" style="display:none;">
+				<%= NOTEBOOK.c_s_NOTEBOOK_WORDBANK_CANCEL_TEXT %>
+			</button>
+			<button class="btn button7 valid-activity" aria-label="Save Note" id="<%= NOTEBOOK.c_s_NOTEBOOK_SAVE_NOTE_BTTN %>" data-value="" style="display:none;" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">
+				<%= NOTEBOOK.c_s_NOTEBOOK_WORDBANK_SAVE_TEXT %>
+			</button>
+			<div class="clear"></div>
+		</div>
+	<% }%>
+	</script>
+	<!--- end journal inner template-->
+	<!--- journal inner  template version 2-->
+	<script type="text/template" id="journalInnerTemplateV2">
+<%
+	var bIsViewMode = ($_GET(POPUP_VIEW.c_s_QUERY_PARAM_MODE) == POPUP_VIEW.c_s_MODE_INSTRUCTOR),
+		sSaveButtonLabel = NOTEBOOK.c_s_NOTEBOOK_WORDBANK_SAVE_TEXT,
+		sBtnDisplayProp = "none";
+		
+	if (bIsViewMode === true) {
+		sSaveButtonLabel = NOTEBOOK.c_s_NOTEBOOK_WORDBANK_SAVE_COMMENT_TEXT;
+		sBtnDisplayProp = "block";
+	}
+	
+	if (typeof journalData != "undefined") {
+		try { 
+			NoteText = journalData.NoteText ? decodeURIComponent(journalData.NoteText).replace(/<br>/gi, "\n") : "";
+			NoteTitle = stripHtmlTagsFromString(decodeURIComponent(journalData.NoteTitle));
+		}
+		catch (oException) {
+			NoteText = journalData.NoteText ? journalData.NoteText.replace(/<br>/gi, "\n") : "";
+			NoteTitle = stripHtmlTagsFromString(journalData.NoteTitle);
+		}
+%>
+		<div class="container_notes_wrapper_title" id="<%= NOTEBOOK.c_s_JOURNAL_TITLE_PANEL_CONTAINER %>">
+			<div class="left left_title"><%= NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_TITLE %></div>
+			<div class="middle"><input name="notetile" type="text" id="<%= NOTEBOOK.c_s_NOTEBOOK_NOTE_TITLE %>" value="<%= NoteTitle %>" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>" class="valid-activity"></div>
+			<div class="clear"></div>
+		</div>
+		<div class="notes_wrapper_content_inner" id="<%= NOTEBOOK.c_s_JOURNAL_EDITOR_PANEL_CONTAINER %>">
+			<div class="textareaholder">
+				<textarea id="notebookdescription" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>" class="valid-activity"><%= NoteText %></textarea>
+			</div>
+			<div class="clear"></div>
+		</div>
+<%
+			if (bIsViewMode === true) { // IPP-4460
+%>
+		<div id="<%= NOTEBOOK.c_s_JOURNAL_TEACHER_COMMENT_CONTAINER %>">
+			<div id="<%= NOTEBOOK.c_s_JOURNAL_TEACHER_COMMENT_BOX_CONTAINER %>">
+				<textarea id="<%= NOTEBOOK.c_s_JOURNAL_TEACHER_COMMENT_BOX %>" maxlength="255"></textarea>
+				<div class="clear"></div>
+			</div>
+			<div class="separator"></div>
+<%
+			}
+%>
+		<div class="button_bar_wrapper" id="<%= NOTEBOOK.c_s_JOURNAL_EDITOR_SAVE_CONTAINER %>">
+			<button class="btn button7" aria-label="Cancel Note" id="<%=NOTEBOOK.c_s_NOTEBOOK_CANCEL_NOTE_BTTN%>" style="display:<%= sBtnDisplayProp %>;">
+				<%= NOTEBOOK.c_s_NOTEBOOK_WORDBANK_CANCEL_TEXT %>
+			</button>
+			<button class="btn button7 valid-activity" aria-label="Save Note" id="<%= NOTEBOOK.c_s_NOTEBOOK_SAVE_NOTE_BTTN %>" data-value="" style="display:<%= sBtnDisplayProp %>;" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">
+				<%= sSaveButtonLabel %>
+			</button>			
+			<div class="clear"></div>
+		</div>
+<%
+		if (bIsViewMode === true) {
+%>
+			<div class="clear"></div>
+		</div>	
+<%
+		}
+
+	}
+	else {
+%>	
+		<div class="container_notes_wrapper_title" id="<%=NOTEBOOK.c_s_JOURNAL_TITLE_PANEL_CONTAINER%>" style="display:none;">
+			<div class="left left_title"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_TITLE%></div>
+			<div class="middle"><input name="notetile" type="text" id="<%=NOTEBOOK.c_s_NOTEBOOK_NOTE_TITLE%>" value="" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>" class="valid-activity"></div>
+			<div class="clear"></div>
+		</div>
+		<div class="notes_wrapper_content_inner" id="<%=NOTEBOOK.c_s_JOURNAL_EDITOR_PANEL_CONTAINER%>" >
+		<div class="note_title_head" id="journal_empty_lebel" style="display:none;"><div class="notebook_blank_msg"><img src="media/alert-icon.png" alt="" height="34" /> <br />  <br /> <%=NOTEBOOK.c_s_NOTEBOOK_JOURNAL_RECORD_EMPTY_TEXT%></div></div>
+			<div class="textareaholder"  style="display:none;">
+				<textarea id="notebookdescription" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>" class="valid-activity"></textarea>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="button_bar_wrapper" id="<%=NOTEBOOK.c_s_JOURNAL_EDITOR_SAVE_CONTAINER%>">
+			<button class="btn button7" aria-label="Cancel Note" id="<%=NOTEBOOK.c_s_NOTEBOOK_CANCEL_NOTE_BTTN%>" style="display:none;">
+				<%= NOTEBOOK.c_s_NOTEBOOK_WORDBANK_CANCEL_TEXT %>
+			</button>
+			<button class="btn button7  valid-activity" aria-label="Save Note" id="<%= NOTEBOOK.c_s_NOTEBOOK_SAVE_NOTE_BTTN %>" data-value="" style="display:none;" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">
+				<%= NOTEBOOK.c_s_NOTEBOOK_WORDBANK_SAVE_TEXT %>
+			</button>
+			<div class="clear"></div>
+		</div>
+<%
+	}
+%>
+	</script>
+	<!--- end journal inner template-->
+	<!--- journal template-->
+	<script type="text/template" id="journaltemplate">
+		<div class="notes_wrapper">
+			<div class="notes_wrapper_left tabs1 left">
+				<div class="notes_head_title">
+					<button autofocus tabindex="0" aria-label="Close Notebook" class="notes_close sprite left valid-activity" id="closenotebook" title="Close notebook" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookClose'].c_s_VERBID%>"></button>
+					<div id="ui-tooltip_closenotebook" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="top: 54px;left: 19px;display:none;">
+							<div class="ui-tooltip-content">Close notebook</div>
+					</div>
+					<div class="middle"><%= NOTEBOOK.c_s_NOTEBOOK_MENU_NAME %></div>
+					<div class="clear"></div>
+				</div>
+				<div class="notes_wrapper_content" id="<%= NOTEBOOK.c_s_JOURNAL_LEFT_PANEL_CONTAINER %>"></div>
+				<div class="clear"></div>
+			</div>   	
+			<div class="notes_wrapper_right middle">
+				<div class="notes_head_title2">
+					<div class="toc_toolls_2 toc_panel_icons btn-inline-block">
+						<button tabindex="0" style="display:;" id="<%= NOTEBOOK.c_s_NOTEBOOK_CURRENT_BOOK %>" title="<%= NOTEBOOK.c_s_NOTEBOOK_CURRENT_BOOK %>" class="tocicons sprite right" type="button" aria-haspopup="true" aria-expanded="false"></button>
+						<div id="ui-tooltip_currentbook" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="top: 50px;display:none;">
+							<div class="ui-tooltip-content"><%= NOTEBOOK.c_s_NOTEBOOK_CURRENT_BOOK %></div>
+						</div>
+						<!-- <div class="notes_icn right notes_send sprite" style="display:;" id="<% //=NOTEBOOK.c_s_NOTEBOOK_CURRENT_BOOK%>"> -->
+<%  
+						if (objCurrentBook.Content != null){
+							var currentReadingBook = "",
+								rataBook = "";
+							
+							if((objCurrentBook.Content.mycurrent_book_item_Id != "") && (objCurrentBook.Content.mycurrent_book_item_Id != null)){
+								currentReadingBook = objCurrentBook.Content.mycurrent_book_item_Id;
+								if (currentReadingBook.indexOf("_") !== -1) {
+									currentReadingBook = currentReadingBook.split("_").fetch(1);
+								}
+							}
+							 
+							if ((objCurrentBook.Content.Ratabook_ItemID != null) && (objCurrentBook.Content.Ratabook_ItemID != "" )) {
+								rataBook = objCurrentBook.Content.Ratabook_ItemID;
+								if (rataBook.indexOf("_") !== -1) {
+									rataBook = rataBook.split("_").fetch(1);
+								}
+							}
+							
+							/*selectedCurrentReadingBook = _.where(
+								objBookList.bookset[0],
+								{
+									book_id: currentReadingBook
+								}
+							);
+							selectedRataBook = _.where(
+								objBookList.bookset[0],
+								{
+									book_id: rataBook
+								}
+							);*/
+							
+							//fire-fox _.where issue
+							selectedCurrentReadingBook = []
+							for(var k in objBookList.bookset[0]){
+								if(objBookList.bookset[0][k] && objBookList.bookset[0][k].book_id ==  currentReadingBook){
+									selectedCurrentReadingBook.push(objBookList.bookset[0][k]);
+								}
+							}
+
+							selectedRataBook = []
+							for(var k in objBookList.bookset[0]){
+								if(objBookList.bookset[0][k] && objBookList.bookset[0][k].book_id ==  rataBook){
+									selectedRataBook.push(objBookList.bookset[0][k]);
+								}
+							}
+						}
+						if ((selectedCurrentReadingBook.length > 0) || (selectedRataBook.length > 0)) {
+%>
+						<div style="display:none;" class="currentbook_tooltip" id="<%= NOTEBOOK.c_s_NOTEBOOK_CURRENTBOOK_TOOLTIP %>">
+							<div class="currentbookpage_arrow sprite"></div>
+							<div class="Tooltip_title_wrap">
+								<div class="notes_icn_cont">
+									<ul class="oragnic_tooltip">
+<%
+										if(selectedCurrentReadingBook.length > 0) {
+											var currentBookTitle = selectedCurrentReadingBook[0].book_title,
+												_BookType = ((selectedCurrentReadingBook[0]["book_type"] == "R") ? "rata" : "time_to_read"),
+												_wordCount = (
+													(
+														selectedCurrentReadingBook[0]["word_count"] == null ||
+														typeof selectedCurrentReadingBook[0]["word_count"] == "undefined"
+													)?
+													0:
+													selectedCurrentReadingBook[0]["word_count"]
+												),
+												_fileType = selectedCurrentReadingBook[0]["file_type"]; 
+										
+%>
+										<li class="cause" id="<%=NOTEBOOK.c_s_NOTEBOOK_VIEW_CURRENTREADING%>_1" book_id="<%= currentReadingBook %>" book_type="<%=_BookType%>" word_count="<%=_wordCount%>" book_title="<%=currentBookTitle%>" file_type="<%=_fileType%>">
+											<a href="#" tabindex="-1">
+												<span class="middle" ><%=NOTEBOOK.c_s_NOTEBOOK_CURRENT_BOOK_LABEL%></span>
+												<div class="clear"></div>
+											</a>
+										</li>
+<%
+										}
+										if(selectedRataBook.length > 0) { 
+											var currentRataBookTitle = selectedRataBook[0].book_title,
+												_rataBookType = ((selectedRataBook[0]["book_type"] == "R") ? "rata" : "time_to_read"),
+												_ratawordCount = (
+													(
+														selectedRataBook[0]["word_count"] == null ||
+														typeof selectedRataBook[0]["word_count"] == "undefined"
+													)?
+													0:
+													selectedRataBook[0]["word_count"]
+												),
+												_ratafileType = selectedRataBook[0]["file_type"]; 
+%>
+										<li class="cause" id="<%= NOTEBOOK.c_s_NOTEBOOK_VIEW_CURRENTREADING %>_2" book_id="<%= rataBook %>" book_type="<%= _rataBookType %>" word_count="<%=_ratawordCount%>" book_title="<%= currentRataBookTitle %>" file_type="<%= _ratafileType %>">
+											<a href="#" tabindex="-1">
+												<span class="middle" ><%= NOTEBOOK.c_s_NOTEBOOK_RATA_BOOK_LABEL %></span>
+												<div class="clear"></div>
+											</a>
+										</li>
+<%
+										}
+%>
+										
+										<div class="clear"></div>
+									</ul>
+									<div class="clear"></div>
+								</div>
+								<div class="clear"></div>
+							</div>
+						</div>
+<%
+						}
+%>
+						</div><!-- End tag of toc_toolls_2 -->
+						<div class="btn-inline-block">
+							<button tabindex="0" aria-label="Delete Journal" title="Delete Journal Button" role="button" class="notes_icn trash_icon sprite" id="<%= NOTEBOOK.c_s_NOTEBOOK_DELETE_JOURNAL %>"  style="display:none;"></button>
+							<div id="ui-tooltip_deletejournal" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="margin-left: -24px;display:none;">
+								<div class="ui-tooltip-content">Delete Journal</div>
+							</div>
+						</div>
+						<div class="btn-inline-block">
+							<button tabindex="0" aria-label="Send Journal" title="Send Journal Button" role="button" class="notes_icn notes_send sprite" style="display:none;" id="<%= NOTEBOOK.c_s_NOTEBOOK_SENT_JOURNAL %>"></button>
+							<div id="ui-tooltip_sentjournal" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="margin-left: -19px;display:none;">
+								<div class="ui-tooltip-content">Send Journal</div>
+							</div>
+						</div>
+						<div class="btn-inline-block">
+							<button tabindex="0" aria-label="Add New Journal" title="Add New Journal Button" role="button" class="notes_icn notes_add sprite" id="<%= NOTEBOOK.c_s_NOTEBOOK_ADD_NEW_JOURNAL %>"></button>
+							<div id="ui-tooltip_addjournal" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="margin-left: -55px;display:none;">
+								<div class="ui-tooltip-content">Add New Journal</div>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="container_notes_wrapper">
+						<div role="main" id="innerDataContainer"></div>
+						<div role="navigation"  class="tabbs_name" id="<%= NOTEBOOK.c_s_JOURNAL_RIGHT_PANEL_CONTAINER %>"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</script>
+	<!--- end of journal template-->
+	<!--- wordbank inner  template-->
+	<script type="text/template" id="wordbankInnerTemplate">
+	<% if(wordbankData.length != 0) {
+		var note_details = '';
+		var definitation = '';
+		var sentence     = '';
+	$.each(wordbankData, function(idx, val){
+		if(val.NoteText == "" || val.NoteText == null)
+		{
+			definitation = GENERAL.c_s_SPECIAL_CHARACTERS_BLANK;
+			sentence     = GENERAL.c_s_SPECIAL_CHARACTERS_BLANK;
+		}else{ 
+			//val.NoteTitle = decodeURIComponent(val.NoteTitle);
+			try{
+				val.NoteTitle = stripHtmlTagsFromString(decodeURIComponent(val.NoteTitle));
+			}catch(e){
+				val.NoteTitle = stripHtmlTagsFromString(val.NoteTitle);
+			}			
+			val.NoteText = val.NoteText.replace(/\n/g,"").replace(/\t/g, "");
+			try{      
+					note_details = $.parseJSON(val.NoteText);
+					try {
+						definitation = decodeURIComponent(note_details.datacontent[0].Definition);
+						sentence     = decodeURIComponent(note_details.datacontent[0].Sentence);
+						val.NoteTitle = stripHtmlTagsFromString(decodeURIComponent(val.NoteTitle));
+					} catch (ex) {
+						definitation = note_details.datacontent[0].Definition;
+						sentence     = note_details.datacontent[0].Sentence;
+						val.NoteTitle = stripHtmlTagsFromString(val.NoteTitle);
+					}
+					
+				}
+			catch(e){
+					try{
+						definitation = decodeURIComponent(val.NoteText);
+					} catch (ex) {
+						definitation = val.NoteText;
+					}
+					sentence     = GENERAL.c_s_SPECIAL_CHARACTERS_BLANK;
+					val.NoteTitle = stripHtmlTagsFromString(decodeURIComponent(val.NoteTitle));
+			}			
+		}
+		
+	%>  <div class="notes_wrapper_content_inner">
+		<div class="notes_book_content" >
+			<div  class="notes_book_title">
+				<div class="notes_book_lt left"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_TXT%></div>
+				<div class="middle valid-activity" id="<%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_TITLE%>" contenteditable="true"  style="display: block;" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"><%=(val.NoteTitle) %></div>
+				<div class="clear"></div>
+			</div>
+			<div class="notes_book_container">
+				<div class="note_comments">
+					<div class="notes_book_lt left"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_DEFINITITION%></div>
+					<div class="middle valid-activity"  id="<%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_DESCRIPTION%>" contenteditable="true" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"><%= definitation %></div>
+					<div class="clear"></div>
+				</div>
+				<div class="note_comments">
+					<div class="notes_book_lt left"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_SENTENCE%></div>
+					<div class="middle valid-activity"  id="<%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_SENTENCE%>" contenteditable="true" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"> 
+						<%=sentence %>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+		</div>
+		
+		<div class="button_bar_wrapper">
+			<button class="btn button7" aria-label="Cancel Note" id="<%=NOTEBOOK.c_s_NOTEBOOK_CANCEL_NOTE_BTTN%>" style="display:none;"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_CANCEL_TEXT%></button>
+			<button class="btn button7 valid-activity" aria-label="Save Note" id="<%=NOTEBOOK.c_s_NOTEBOOK_SAVE_NOTE_BTTN%>" data-value="" style="display:none;" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_SAVE_TEXT%></button>
+		<div class="clear"></div>
+		</div>
+	<%
+	});
+	} else {
+	%>
+		
+		<div class="notes_wrapper_content_inner">
+		 <div class="note_title_head" id="wordbank_empty_lebel" style="display:none;"><div class="notebook_blank_msg"><img src="media/alert-icon.png" alt="" height="34" /> <br />  <br /> <%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_RECORD_EMPTY_TEXT%></div></div>
+		<div class="notes_book_content" style="display:none;">
+			<div  class="notes_book_title">
+				<div class="notes_book_lt left"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_TXT%></div>
+				<div class="middle valid-activity" id="<%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_TITLE%>" contenteditable="true"  style="display: block;" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"></div>
+				<div class="clear"></div>
+			</div>
+			<div class="notes_book_container">
+				<div class="note_comments">
+					<div class="notes_book_lt left"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_DEFINITITION%></div>
+					<div class="middle valid-activity"  id="<%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_DESCRIPTION%>" contenteditable="true" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"></div>
+					<div class="clear"></div>
+				</div>
+				<div class="note_comments">
+					<div class="notes_book_lt left"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_SENTENCE%></div>
+					<div class="middle valid-activity"  id="<%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_SENTENCE%>" contenteditable="true" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"> 
+						
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+		</div>
+		
+		<div class="button_bar_wrapper">
+			<button class="btn button7" aria-label="Cancel note" id="<%=NOTEBOOK.c_s_NOTEBOOK_CANCEL_NOTE_BTTN%>" style="display:none;" ><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_CANCEL_TEXT%></button>
+			<button class="btn button7 valid-activity" aria-label="Save note" id="<%=NOTEBOOK.c_s_NOTEBOOK_SAVE_NOTE_BTTN%>" data-value="" style="display:none;" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_SAVE_TEXT%></button>
+		<div class="clear"></div>
+		</div>
+	
+	<% } %>
+	
+	</script>
+	<!--- end wordbank inner template-->
+	<!--- wordbank inner  template-->
+	<script type="text/template" id="wordbankInnerTemplateV2">
+	<% if(typeof wordbankData!= "undefined"){
+	var definitation = "";
+	var sentence     = "";
+		if (wordbankData.NoteText == "" || wordbankData.NoteText == null) {
+			definitation = GENERAL.c_s_SPECIAL_CHARACTERS_BLANK;
+			sentence     = GENERAL.c_s_SPECIAL_CHARACTERS_BLANK;
+		}
+		else {
+			try {
+				NoteTitle = stripHtmlTagsFromString(decodeURIComponent(wordbankData.NoteTitle));
+			}
+			catch(e) {
+				NoteTitle = stripHtmlTagsFromString(wordbankData.NoteTitle);
+			}			
+			NoteText = wordbankData.NoteText.replace(/\n/g,"").replace(/\t/g, "");
+			try{      
+					note_details = $.parseJSON(wordbankData.NoteText);
+					try {
+						definitation = decodeURIComponent(note_details.datacontent[0].Definition);
+						sentence     = decodeURIComponent(note_details.datacontent[0].Sentence);
+						NoteTitle = stripHtmlTagsFromString(decodeURIComponent(wordbankData.NoteTitle));
+					} catch (ex) {
+						definitation = note_details.datacontent[0].Definition;
+						sentence     = note_details.datacontent[0].Sentence;
+						NoteTitle = stripHtmlTagsFromString(wordbankData.NoteTitle);
+					}
+					
+				}
+			catch(e){
+					try{
+						definitation = decodeURIComponent(wordbankData.NoteText);
+					} catch (ex) {
+						definitation = wordbankData.NoteText;
+					}
+					sentence     = GENERAL.c_s_SPECIAL_CHARACTERS_BLANK;
+					NoteTitle = stripHtmlTagsFromString(decodeURIComponent(wordbankData.NoteTitle));
+			}			
+		}
+		
+	%>  <div class="notes_wrapper_content_inner">
+		<div class="notes_book_content" >
+			<div  class="notes_book_title">
+				<div class="notes_book_lt left"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_TXT%></div>
+				<div class="middle valid-activity" id="<%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_TITLE%>" contenteditable="true"  style="display: block;" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"><%=(NoteTitle) %></div>
+				<div class="clear"></div>
+			</div>
+			<div class="notes_book_container">
+				<div class="note_comments">
+					<div class="notes_book_lt left"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_DEFINITITION%></div>
+					<div class="middle valid-activity"  id="<%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_DESCRIPTION%>" contenteditable="true" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"><%= definitation %></div>
+					<div class="clear"></div>
+				</div>
+				<div class="note_comments">
+					<div class="notes_book_lt left"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_SENTENCE%></div>
+					<div class="middle valid-activity"  id="<%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_SENTENCE%>" contenteditable="true" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"> 
+						<%=sentence %>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+		</div>
+		
+		<div class="button_bar_wrapper">
+			<button class="btn button7" aria-label="Cancel note" id="<%=NOTEBOOK.c_s_NOTEBOOK_CANCEL_NOTE_BTTN%>" style="display:none;"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_CANCEL_TEXT%></button>
+			<button class="btn button7 valid-activity" aria-label="Save note" id="<%=NOTEBOOK.c_s_NOTEBOOK_SAVE_NOTE_BTTN%>" data-value="" style="display:none;" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_SAVE_TEXT%></button>
+		<div class="clear"></div>
+		</div>
+	<%
+	} else {
+	%>
+		
+		<div class="notes_wrapper_content_inner">
+		 <div class="note_title_head" id="wordbank_empty_lebel" style="display:none;"><div class="notebook_blank_msg"><img src="media/alert-icon.png" alt="" height="34" /> <br />  <br /> <%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_RECORD_EMPTY_TEXT%></div></div>
+		<div class="notes_book_content" style="display:none;">
+			<div  class="notes_book_title">
+				<div class="notes_book_lt left"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_TXT%></div>
+				<div class="middle valid-activity" id="<%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_TITLE%>" contenteditable="true"  style="display: block;" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"></div>
+				<div class="clear"></div>
+			</div>
+			<div class="notes_book_container">
+				<div class="note_comments">
+					<div class="notes_book_lt left"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_DEFINITITION%></div>
+					<div class="middle valid-activity"  id="<%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_DESCRIPTION%>" contenteditable="true" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"></div>
+					<div class="clear"></div>
+				</div>
+				<div class="note_comments">
+					<div class="notes_book_lt left"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_WORD_SENTENCE%></div>
+					<div class="middle valid-activity"  id="<%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_SENTENCE%>" contenteditable="true" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"> 
+						
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+		</div>
+		
+		<div class="button_bar_wrapper">
+			<button class="btn button7" aria-label="Cancel note" id="<%=NOTEBOOK.c_s_NOTEBOOK_CANCEL_NOTE_BTTN%>" style="display:none;" ><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_CANCEL_TEXT%></button>
+			<button class="btn button7 valid-activity" aria-label="Save note" id="<%=NOTEBOOK.c_s_NOTEBOOK_SAVE_NOTE_BTTN%>" data-value="" style="display:none;" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"><%=NOTEBOOK.c_s_NOTEBOOK_WORDBANK_SAVE_TEXT%></button>
+			<div class="clear"></div>
+		</div>
+	
+	<% } %>
+	
+	</script>
+	<!--- end journal inner template-->
+	
+	
+	
+	
+	<!--- word bank template-->
+	<script type="text/template" id="wordbanktemplate">
+		<div class="notes_wrapper">
+			<div class="notes_wrapper_left tabs2 left">
+				<div class="notes_head_title">
+					<button autofocus tabindex="0" aria-label="Close Notebook" class="notes_close sprite left valid-activity" id="closenotebook" title="Close notebook" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookClose'].c_s_VERBID%>"></button>
+					<div id="ui-tooltip_closenotebook" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="top: 54px;left: 19px;display:none;">
+						<div class="ui-tooltip-content">Close notebook</div>
+					</div>
+					<div class="middle"><%=NOTEBOOK.c_s_NOTEBOOK_MENU_NAME%></div>
+					<div class="clear"></div>
+				</div>
+				<div class="notes_wrapper_content" id="<%=NOTEBOOK.c_s_WORDBOOK_LEFT_PANEL_CONTAINER%>"></div>
+				<div class="clear"></div>
+			</div>   	
+			<div class="notes_wrapper_right middle">
+				<div class="notes_head_title2">
+					<div class="btn-inline-block">
+						<button tabindex="0" aria-label="Delete Word" title="Delete word" class="notes_icn trash_icon sprite" id="<%=NOTEBOOK.c_s_NOTEBOOK_DELETE_WORDBANK%>" style="display:none;"></button>
+						<div id="ui-tooltip_deleteword" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="margin-left:-12px;display:none;">
+							<div class="ui-tooltip-content">Delete word</div>
+						</div>
+					</div>
+					<div class="btn-inline-block">
+						<button tabindex="0" aria-label="Send Word" title="Send word" class="notes_icn notes_send sprite" style="display:none;" id="<%=NOTEBOOK.c_s_NOTEBOOK_SEND_WORDBANK%>"></button>
+						<div id="ui-tooltip_sendword" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="margin-left:-12px;display:none;">
+							<div class="ui-tooltip-content">Send word</div>
+						</div>
+					</div>
+					<div class="btn-inline-block">
+						<button tabindex="0" aria-label="Add New Word" title="Add new word" class="notes_icn notes_add sprite" id="<%=NOTEBOOK.c_s_NOTEBOOK_ADD_NEW_WORDBANK%>"></button>
+						<div id="ui-tooltip_addword" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="margin-left:-25px;display:none;">
+							<div class="ui-tooltip-content">Add new word</div>
+						</div>
+					</div>					
+					<div class="clear"></div>
+				</div>
+				<div class="container_notes_wrapper">
+					<div role="main" id="innerWordbankDataContainer"></div>
+					<div role="navigation" class="tabbs_name" id="<%=NOTEBOOK.c_s_WORDBOOK_RIGHT_PANEL_CONTAINER%>"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+	</script>
+	<!--- end of word bank template---->
+	<!--- class notes template---->
+	<script type="text/template" id="classnotestemplate">
+		<div class="notes_wrapper">
+			<div class="notes_wrapper_left tabs3 left">
+				<div class="notes_head_title">
+					<button autofocus tabindex="0" aria-label="Close Notebook" class="notes_close sprite left valid-activity" id="closenotebook" title="Close notebook" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookClose'].c_s_VERBID%>"></button>
+					<div id="ui-tooltip_closenotebook" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="top: 54px;left: 19px;display:none;">
+						<div class="ui-tooltip-content">Close notebook</div>
+					</div>
+					<div class="middle"><%=NOTEBOOK.c_s_NOTEBOOK_CLASSSNOTES_MENU_NAME%></div>
+					<div class="clear"></div>
+				</div>
+				<div class="notes_wrapper_content" id="<%=NOTEBOOK.c_s_CLASSNOTES_LEFT_PANEL_CONTAINER%>"></div>
+				<div class="clear"></div>
+			</div>   	
+			<div class="notes_wrapper_right middle">
+				<div class="notes_head_title2">
+					<div class="btn-inline-block" style="position: relative;">
+						<% 
+							var displayStyle = '';
+							if ($_GET(POPUP_VIEW.c_s_QUERY_PARAM_MODE) == POPUP_VIEW.c_s_MODE_INSTRUCTOR) { 
+								displayStyle = "visibility: hidden";
+							}
+						%>
+						<div role="button" class="notes_icn notes_organizer sprite active" tabindex="0" title="Organize Classnote button" aria-expanded="false" aria-haspopup="true" aria-label="organize classnote" style="<%= displayStyle %>" id="<%=NOTEBOOK.c_s_NOTEBOOK_ORGANIZE_CLASSNOTE%>"></div>
+						<div id="ui-tooltip_organizer" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="top: 44px;right: -43px;display:none;">
+							<div class="ui-tooltip-content">Organize Classnote</div>
+						</div>
+						
+						<div style="display:none;" class="lesson_tooltip" id="notebook_organize_classnote_tooltip">
+							<div class="page_arrow sprite"></div>
+							<div class="Tooltip_title_wrap">
+								<div class="notes_icn_cont">
+									<ul class="oragnic_tooltip">
+										<li tabindex="-1" class="cause" id="actioncauseeffect" aria-describedby="item1">
+											<a tabindex="-1" aria-label="<%=NOTEBOOK.c_s_NOTEBOOK_TOOLTIP_CAUSE_TEXT%>" href="#" aria-hidden="true">
+												<span class="left icon_lft sprite3"></span> 
+												<span class="middle" id="item1"><%=NOTEBOOK.c_s_NOTEBOOK_TOOLTIP_CAUSE_TEXT%></span>
+												<div class="clear"></div>
+											</a>
+										</li>
+										
+										<li tabindex="-1" class="step" id="actionstepbystep" aria-describedby="item2">
+											<a tabindex="-1" aria-label="<%=NOTEBOOK.c_s_NOTEBOOK_TOOLTIP_STEP_TEXT%>"  href="#" aria-hidden="true">
+												<span class="left icon_lft sprite3"></span> 
+												<span class="middle" id="item2"><%=NOTEBOOK.c_s_NOTEBOOK_TOOLTIP_STEP_TEXT%></span>
+												<div class="clear"></div>
+											</a>
+										</li>
+											
+										<li tabindex="-1" class="Storymap" id="actionstorymap" aria-describedby="item3">
+											<a tabindex="-1" aria-label="<%=NOTEBOOK.c_s_NOTEBOOK_TOOLTIP_STORYMAP_TEXT%>" href="#" aria-hidden="true">
+												<span class="left icon_lft sprite3"></span> 
+												<span class="middle" id="item3"><%=NOTEBOOK.c_s_NOTEBOOK_TOOLTIP_STORYMAP_TEXT%></span>
+												<div class="clear"></div>
+											</a>
+										</li>
+										
+										<li tabindex="-1" class="Three" id="actionthreecolumnchart" aria-describedby="item4">
+											<a tabindex="-1" aria-label="<%=NOTEBOOK.c_s_NOTEBOOK_TOOLTIP_THREECOLCHART_TEXT%>" href="#" aria-hidden="true">
+												<span class="left icon_lft sprite3"></span> 
+												<span class="middle" id="item4"><%=NOTEBOOK.c_s_NOTEBOOK_TOOLTIP_THREECOLCHART_TEXT%></span>
+												<div class="clear"></div>
+											</a>
+										</li>
+										
+										<li tabindex="-1" class="timeline" id="actiontimeline" aria-describedby="item5">
+											<a tabindex="-1" aria-label="<%=NOTEBOOK.c_s_NOTEBOOK_TOOLTIP_TIMELINE_TEXT%>" href="#" aria-hidden="true">
+												<span class="left icon_lft sprite3"></span> 
+												<span class="middle" id="item5"><%=NOTEBOOK.c_s_NOTEBOOK_TOOLTIP_TIMELINE_TEXT%></span>
+												<div class="clear"></div>
+											</a>
+										</li>
+										
+										<li tabindex="-1" class="Two" id="actiontwocolumnchart" aria-describedby="item6">
+											<a tabindex="-1" aria-label="<%=NOTEBOOK.c_s_NOTEBOOK_TOOLTIP_TWOCOLCHART_TEXT%>" href="#" aria-hidden="true">
+												<span class="left icon_lft sprite3"></span> 
+												<span class="middle" id="item6"><%=NOTEBOOK.c_s_NOTEBOOK_TOOLTIP_TWOCOLCHART_TEXT%></span>
+												<div class="clear"></div>
+											</a>
+										</li>
+										
+										<li tabindex="-1" class="last venn" id="actionvendiagram" aria-describedby="item7">
+											<a tabindex="-1" aria-label="<%=NOTEBOOK.c_s_NOTEBOOK_TOOLTIP_VENNDIAGRAM_TEXT%>" href="#" aria-hidden="true">
+												<span class="left icon_lft sprite3"></span> 
+												<span class="middle" id="item7"><%=NOTEBOOK.c_s_NOTEBOOK_TOOLTIP_VENNDIAGRAM_TEXT%></span>
+												<div class="clear"></div>
+											</a>
+										</li>
+										<div class="clear"></div>
+									</ul>
+									<div class="clear"></div>
+								</div>
+								<div class="clear"></div>
+							</div>
+						</div> <!--  End of lesson_tooltip div -->
+						</div>
+					<div class="btn-inline-block">
+						<button tabindex="0" aria-label ="Delete Class Note" title="Delete class note" class="notes_icn trash_icon sprite" id="<%=NOTEBOOK.c_s_NOTEBOOK_DELETE_CLASSNOTE%>" style="display:none;"></button>
+						<div id="ui-tooltip_deleteclass" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="margin-left: -19px;display:none;">
+							<div class="ui-tooltip-content">Delete classnote</div>
+						</div>
+					</div>
+					<div class="btn-inline-block">
+						<button tabindex="0" aria-label ="Send Class Note" title="Send class note" class="notes_icn notes_send sprite" style="display:none;" id="<%=NOTEBOOK.c_s_NOTEBOOK_SEND_CLASSNOTE%>"></button>
+						<div id="ui-tooltip_sendclass" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="margin-left: -22px;display:none;">
+							<div class="ui-tooltip-content">Send classnote</div>
+						</div>
+					</div>
+					<div class="btn-inline-block">
+						<button tabindex="0" aria-label ="Add new Class Note" title="Add new class note" class="notes_icn notes_add sprite" style="<%= displayStyle %>" id="<%=NOTEBOOK.c_s_NOTEBOOK_ADD_NEW_CLASSNOTE%>"></button>
+						<div id="ui-tooltip_addclass" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="margin-left: -30px;display:none;">
+							<div class="ui-tooltip-content">Add classnote</div>
+						</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="container_notes_wrapper">
+					<div role="main" class="container_notes_wrapper_title">
+						<div class="left left_title"><%=NOTEBOOK.c_s_NOTEBOOK_CLASSNOTES_TITLE_TXT%></div>
+						<div class="middle">
+						<% if ($_GET(POPUP_VIEW.c_s_QUERY_PARAM_MODE) == POPUP_VIEW.c_s_MODE_INSTRUCTOR) { %>
+							<input name="title" type="text" class="classnotestitle valid-activity" id="<%=NOTEBOOK.c_s_NOTEBOOK_NOTE_TITLE%>"  data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"></div>
+						<% } else { %> 
+							<input name="title" type="text" class="classnotestitle valid-activity" id="<%=NOTEBOOK.c_s_NOTEBOOK_NOTE_TITLE%>" onfocus="(this.value == '<%=NOTEBOOK.c_s_NOTEBOOK_EMPTY_TITLE_TXT%>') && (this.value = '')" onblur="(this.value == '<%=GENERAL.c_s_SPECIAL_CHARACTERS_BLANK%>') && (this.value = '<%=NOTEBOOK.c_s_NOTEBOOK_EMPTY_TITLE_TXT%>')" value='<%=NOTEBOOK.c_s_NOTEBOOK_EMPTY_TITLE_TXT%>' data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"></div>
+						<% } %>
+						<div id="hidclassvalue" style="display:none;"></div>
+						<div class="clear"></div>
+					</div>
+					<div class="notes_wrapper_content_inner valid-activity" tabindex="0" id="editable" contenteditable="true" onmousedown="return ClassNotesView.cancelEvent(event);" onclick="return ClassNotesView.cancelEvent(event);" onmouseup="ClassNotesView.saveSelection(event);" onkeyup="ClassNotesView.saveSelection(event);" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>">
+						
+						<div class="clear"></div>
+					</div>
+					<div class="button_bar_wrapper">
+						<button class="btn button7" aria-label="Cancel note" id="<%=NOTEBOOK.c_s_NOTEBOOK_CANCEL_NOTE_BTTN%>"><%=NOTEBOOK.c_s_NOTEBOOK_CLASSNOTES_CANCEL_TEXT%></button>
+						<button class="btn button7 valid-activity" aria-label="Save note" id="<%=NOTEBOOK.c_s_NOTEBOOK_SAVE_NOTE_BTTN%>" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"><%=NOTEBOOK.c_s_NOTEBOOK_CLASSNOTES_SAVE_TEXT%></button>
+						<div class="clear"></div>
+					</div>
+					<div role="navigation" class="tabbs_name" id="<%=NOTEBOOK.c_s_CLASSNOTES_RIGHT_PANEL_CONTAINER%>"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+	</script>
+	<!--- end of class notes template---->
+	<!---- portfolio inner template ----->
+	<script type="text/template" id="portfolioInnerTemplate">
+		<div class="container_notes_wrapper"> 
+<%
+			var sProductCode =  NotebookView.sProductCode;
+			NOTEBOOK.c_s_PORTFOLIO_LESSION_LABEL =(sProductCode.match(GENERAL.c_s_PROD_TYPE_WTW) ? "Sort" : "Lessons");
+			if (PortfolioView.tabType == NOTEBOOK_PORTFOLIO_TABS[0].c_s_CODE) {
+				if (assignmentsData.length > 0) {					
+					if(sProductCode.match(GENERAL.c_s_ILIT_20)) { %>
+			<div class="note_title_head"> Week <%=assignmentsData[0].ItemWeekNumber%> </div>	
+<%					}
+					else if(sProductCode.match(GENERAL.c_s_PROD_TYPE_WTW)){
+						var oUnitData= _.where(NotebookView.UnitNameArray, {"unitNumber": ""+assignmentsData[0].ItemUnitNumber+""})[0] || {};
+						%>
+						<div class="note_title_head"><%=oUnitData.unitName%> <%=NOTEBOOK.c_s_PORTFOLIO_LESSION_LABEL%> <%=LessionRef%> </div>
+						<%
+					}
+					else { %>
+			<div class="note_title_head"> Unit <%=assignmentsData[0].ItemUnitNumber%> <%=NOTEBOOK.c_s_PORTFOLIO_LESSION_LABEL%> <%=LessionRef%> </div>
+<%					}
+				}
+				else {
+%>
+				<div class="note_title_head" id="mywork_empty_lebel">
+					<div class="notebook_blank_msg" style="display:none;">
+						<img src="media/alert-icon.png" alt="" height="34" /> <br />  <br />
+						<%= NOTEBOOK.c_s_NOTEBOOK_PORTFOLIO_RECORD_EMPTY_TEXT %>
+					</div>
+				</div>
+<%
+				}
+%>
+				<div class="container_notes_column">
+					<div class="container_notes_column_content">
+<%
+					if (assignmentsData.length > 0 || benchmarkData.length > 0 || wrcData.length > 0) {
+						var isAssignmentvisible = 0; 
+%>
+						<ul>
+<%
+						//remove week 0 
+						assignmentsData = _.filter(assignmentsData, function(obj){ return (obj.ItemWeekNumber  !=0); });
+						//assignmentsData = _.sortBy(assignmentsData, function(num){return num.ItemWeekNumber;});
+						assignmentsData = _.sortBy(assignmentsData, function(num){return num.ItemLessonNumber;});
+						assignmentsData = _.sortBy(assignmentsData, function(num){return num.ItemDisplayName;});
+						//assignment.ItemDisplayName
+						if (typeof assesmentType =="undefined") {
+							_.each(assignmentsData, function(assignment,idx) {
+								if (
+									(assignment.ItemCompletionStatus == "scored") &&
+									(assignment.FinalScore != "null")
+								) {
+									isAssignmentvisible = 1;
+								
+%>
+								<li
+									class="viewWorkData valid-activity"
+									item_id="<%= assignment.ItemType + "___" + assignment.AssignedItemID + "___" + assignment.ItemSubType %>"
+									item_display_name="<%= escape(assignment.ItemDisplayName) %>" 
+									item_attempt_summary="<%= assignment.ItemAttemptDataSummary %>" 
+									data-final-score="<%= assignment.FinalScore %>" 
+									data-max-score="<%= assignment.ItemMaxScore %>"
+									data-item-type="<%= assignment.ItemSubType %>"
+									data-item-id="<%= assignment.AssignedItemID %>"
+									data-item-attempt-id="<%= assignment.ItemAttemptId %>"
+									data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"
+								>
+									<a href="#">
+										<span
+											class="upload_icon sprite3 right valid-activity"
+											item_id="<%= assignment.ItemType + "___" + assignment.AssignedItemID + "___" + assignment.ItemSubType %>"
+											item_display_name="<%= escape(assignment.ItemDisplayName) %>"
+											item_attempt_summary="<%=assignment.ItemAttemptDataSummary%>"
+											data-item-attempt-id="<%= assignment.ItemAttemptId %>"
+											data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"
+										>
+										</span>
+										<span class="right percent_score">
+<%
+											// IPP-3511
+											if (assignment.ItemSubType == ASSIGNMENTS.c_s_ASSIGNMENT_NS_ASSIGNMENT) {
+%>
+												<span class="classBlack" style="color: black;">Finished</span>	
+<%
+											}
+											else {
+%>
+											<%= assignment.FinalScore%> / <%= assignment.ItemMaxScore%>
+<%
+											}
+											// End IPP-3511
+%>
+										</span>
+
+
+										<!-- CLAS-60 -->
+										<span class="right ">
+											<%
+											if (assignment.SFB != '' && assignment.SFB != null) {
+%>
+											<span id= "viewFeedback" class="view-feedback-button" role="button" aria-label="View Feedback" aria-haspopup="true" tabindex="0" style="color: white;" data-customdata=<%=assignment.SFB %>>View Feedback</span>
+<%
+											}
+%>
+										</span>
+										<!-- End of CLAS-60 -->
+
+										<span class="middle">
+											<%= assignment.ItemDisplayName %>
+										</span>
+									</a>
+									<div class="clear"></div>
+								</li>
+<%
+								}
+							});
+							if(isAssignmentvisible == 0){
+							  benchmarkData = _.sortBy(benchmarkData, function(num){return num.ItemWeekNumber;});
+							_.each(benchmarkData,function(benchmarkassignment,idx) {
+%>
+								<li
+									class="viewWorkData valid-activity"
+									item_id="<%= benchmarkassignment.ItemType + "___" + benchmarkassignment.AssignedItemID + "___" + benchmarkassignment.ItemSubType %>"
+									item_display_name="<%= escape(benchmarkassignment.ItemDisplayName) %>" 
+									item_attempt_summary="<%=benchmarkassignment.ItemAttemptDataSummary%>" 
+									data-final-score="<%= benchmarkassignment.FinalScore %>" 
+									data-max-score="<%= benchmarkassignment.ItemMaxScore %>"
+									data-item-type="<%= benchmarkassignment.ItemSubType %>"
+									data-item-id="<%= benchmarkassignment.AssignedItemID %>"
+									data-item-attempt-id="<%= benchmarkassignment.ItemAttemptId %>"
+									data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"
+								>
+									<a href="#">
+										<span class="upload_icon sprite3 right valid-activity" item_id="<%= benchmarkassignment.ItemType + "___" + benchmarkassignment.AssignedItemID + "___" + benchmarkassignment.ItemSubType %>" item_display_name="<%= escape(benchmarkassignment.ItemDisplayName) %>" item_attempt_summary="<%=benchmarkassignment.ItemAttemptDataSummary%>" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"></span>
+										<span class="right percent_score"><%=benchmarkassignment.FinalScore%> / <%=benchmarkassignment.ItemMaxScore%> </span>
+										<span class="middle"><%//=benchmarkassignment.ItemUnitNumber%><%//= benchmarkassignment.ItemLessonNumber %> <%= benchmarkassignment.ItemDisplayName %></span>
+									</a>
+									<div class="clear"></div>
+								</li>
+<%
+							});
+							}
+							}else{
+							wrcData = _.sortBy(wrcData, function(num){return num.ItemWeekNumber;});
+							_.each(wrcData,function(wrcassignment,idx) {
+%>
+								<li
+									class="viewWorkData valid-activity"
+									item_id="<%= wrcassignment.ItemType + "___" + wrcassignment.AssignedItemID + "___" + wrcassignment.ItemSubType %>" 
+									item_display_name="<%= escape(wrcassignment.ItemDisplayName) %>" 
+									item_attempt_summary="<%=wrcassignment.ItemAttemptDataSummary%>"
+									data-final-score="<%= wrcassignment.FinalScore %>" 
+									data-max-score="<%= wrcassignment.ItemMaxScore %>"
+									data-item-type="<%= wrcassignment.ItemSubType %>"
+									data-item-id="<%= wrcassignment.AssignedItemID %>"
+									data-item-attempt-id="<%= wrcassignment.ItemAttemptId %>"
+									data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"
+								>
+									<a href="#">
+										<span class="upload_icon sprite3 right valid-activity" item_id="<%= wrcassignment.ItemType + "___" + wrcassignment.AssignedItemID + "___" + wrcassignment.ItemSubType %>" item_display_name="<%= escape(wrcassignment.ItemDisplayName) %>" item_attempt_summary="<%=wrcassignment.ItemAttemptDataSummary%>" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"></span>
+										<span class="right percent_score"><%=wrcassignment.FinalScore%> / <%=wrcassignment.ItemMaxScore%> </span>
+										<span class="middle"><%//=wrcassignment.ItemUnitNumber%><%//= wrcassignment.ItemLessonNumber %> <%= wrcassignment.ItemDisplayName %></span>
+									</a>
+									<div class="clear"></div>
+								</li>
+<%
+							});
+							
+							}
+%>	
+							</ul>
+<%
+						}
+%>
+					  </div>
+						<div class="clear"></div>
+					</div>
+<%
+			}
+			else { // Resources Section
+				
+%>
+				<div class="note_title_head">
+					<%
+					if(sProductCode.match(GENERAL.c_s_PROD_TYPE_WTW)){
+						var oUnitData= _.where(NotebookView.UnitNameArray, {"unitNumber": ""+resourcesData[0].unitNumber+""})[0] || {};
+%>					
+					<%= oUnitData.unitName %> <%=NOTEBOOK.c_s_PORTFOLIO_LESSION_LABEL%> <%=LessionRef%>
+<%
+					}else{
+					%>
+						Unit <%=resourcesData[0].unitNumber%> <%=NOTEBOOK.c_s_PORTFOLIO_LESSION_LABEL%> <%=LessionRef%>
+					<%
+					}
+					%>
+				</div>
+				<div class="container_notes_column">
+					<div class="container_notes_column_content">
+						<ul>
+<%
+						//console.log(assignmentsData);
+						//remove day 0 
+						resourcesData = _.filter(resourcesData, function(obj){ return (obj.dayNumber  !=0); });
+						resourcesData = _.sortBy(resourcesData, function(num){return num.dayNumber;});
+						resourcesData = _.sortBy(resourcesData, function(num){return num.itemDisplayName;});
+						resourcesData = _.sortBy(resourcesData, function(num){return num.word;});
+						var i =0;
+						var days = [];
+						var wgcounter = 1;
+						_.each(resourcesData,function(resource,idx) { 
+							if (resource.itemDisplayName.match(/WGI/g) || resource.itemDisplayName.match(/Vocab/g)) {
+								if (resource.itemDisplayName.match(/WGI/g)) {
+									if ($.inArray(resource.dayNumber, days) == -1) {
+										wgcounter = 1;
+										days.push(resource.dayNumber);
+									}
+									else {
+										wgcounter++;
+									}
+									var symbolic_name = (resource.word !="") ?  resource.word: 	NOTEBOOK.c_s_NOTEBOOK_WHOLE_GROUP_RESOURCE_TXT+" "+wgcounter;
+								}
+								else {
+									var symbolic_name = (resource.word !="") ?  NOTEBOOK.c_s_NOTEBOOK_VOCABULARY_RESOURCE_TXT+" "+resource.word: 	resource.itemDisplayName;
+								}
+								if (resource.itemDisplayName.match(/Vocab/g) && resource.word == "") {
+									return;
+								}
+%>
+							<li class="viewWorkData valid-activity" item_id="<%=resource.Ref_lessonID+"___"+resource.resourceID+"___"+resource.resourceType%>" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>">
+								<a href="#" >
+									<span class="upload_icon sprite3 right" item_id="<%=resource.Ref_lessonID+"___"+resource.resourceID+"___"+resource.resourceType%>"></span>
+									<span class="right percent_score"></span>
+									<span class="middle"><%=resource.unitNumber%>.<%=resource.weekNumber%>.<%=(parseInt(resource.weekNumber)*5) - (5 - parseInt(resource.dayNumber))%> <%=symbolic_name%></span>
+								</a>
+								<div class="clear"></div>
+							</li>
+<%
+							}
+							i++;
+						});
+%>
+						</ul>
+					</div>
+					<div class="clear"></div>
+				</div>
+			<% } %>
+		</div>
+		<div class="clear"></div>
+	</script>
+	<!---- portfolio inner template ----->
+	<!--- portfolio template---->
+	<script type="text/template" id="portfoliotemplate">
+<%	
+		var activeClass = " active",
+			oTabInfo = NOTEBOOK_TABS.fetch(activeIdx);
+%>
+		<div class="notes_wrapper">
+			<div class="notes_wrapper_left left tabs<%= (activeIdx + 1) %> portfolio_container left">
+				<div class="notes_head_title">
+					<button autofocus tabindex="0" aria-label="Close Notebook"  class="notes_close sprite left valid-activity" id="closenotebook" title="Close notebook" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookClose'].c_s_VERBID%>"></button>
+					<div id="ui-tooltip_closenotebook" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="top: 54px;left: 19px;display:none;">
+						<div class="ui-tooltip-content">Close notebook</div>
+					</div>
+					<div class="tabs_notes left<%= activeClass %>" data-value="<%= oTabInfo.c_s_CODE %>">
+						<%= oTabInfo.c_s_NAME %>
+						<!-- <div> <%= oTabInfo.c_s_NAME %> </div>
+						<% /*
+						<div class="arrow_port">
+							<div class="arrow_port_inn"></div>
+						</div>
+						*/ %> -->
+					</div>
+					<div class="clear"></div>
+                </div>
+				<div class="notes_wrapper_content" id="<%= NOTEBOOK.c_s_PORTFOLIO_LEFT_PANEL_CONTAINER %>"> </div>
+				<div class="clear"></div>
+			</div>   	
+			<div class="notes_wrapper_right middle">
+				<div class="notes_head_title2">
+					<div class="btn-inline-block">
+						<button tabindex="0" aria-label="Delete Portfolio" title="Delete portfolio" class="notes_icn trash_icon sprite" style="display:none;" id="<%= NOTEBOOK.c_s_NOTEBOOK_DELETE_PORTFOLIO %>"></button>
+						<div id="ui-tooltip_deleteportfolio" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="margin-left: -22px;display:none;">
+							<div class="ui-tooltip-content">Delete portfolio</div>
+						</div>
+					</div>
+					<div class="btn-inline-block" style="display:none;"> <!-- display is set as none because it has no action and no code is written -->
+						<button tabindex="0" aria-label="Send Portfolio" title="Send portfolio" class="notes_icn notes_send sprite" style="display:;" id="<%= NOTEBOOK.c_s_NOTEBOOK_SEND_PORTFOLIO %>"></button>
+						<div id="ui-tooltip_sendportfolio" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="margin-left: -20px;display:none;">
+							<div class="ui-tooltip-content">Send portfolio</div>
+						</div>								
+					</div>
+					<div class="btn-inline-block">
+						<button tabindex="0" aria-label="Add Portfolio" title="Add portfolio" class="notes_icn notes_add sprite" style="display:none;" id="<%= NOTEBOOK.c_s_NOTEBOOK_ADD_NEW_PORTFOLIO %>"></button>
+						<div id="ui-tooltip_addportfolio" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="margin-left: -30px;display:none;">
+							<div class="ui-tooltip-content">Add portfolio</div>
+						</div>
+					</div>					
+					<div class="clear"></div>
+				</div>
+				<div class="container_notes_wrapper">
+					<div role="main" id="innerPortfolioDataContainer"></div>
+					<div role="navigation"  class="tabbs_name" id="<%= NOTEBOOK.c_s_PORTFOLIO_RIGHT_PANEL_CONTAINER %>"></div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+	</script>
+	<!--- portfolio template-->
+	<!-- notes landing page-->
+	<script type="text/template" id="notesLandingPage">
+		<div class="notes_landing" id="default_notes">
+			<div class="notes_book_icon">
+				<button tabindex="0" role="button" autofocus aria-label="To open notebook press enter on Notebook thumb button" aria-pressed="false" class="thumb_stamp valid-activity" id="<%= NOTEBOOK.c_s_NOTEBOOK_IMAGE_THUMB %>" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookThumbPrintOpen'].c_s_VERBID%>"></button>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</script>
+	<!--notes landing page end-->
+	<!--resource popup content-->	
+	
+	<script type="text/template" id="resourcePopup">
+		
+		 <div class="overley"></div>
+        <div class="slide_upload_light_box resource" role="dialog" aria-hidden="true">
+			<button tabindex="0" role="button" aria-label="Close resource" class="light_box_close sprite" id="resource_close_btn"></button>
+			<div id="ui-tooltip_closeresource" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="top: 53px;right: -51px;display:none;">
+				<div class="ui-tooltip-content">Close resource</div>
+			</div>
+        	<div class="light_box_content" aria-label="dialog content" >
+            	<% 
+			var mediaurl = pojectionurl+filename;
+			if(filetype == "image"){ %>
+			<div class="image_container">
+			<img id="<%= item_id %>" alt="<%=altText %>" role="presentation" src="
+			<%=mediaurl%>">
+			</div>
+			<% } else if(filetype=="video") {  %>
+			<div class="video_container page_container_video">
+				<video id="video_<%= item_id %>" role="presentation" class="video-js vjs-default-skin" width="100%" height="100%" controls data-setup='{"controls":true, "preload": false, "autoplay": false,"techOrder": ["html5","flash"]}' >
+					<source type="video/mp4;" src="
+					<%=mediaurl%>" />
+				</video>
+			<% } %>
+				<div class="clear"></div>
+			</div>
+        	<div class="clear"></div>
+        </div>
+        	
+	</script>
+	<!-- end of resource popup content-->
+	<!-- end of add new classnotes text area template -->
+	<script type="text/template" id="noteBookClassnotesEditorPanel">
+		<div class="container_steps_column_outer portfoliograph" data-value="classnoteseditorpanel" contenteditable="false">
+			<div class="cotainerborder" contenteditable="false">
+				<div tabindex="0" role="button" aria-label="Close" class="closebtn sprite"></div>
+				<div class="textareaholder">
+					<textarea tabindex="0" class="classnotesdescription valid-activity" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>"><%=(typeof classnotesdata != "undefined")? decodeURIComponent(classnotesdata[0]) : "" %></textarea>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</script>
+	<!-- end of add new classnotes text area template -->
+	<!-- cause and effect template -->
+	<script type="text/template" id="causeneffecttemplate">
+		<div class="container_steps_column_outer portfoliograph" data-value="causeandeffect" contenteditable="false">
+			<div class="cotainerborder" contenteditable="false">
+				<div class="steps_boxes">
+					<div class="step_content">
+						<textarea rows="" cols="" tabindex="0" aria-label="Cause" name="" class="causetext"><%= (decodeURIComponent(data.causetext || "") || "") %></textarea>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="step_arrow"><span class="step_arrowicon sprite3"></span> </div>
+				<div class="steps_boxes">
+					<div class="step_content">
+						<textarea rows="" cols="" tabindex="0" aria-label="Effect" name="" class ="effecttext"><%= (decodeURIComponent(data.effecttext || "") || "") %></textarea>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div tabindex="0" role="button" aria-label="Close Cause and Effect component" class="closebtn sprite"></div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</script>
+	<!--- end of cause and effect template -->
+	
+	<!-- start of step by step template -->
+	<script type="text/template" id="stempbysteptemplate">
+		<div class="container_steps_column_outer portfoliograph" data-value="stepbystepgraph" contenteditable="false">
+			<div class="cotainerborder" contenteditable="false">
+<%
+				var i = 0;
+				for(var sStep in data) {
+					i = i + 1;
+%>
+				<div class="steps_boxes">
+					<div class="step_content">
+						<textarea rows="" cols="" tabindex="0" aria-label="<%='step' + i %>" name="" class="stepbystep"><%= data[sStep]["text"] %></textarea>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+<%
+					if (data[sStep]["showArrow"] !== false) {
+%>
+				<div class="step_arrow">
+					<span class="step_arrowicon sprite3"></span>
+				</div>
+<%
+					}
+				}
+%>
+				<div tabindex="0" role="button" aria-label="Close step by step component" class="closebtn sprite"></div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</script>
+	<!-- end of step by step template -->
+	
+	<!-- start of storymap template -->
+	<script type="text/template" id="storymaptemplate">
+		<div class="container_steps_column storymapgraph portfoliograph" data-value="storymapgraph" contenteditable="false">
+			<div class="cotainerborder" contenteditable="false">
+<%
+				var i = 0;
+				for (var sStep in data) {
+					i = i + 1;
+%>
+				<div class="fr_boxes">
+					<div class="step_tilteleft" id="<%='storymap'+i %>"><%= data[sStep].title %></div>
+					<div class="fr_boxes_content">
+						<textarea name="" cols="" tabindex="0" aria-labelledby="<%='storymap'+i%>" rows="" class="storymapinput"><%= data[sStep].text %></textarea>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+<%
+				}
+%>
+				<div tabindex="0" role="button" aria-label="Close storymap component" class="closebtn sprite"></div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</script>
+	<!--end of storymap template -->
+	
+	<!-- start of three column chart template -->
+	<script type="text/template" id="columncharttemplate">
+		<div class="container_steps_column_outer portfoliograph" data-value="<%= data.chartType %>graph" contenteditable="false">
+			<div class="cotainerborder" contenteditable="false">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tbody>
+						<tr>
+<%
+						var i = 0;
+						for (var sStep in data.header) {
+							i = i + 1;
+%>
+						<th>
+							<div class="<%= data.chartType %>step" tabindex="0" aria-label="column<%=i %> header" contenteditable="true">
+								<%= data.header[sStep] %>
+							</div>
+						</th>
+<%
+						}
+%>
+						</tr>
+						<tr>
+					<%
+						i = 0;
+						for (var sStep in data.text) {
+							i = i + 1;
+					%>
+						<td>
+							<div class="step_content">
+								<textarea name="" cols="" rows="" tabindex="0" aria-label="column<%=i %> content" class="<%= data.chartType %>input"><%= data.text[sStep] %></textarea>
+								<div class="clear"></div>
+							</div>
+						</td>
+<%
+						}
+%>
+						</tr>
+					</tbody>
+				</table>
+				<div tabindex="0" role="button" aria-label="Close three column chart component" class="closebtn sprite"></div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</script>
+	<!--- end of three column chart template -->
+	
+	<!-- start time line template -->
+	<script type="text/template" id="timelineemplate">
+		<div class="container_steps_column timelinegraph portfoliograph" data-value="timelinegraph" contenteditable="false">
+			<div class="cotainerborder" contenteditable="false">
+				<div class="dates_events"> 
+					<div class="dates_container"> 
+						<div class="dates_title"><%= NOTEBOOK.c_s_NOTEBOOK_TIMELINE_DATELABEL_TXT %></div>
+<%
+						var i = 0;
+						for (var sStep in data["date"]) {
+							i = i + 1;
+%>
+						<div class="event_put">
+							<textarea name="" tabindex="0" aria-label="<%='date ' + i %>" class="timelinedateinput"><%= data["date"][sStep] %></textarea>
+						</div>
+<%
+						}
+%>
+						<div class="clear"></div>
+					</div>
+					<div class="dates_container"> 
+						<div class="event_title"><%= NOTEBOOK.c_s_NOTEBOOK_TIMELINE_EVENTLABEL_TXT %></div>
+<%
+						i = 0;
+						for (var sStep in data["event"]) {
+							i = i + 1;
+%>
+						<div class="event_put">
+							<textarea name="" tabindex="0" aria-label="<%='event ' + i %>" class="timelineeventinput"><%= data["event"][sStep] %></textarea>
+						</div>
+<%
+						}
+%>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div tabindex="0" role="button" aria-label="Close timeline component" class="closebtn sprite"></div>
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</script>
+	<!--- end of time line template -->
+	
+	<!-- strt of two column chart template -->
+	<script type="text/template" id="twocolumncharttemplate">
+	
+			<div class="container_steps_column_outer portfoliograph" data-value="twocolumngraph" contenteditable="false">
+				<div class="cotainerborder" contenteditable="false">
+					 <table width="100%" border="0" cellspacing="0" cellpadding="0">
+					  <tbody>
+					  <tr>
+						   <% 
+						    var headerPart = "";
+							var inputPart = "";
+							
+						   for(var i=0;i<2;i++) { 
+						   %>
+							<th><div class="twocolumnstep" tabindex="0" aria-label="<%='column'+(i+1)+' header' %>" contenteditable="true"><%=(typeof classnotesdata != "undefined")? decodeURIComponent(classnotesdata[i+2]) : decodeURIComponent((NOTEBOOK.c_s_NOTEBOOK_CLASSNOTES_STEP_TXT)+(i+1)) %></div></th>
+						   <% } %>
+					  </tr>
+					  <tr>
+						   <% for(var i=0;i<2;i++) { %>
+							<td>
+								<div class="step_content">
+										<textarea name="" tabindex="0" cols="" rows="" aria-label="<%='column'+(i+1)+' content' %>" class="twocolumninput"><%=(typeof classnotesdata != "undefined")? decodeURIComponent(classnotesdata[i]) : "" %></textarea>
+										<div class="clear"></div>
+								</div>
+							</td>
+							<% } %>
+					  </tr>
+					</tbody>
+					</table>
+					<div class="clear"></div>
+				</div>
+				<div tabindex="0" role="button" aria-label="Close two column chart component" class="closebtn sprite"></div>
+				 <div class="clear"></div>
+			</div>
+	</script>
+	<!--- end of two column chart template -->
+	
+	<!-- start of Venn Diagram template -->
+	<script type="text/template" id="vendiagramttemplate">
+		<div class="container_steps_column_outer portfoliograph" data-value="vendiagramgraph" contenteditable="false">
+			<div class="cotainerborder" contenteditable="false">
+				<div class="Venn_Diagram">
+					<div class="Venn_Diagram_images"><img alt="" src="media/venn.png"></div>
+					<div class="Venn_Diagram_container">
+						<div class="Venn_Diagram_container_inner">
+<% 
+						var ariaLabel = null;
+						for (var sStep in data) {
+						if (sStep == 'step1') {
+							ariaLabel = 'left circle';
+						} else if (sStep == 'step2') {
+							ariaLabel = 'merged area';
+						} else if (sStep == 'step3') {
+							ariaLabel = 'right circle';
+						}
+%>
+							<div class="step_content">
+								<textarea name="" tabindex="0" cols="" rows="" aria-label="<%=ariaLabel %>" class="vendiagraminput"><%= data[sStep] %></textarea>
+								<div class="clear"></div>
+							</div>
+<%
+						}
+%>
+							<div class="clear"></div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div tabindex="0" role="button" aria-label="Close venn diagram component" class="closebtn sprite"></div>
+				<div class="clear"></div>
+			</div>
+			 <div class="clear"></div>
+		</div>	
+	</script>
+	<!--- end of Venn Diagram chart template -->
+	
+	<!-- /*==== IPP-3499 ====*/ -->
+	<script type="text/template" id="resoucesBodyLessonScreen">
+<%
+	var bDisplayedTitle = false;
+
+	for (var iI = 0; iI < resources.length; iI++) {
+		if (bDisplayedTitle === false) {
+%>
+<div class="container_notes_wrapper">
+	<div class="note_title_head"> Unit <%= unit %>, <%if(NotebookView.sProductCode.match(GENERAL.c_s_PROD_TYPE_WTW)){%> Sort <%}else{%>Lessons<%} %> <%= lesson %> </div>
+	<div class="container_notes_column" id="lessonScreen-cont" style="overflow-x: hidden; overflow-y: auto; padding:15px; width:97%">
+		<div class="container_notes_column_content" tabindex="0" aria-label="Resource Content">
+			<ul>
+<%
+				bDisplayedTitle = true;
+		}
+%>
+		
+				<li item_id="<%= resources[iI].Ref_lessonID %>___<%= resources[iI].resourceID %>___<%= resources[iI].resourceType %>___<%= (resources[iI].resourceType==='image') ? resources[iI].image_alternative_text : null %>" class="viewWorkData valid-activity" data-verbid="<%=TRACK_EVENT[3].Notebook['noteBookRight'].c_s_VERBID%>">
+					<a href="#">
+						<span item_id="<%= resources[iI].Ref_lessonID %>___<%= resources[iI].resourceID %>___<%= resources[iI].resourceType %>___<%= (resources[iI].resourceType==='image') ? resources[iI].image_alternative_text : null %>" class="upload_icon sprite3 right"></span>
+						<span class="right percent_score"></span>
+						<span class="middle" aria-label="<%= resources[iI].unitNumber %>.<%= resources[iI].weekNumber %>.<%= (parseInt(resources[iI].weekNumber) * 5) - (5 - parseInt(resources[iI].dayNumber)) %> <%= resources[iI].word %>">
+							<%= resources[iI].unitNumber %>.<%= resources[iI].weekNumber %>.<%= (parseInt(resources[iI].weekNumber) * 5) - (5 - parseInt(resources[iI].dayNumber)) %> <%= resources[iI].word %>
+						</span>
+					</a>
+					<div class="clear"></div>
+				</li>
+<%
+	}
+%>
+			</ul>
+		</div>
+		<p> &nbsp; </p>
+	</div>
+</div>
+	</script>
+	<script type="text/template" id="resoucesBodyStandards">
+<%
+	var oResource = {},
+		oResourceDetails = {},
+		sType = "",
+		oRegex = /^(image|text)slide$/,
+		aMatches = [],
+		oEntry = null,
+		sTitle = "",
+		sText = "",
+		sImageURL = "";
+%>
+<div class="container_notes_wrapper">
+	<div class="note_title_head"> <%= title %> </div>
+<%
+		
+	if ((oResource = resources.fetch(index)) !== false) {
+		oResourceDetails = oResource.resourceDetail || {};
+%>
+	<div class="container_notes_column" id="standards-cont" style="overflow-x: hidden; overflow-y: auto; padding:15px; width:97%">
+<%
+		for (var iI in oResourceDetails) {
+			if ((aMatches = oResourceDetails[iI].type.match(oRegex)) !== null) {
+				sType = aMatches.fetch(1);
+				oEntry = oResourceDetails[iI][sType] || {};
+				
+%>
+		<div class="container_notes_column_content">
+<%
+				switch (sType) {
+					case "text":
+						sText = (_.findWhere(oEntry.metadata, { "key": "text_html" }).keyValue || "");
+						sTitle = (_.findWhere(oEntry.metadata, { "key": "page_title" }).keyValue || "");
+%>
+			<strong> <%= sTitle %> </strong>
+			<br />
+			<div> <%= sText %> </div>
+<%
+					break;
+					case "image":
+						sImageURL = (_.findWhere(oEntry.metadata, { "key": "image" }).keyValue || "");
+						sTitle = (_.findWhere(oEntry.metadata, { "key": "slide_title" }).keyValue || "");
+%>
+			<img src="<%= mediaPath %><%= sImageURL %>" alt="<%= sTitle %>" />
+<%
+					break;
+				}
+%>
+		</div>
+<%
+			}
+		}
+%>
+		<p> &nbsp; </p>
+	</div>
+<%
+	}
+%>
+</div>
+	</script>
+	<script type="text/template" id="resoucesBodyRoutineCards">
+<%
+	var oResource = {},
+		oResourceDetails = {},
+		sType = "",
+		oRegex = /^(image|text)slide$/,
+		aMatches = [],
+		oEntry = null,
+		sTitle = "",
+		sText = "",
+		sImageURL = "";
+%>
+<div class="container_notes_wrapper">
+	<div class="note_title_head"> <%= title %> </div>
+<%
+		
+	if ((oResource = resources.fetch(index)) !== false) {
+		oResourceDetails = oResource.resourceDetail || {};
+%>
+	<div class="container_notes_column" id="routineCards-cont" style="overflow-x: hidden; overflow-y: auto; padding:15px; width:97%">
+<%
+		for (var iI in oResourceDetails) {
+			if ((aMatches = oResourceDetails[iI].type.match(oRegex)) !== null) {
+				sType = aMatches.fetch(1);
+				oEntry = oResourceDetails[iI][sType] || {};
+				
+%>
+		<div class="container_notes_column_content">
+<%
+				switch (sType) {
+					case "text":
+						sText = (_.findWhere(oEntry.metadata, { "key": "text_html" }).keyValue || "");
+						sTitle = (_.findWhere(oEntry.metadata, { "key": "page_title" }).keyValue || "");
+%>
+			<strong> <%= sTitle %> </strong>
+			<br />
+			<div> <%= sText %> </div>
+<%
+					break;
+					case "image":
+						sImageURL = (_.findWhere(oEntry.metadata, { "key": "image" }).keyValue || "");
+						sTitle = (_.findWhere(oEntry.metadata, { "key": "slide_title" }).keyValue || "");
+%>
+			<img src="<%= mediaPath %><%= sImageURL %>" alt="<%= sTitle %>" />
+<%
+					break;
+				}
+%>
+		</div>
+<%
+			}
+		}
+%>
+		<p> &nbsp; </p>
+	</div>
+<%
+	}
+%>
+</div>
+	</script>
+	<script type="text/template" id="resoucesBodyBookClub">
+<%
+	var oResource = {},
+		oResourceDetails = {},
+		sType = "",
+		oRegex = /^(image|text)slide$/,
+		aMatches = [],
+		oEntry = null,
+		sTitle = "",
+		sText = "",
+		sImageURL = "";
+%>
+<div class="container_notes_wrapper">
+	<div class="note_title_head"> <%= title %> </div>
+<%
+		
+	if ((oResource = resources.fetch(index)) !== false) {
+		oResourceDetails = oResource.resourceDetail || {};
+%>
+	<div class="container_notes_column" id="bookClub-cont" style="overflow-x: hidden; overflow-y: auto; padding:15px; width:97%">
+<%
+		for (var iI in oResourceDetails) {
+			if ((aMatches = oResourceDetails[iI].type.match(oRegex)) !== null) {
+				sType = aMatches.fetch(1);
+				oEntry = oResourceDetails[iI][sType] || {};
+				
+%>
+		<div class="container_notes_column_content">
+<%
+				switch (sType) {
+					case "text":
+						sText = (_.findWhere(oEntry.metadata, { "key": "text_html" }).keyValue || "");
+						sTitle = (_.findWhere(oEntry.metadata, { "key": "page_title" }).keyValue || "");
+%>
+			<strong> <%= sTitle %> </strong>
+			<br />
+			<div> <%= sText %> </div>
+<%
+					break;
+					case "image":
+						sImageURL = (_.findWhere(oEntry.metadata, { "key": "image" }).keyValue || "");
+						sTitle = (_.findWhere(oEntry.metadata, { "key": "slide_title" }).keyValue || "");
+%>
+			<img src="<%= mediaPath %><%= sImageURL %>" alt="<%= sTitle %>" />
+<%
+					break;
+				}
+%>
+		</div>
+<%
+			}
+		}
+%>
+		<p> &nbsp; </p>
+	</div>
+<%
+	}
+%>
+</div>
+	</script>
+	<!-- /*== End IPP-3499 ==*/ -->
+</html>

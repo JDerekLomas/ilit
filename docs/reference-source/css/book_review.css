@@ -1,0 +1,192 @@
+html {
+	-webkit-text-size-adjust: none; /* Prevent font scaling in landscape */
+}
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+}
+body {
+    line-height:24px;
+	font-family:Helvetica, Arial, sans-serif;
+	font-size:16px;
+	color:#4e4e4e;
+	font-weight:normal;
+	min-height:100%;
+}
+article,aside,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section {
+    display:block;
+}
+nav ul {
+    list-style:none;
+}
+blockquote, q {
+    quotes:none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content:'';
+    content:none;
+}
+a {
+    margin:0;
+    padding:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+}
+/* change colours to suit your needs */
+ins {
+    background-color:#ff9;
+    color:#000;
+    text-decoration:none;
+}
+/* change colours to suit your needs */
+mark {
+    background-color:#ff9;
+    color:#000;
+    font-style:italic;
+    font-weight:bold;
+}
+del {
+    text-decoration: line-through;
+}
+abbr[title], dfn[title] {
+    border-bottom:1px dotted;
+    cursor:help;
+}
+table {
+    border-collapse:collapse;
+    border-spacing:0;
+}
+/* change border colour to suit your needs */
+hr {
+    display:block;
+    height:1px;
+    border:0;
+    border-top:1px solid #cccccc;
+    margin:1em 0;
+    padding:0;
+}
+input, select {
+    vertical-align:middle;
+}
+ul, li{ list-style:none;}
+
+
+input:focus[type="text"]
+{
+    outline: none;
+	-webkit-appearance: none;
+}
+input[type="text"] {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-focus-ring-color:  rgba(0, 0, 0, 0); outline:none;}
+.clear {
+	padding:0;
+	margin:0;
+	font-size:0;
+	line-height:0;
+	clear:both;
+}
+.left{float:left;}
+.right{float:right;}
+.middle{ overflow:hidden;}
+.center{ text-align:center;}
+img{ max-width:100%; height:auto;}
+.sprite{ background:url(../media/sprite.png) no-repeat 0 0;}
+.wrapper{}
+.main_wrapper{ position:relative;}
+.modal-wrapper{ max-width:500px; margin:20px auto 0;}
+.clearfix{ height:0; line-height:0; width:0; padding:0; margin:0; clear:both;}
+.modal-head{ background-color:#eeb01c; border-radius:5px 5px 0 0; font-size:18px; text-align:center; color:#fff; font-weight:bold; padding:7px 15px;}
+.modal-container{ background-color:#fff;}
+.modal-foot{ text-align:right; background-color:#fff; border-radius:0 0 5px 5px; padding:10px 15px;}
+.modal-block{ padding:10px;}
+.modal-block-right{ padding:0 10px;}
+.Library-wrapper {
+	/*background-image: url(../media/background-Library.png);*/ 
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	/*background-color: #464646;*/
+	background-color: #585858;
+}
+html, body{ height:100%}
+.Library-wrapper-modal{ /*for book review header */ /*background-color:rgba(0,0,0,0.6);*/  position:fixed; left:0; top:0; width:100%; height:100%; } 
+.modal-block h2{ font-size:18px; }
+.modal-block h3{ font-size:15px; }
+.font-weightnormal{ font-weight:normal;}
+h1, h2, h3, h4, h5, h6{ margin-bottom:10px;}
+.modal-block ul{ margin-bottom:10px; margin-top:15px; margin-left:20px; list-style-type:circle;}
+.modal-block ul li{  list-style-type: decimal;}
+.vertical-middle{ vertical-align:middle;}
+.ratting-comt{ padding:9px 0 0 10px; font-weight:bold; font-size:14px;}
+.margin-top10 {
+	margin-top: 10px;
+}
+.btn-normal {
+	background-color: #000;
+	border-radius: 4px;
+	color: #fff;
+	font-size: 13px;
+	font-weight: 600;
+	border: 0;
+	padding: 7px 10px;
+	cursor: pointer; 
+	text-transform:uppercase;
+}
+.btn-normal.disabled {
+	cursor: default;
+	opacity: 0.5;
+}
+.margin-bootom0{ margin-bottom:0px;}
+
+.book-Library-wrapper{ width:500px; margin:0 auto; overflow:hidden; }
+.book-cover-slide{ width:60px; height:91px; float:left; margin:6px; border:5px solid transparent; border-radius:4px; cursor:pointer;}
+.book-Library-content{ text-align:center;}
+.book-Library-slider{ background-color:#bfbfbf; padding:10px 35px;position:relative;}
+.book-cover-slide.active{ border:5px solid #fff; border-radius:4px; cursor:default;}
+.lib-animation{ width:30px; height:30px; border:0;  position:absolute; top:50%; margin-top:-15px; }
+.lib-next{ background-position:-169px -471px; left:10px; cursor:pointer; }
+.lib-prev{ background-position:-173px -522px; right:10px; cursor:pointer;}
+.multi-Library{ border:1px solid #ccc; margin-top:15px;}
+.multi-Library-content{ max-height:150px; overflow:auto; margin:0 !important;}
+.multi-Library-content li{padding:5px; padding-right:30px; position:relative; border-bottom:1px solid #ddd;}
+.multi-Library-content li:last-child{border-bottom:0px solid #ddd;}
+.lib-mark{ position:absolute; width:25px; height:25px; right:5px; top:50%; margin-top:-12.5px; background-position:-422px -702px;}
+.multi-Library-title{ font-weight:bold; font-size:16px; padding:5px 7px; border-bottom:1px solid #ccc; }
+.multi-Library-content li:hover{ /* background-color:#333; color:#fff; */} 	/*fix for ILIT-119 */
+.multi-Library-content li.active{ background-color:#333; color:#fff;}
+.margin-left5{ margin-left:5px;}
+.book-lib-textarea{ margin-top:10px; width:100%; min-height:150px;}
+@media screen and (max-width:1024px){
+	
+}
+	
+/* Instructor View End */
+@media only screen and (-webkit-min-device-pixel-ratio: 2){
+	.sprite{	background-image:url(../media/sprite_ratina.png) no-repeat; background-size:500 800px; }
+}
+	
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min--moz-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 1.5) {
+	.sprite{	background-image:url(../media/sprite_ratina.png) no-repeat; background-size:500px auto; }
+}

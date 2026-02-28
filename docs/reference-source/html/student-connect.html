@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\
+	<meta http-equiv='cache-control' content='no-cache'>
+	<meta http-equiv='expires' content='0'>
+	<meta http-equiv='pragma' content='no-cache'>
+	<title>iLiT</title>
+	<script>
+			var cache_timestamp = (new Date()).getTime();
+			document.write('<link href="css/lesson.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+		</script>
+	<link href="css/fonts/fonts.css" media="all" rel="stylesheet" />	
+	<script>
+			document.write('<link href="css/lesson.swiper.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+	      
+	</script>
+	<script>
+	   document.write('<link href="css/tooltipster.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+	</script>
+	<link href="css/video-js.css" type="text/css" rel="stylesheet"/>        
+	<script>
+			document.write('<link href="css/lesson_dev.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+			document.write('<link href="css/student_connect_dev.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');			
+	</script>     
+	<link href="css/jquery-ui.css" media="all" rel="stylesheet"/>
+	<script>
+			document.write('<link href="css/a11y.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+			document.write('<link href="css/buzz.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+			document.write('<link href="css/buzz_dev.css?'+ cache_timestamp + '" media="all" rel="stylesheet"/>');
+			
+	</script> 
+	<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.js"></script>
+	<script type="text/javascript" src="js/underscore-min.js"></script>	
+	
+	<script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.touch-punch.min.js"></script>
+	<script type="application/javascript" src="js/fastclick.js"></script>
+	<script src="js/video.js" type="text/javascript"></script>
+
+	<script>
+			document.write('<script type="text/javascript" src="js/iSeriesBase.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/util.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/constants.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/student_connect.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/message_handler.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/application.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/a11y.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/chromeapp_communication.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+			document.write('<script type="text/javascript" src="js/client_native_communication.js?'+ cache_timestamp + '"></scr' + 'ipt>');
+
+</script>
+	
+<!--[if gte IE 9]>
+        <style type="text/css">
+            .gradient {
+				filter: none !important;
+			}
+        </style>
+        <![endif]-->
+		
+		<script type="text/javascript">
+		
+		/* Buzz Info notes data*/
+		objBuzzCommentsJsonData = {
+			rootFolderPath:'/path/to/curricullam',
+			gradeId:8,
+			mediaPath:'',
+			jsPath:'js/buzz_info.js'
+		};
+		
+		window.CheckBuzzCommentsDetails = function() {
+			if (objBuzzCommentsJsonData != null) {
+				loadJS("js/buzz_info.js", buzzInfoJsLoaded);
+			}
+			else {
+				setTimeout(CheckBuzzCommentsDetails, 500);
+			}
+		};
+		
+		/**
+		* Check Buzz Info Js Content loaded or not 
+		* @returns void
+		*/
+		window.buzzInfoJsLoaded =  function () {
+			if (objBuzzCommentData != null) {
+				GetBuzzCmtDetails();
+				setTimeout(function() {
+				scheduleStudentBuzzDataCheck();
+				}, 200);
+			}
+			else {
+				setTimeout(function() {
+					buzzInfoJsLoaded();
+				}, 500);
+			}
+		};
+		
+		/**
+		* Get Buzz Details
+		* @method scheduleStudentBuzzDataCheck
+		* @return 
+		*/
+		window.scheduleStudentBuzzDataCheck = function() {
+
+		if (objBuzzListData != null) {
+			if (objBuzzListData.Status == "200") {
+				Application.init(VIEWTYPE.c_s_STUDENT_CONNECT);
+				$('.wrapper').animate({'opacity' : '1'}, 800);
+			} else {
+				if (objBuzzListData.Error.ErrorCode != 'U1065') {
+					//alert(objStudentListJsonData.Error.ErrorUserDescription);
+				}
+			}
+		} else {
+			setTimeout(scheduleStudentBuzzDataCheck, 100);
+		}
+		};
+		
+		$(document).ready(function () {
+				if(oPlatform.isIOS()) {
+				loadJS('js/NativeBridge.js', CheckBuzzCommentsDetails);
+				}else if(location.hash === "#chromeApp") {     
+				if(window.top.appOrigin){
+					window.appOrigin = window.top.appOrigin;
+						CheckBuzzCommentsDetails(); 
+						return;
+				}
+				window.addEventListener('message', onMessage);
+				function onMessage(e) {
+					window.appWindow = e.source;
+					window.appOrigin = e.origin;
+					CheckBuzzCommentsDetails();  
+				}             
+				if(typeof chrome.runtime.id !== 'undefined') {
+					CheckBuzzCommentsDetails();
+				}
+			}else {
+				setTimeout(CheckBuzzCommentsDetails, 400);
+				}
+		});
+		</script>
+
+</head>
+<body >
+<div class="wrapper" style="display: block; opacity: 1;">
+
+  <div id="connectStudent" style="height: 500px;">
+    <div class="backgound_images bg13"></div>
+    <div class="main_wrapper" id="toc_inner_container">
+      <div class="buzz_wrapper" id="studentConnectWrapper">
+        
+      </div>
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>
+<div id="dialog-message-network" title="Alert!" class="Ilit_alert_box"></div>
+</body>
+<script type="text/template" id="studentConnectTemplate">
+<div class="buzz_wrapper_inner">
+          <div style="height: 500px;" class="buzz_container">
+              <div class="inner_content">
+			   <h1 class="heading1 left" >Comments</h1>
+			   <button id="buttonConnectRefresh" type="button" tabindex="0" class="right refresh_icon rconnect sprite valid-activity" dataiverbid="<%=TRACK_EVENT[4]["connect"].connectTabRefresh.c_s_VERBID%>" aria-label="Refresh Button"></button>
+			   <div id="buttonConnectRefreshTooltip" role="tooltip" aria-hidden="true" class="ui-tooltip ui-widget ui-corner-all ui-widget-content" style="top:68px;left: 468px;display:none;font-size:13px;">	
+				<div class="ui-tooltip-content">Refresh</div>			
+		      </div>
+			   <div class="clear"></div>
+			   <div class="comment_show" id="cmtView">
+			        
+			   </div>
+			  </div>
+			  <div class="buzzDiv" id="starview">
+			   
+			  </div>
+   		  </div>
+        </div>
+</script>
+<script type="text/template" id="studentCmtTemplate">
+		<% if(buzzList.length > 0) {%>
+						<table>
+						
+						<thead>
+							<tr>
+								<th scope="col">Date</th>
+								<th scope="col">Comments</th>
+										 
+							</tr>
+						</thead>
+						<tbody aria-label="Comments">
+						<% $.each(buzzList, function (idx, val){ 
+							
+							var rId = val.RevisionID;
+								rId = rId.toString().substring(0, 8),
+								cmtMonth = rId.substring(4, 6),
+								cmtDate = rId.substring(6, 8),
+								cmtYear = rId.substring(2, 4),
+								insBuzzCmt = JSON.parse(val.CMT_BUZZ),
+								insCmt = "";
+								
+								if(insBuzzCmt.comments != ""){
+									 //_.each(insBuzzCmt.comments, function (listdata, idx) {
+									//		insCmt += buzzCommentNotes.comments[listdata].title +",";
+									//	});
+									insCmt += insBuzzCmt.comments;
+								}
+								else{
+									insCmt = insBuzzCmt.personalComments;
+								}
+						%>   
+						    <tr scope="row">
+							<td width="30%"><%=cmtMonth%>/<%=cmtDate%>/<%=cmtYear%>
+							</td>
+							<td  width="70%" class="comment">
+							 <%=insCmt%>
+							</td>
+							</tr>
+						
+						<%  });
+						%>
+						</tbody>
+						</table>
+						
+						
+					<% } %>
+					</ul>
+</script>
+<script type="text/template" id="studentStarTemplate">
+		<div class="heading1" style="display:none;">Buzz</div>
+		<% starimg = (noOfStars == 0) ? "star_big_border.png" : "star_big_fill.png"; 
+		   var imgtext = noOfStars > 1 ?  noOfStars + ' Stars' : noOfStars + ' Star';
+		
+		%>
+		<div class="star"><img src="media/<%=starimg%>" alt="<%=imgtext%>"></div>
+		<% if (noOfStars == 1 ) { %>
+			<div class="heading2">You have <b><%=noOfStars%></b> star !!!</div>
+		<% } else { %>
+			<div class="heading2">You have <b><%=noOfStars%></b> stars !!!</div>
+		<% } %>
+</script>
+</html>

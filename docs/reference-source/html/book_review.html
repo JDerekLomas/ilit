@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta http-equiv='cache-control' content='no-cache'>
+    <meta http-equiv='expires' content='0'>
+    <meta http-equiv='pragma' content='no-cache'>
+	<title>iLiT</title>
+	
+	<link href="css/jquery-ui.css" media="all" rel="stylesheet" />
+	<link href="css/idangerous.swiper.css" media="all" rel="stylesheet" />
+	<link href="css/jquery.raty.css" media="all" rel="stylesheet" />
+    <script>
+        var cache_timestamp = (new Date()).getTime();
+        document.write('<link href="css/book_review.css?' + cache_timestamp + '" media="all" rel="stylesheet"/>');
+        document.write('<link href="css/book_review-dev.css?' + cache_timestamp + '" media="all" rel="stylesheet"/>');
+        document.write('<link href="css/a11y.css?' + cache_timestamp + '" media="all" rel="stylesheet"/>');
+    </script>
+    
+	<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.js"></script>
+	<script type="text/javascript" src="js/underscore-min.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.touch-punch.min.js"></script>
+	<script type="text/javascript" src="js/idangerous.swiper-2.1.min.js"></script>
+	<script type="text/javascript" src="js/jquery.raty.js"></script>
+	
+    <script>
+        document.write('<script type="text/javascript" src="js/iSeriesBase.js?' + cache_timestamp + '"></scr' + 'ipt>');
+        document.write('<script type="text/javascript" src="js/a11y.js?' + cache_timestamp + '"></scr' + 'ipt>');
+        document.write('<script type="text/javascript" src="js/util.js?' + cache_timestamp + '"></scr' + 'ipt>');
+        document.write('<script type="text/javascript" src="js/globals.js?' + cache_timestamp + '"></scr' + 'ipt>');
+        document.write('<script type="text/javascript" src="js/constants.js?' + cache_timestamp + '"></scr' + 'ipt>');
+        document.write('<script type="text/javascript" src="js/book_review.js?' + cache_timestamp + '"></scr' + 'ipt>');
+        document.write('<script type="text/javascript" src="js/chromeapp_communication.js?' + cache_timestamp + '"></scr' + 'ipt>');
+        document.write('<script type="text/javascript" src="js/client_native_communication.js?' + cache_timestamp + '"></scr' + 'ipt>');
+    </script>    
+	
+</head>
+<body class="Library-wrapper">
+		<div id="dynamicTextForSR" aria-live="assertive" class="assistive-text"></div>
+	<header id="bookReviewHeader">
+		<div class="header_inner" id="renderBookReviewHeaderArea">
+			
+		</div>
+		<div class="clear"></div>
+    </header>
+	<div class="Library-wrapper-modal vertical-alignment-helper">
+		<div class="modal-wrapper  vertical-align-center">
+			<div class="modal-content-main">
+			
+			<div class="modal-content-main-width" id="mainContainer"></div>
+			</div>
+		</div>
+	</div>
+	<div id="dialog-message" title="Alert!" class="Ilit_alert_box"></div>
+	<!-- DIALOG BOX -->
+    <div id="dialog-message-network" title="Alert!" class="Ilit_alert_box"></div>
+</body>
+<script type="text/template" id="templateNoRecord">
+	<div class="modal-head">Book Review</div>
+	<div class="modal-container">
+		<div class="modal-block">
+			<h1 class="txt_center">No books available for review.</h1>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+	<div class="modal-foot"></div>
+</script>
+<script type="text/template" id="templateLandingPage">
+	<div class="modal-head">Book Review</div>
+	<div class="modal-container">
+		<div class="book-Library-slider">
+			<button id="prevPagingBtn" class="lib-animation lib-next sprite valid-activity" type="button" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"></button>
+			<button id="nextPagingBtn"  class="lib-animation lib-prev sprite valid-activity" type="button" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"></button>
+			<div class="book-Library-wrapper swiper-container">
+				<div class="book-Library-content swiper-wrapper" ><!-- style="width:5000px; float:left;" -->
+					<%
+					var iCnt = 0;
+					$.each(Data.reviewData, function(Idx, Val){
+						var activeClass = "";
+						if (iCnt == RecordIndex){
+							activeClass = "active";
+						}
+						if (iCnt == 0){
+					%>
+					<div class="swiper-slide swiper-no-swiping">
+					<%
+						}
+					%>
+					
+						<div data-recordIndex="<%= Idx %>" tabindex='0' class="book-cover-slide <%= activeClass %> bookItem valid-activity" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">
+							<img src="<%= Val.book_image %>"   alt="<%= Val.book_title %>" /> 
+							<% 
+							if(Val.is_reviewed != "Y"){
+							%>
+								<span class="unreviewed"></span>
+							<%
+							}
+							%>
+						</div>
+						
+						
+						<%
+						iCnt++;
+						if (iCnt == 5) {
+					%>
+					</div>
+					<%
+							iCnt = 0;
+						}
+					});
+					
+					if(iCnt != 0) {
+					%>
+					</div>
+					<% }%>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<div id="formContainer" class="modal-block"></div>
+	</div>
+	<div id="buttonContainer" class="modal-foot"></div>
+</script>
+
+<script type="text/template" id="templateFormContent">
+
+	<div class="modal-block-div">
+		<h2><span class="font-weightnormal">Title :</span> <strong><%= Data.reviewData[RecordIndex].book_title %></strong></h2>
+		<h3>
+			<span class="font-weightnormal">Authors :</span> 
+			<strong><%= Data.reviewData[RecordIndex].author_name %></strong>
+		</h3>
+	</div>
+	<div class="modal-block-left left" style="width:150px">
+		<img src="<%= Data.reviewData[RecordIndex].book_image %>" alt="<%= Data.reviewData[RecordIndex].book_title %>" />
+	</div>
+	<div class="modal-block-right middle">
+		<p class="vertical-middle">
+			<div id="score-callback" data-score="<%=Data.reviewData[RecordIndex]["rating"]%>"  aria-label="Rate <%=Data.reviewData[RecordIndex]["book_title"]%> Book"  tabindex="<%=Data.reviewData[RecordIndex].is_reviewed == "Y" ? '-1' : '0' %>" class="left valid-activity" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>"></div>
+		<% if(Data.reviewData[RecordIndex].is_reviewed == "Y"){ %>
+			<span class="ratting-comt left"><%= Data.starRatings[Data.reviewData[RecordIndex].rating] %></span>
+		<% } else{ %>
+			<span id="starRatingTxt" class="ratting-comt left"><%=Data.starRatings[Data.reviewData[RecordIndex].rating]%></span>
+		<% }%>
+		</p>
+		<div class="clearfix"></div>
+		<% if(Data.reviewData[RecordIndex].is_reviewed == "Y") { %>
+		   <div>
+				  <% if( typeof Data.reviewData[RecordIndex].csv_feedback_tags == "string" && Data.reviewData[RecordIndex].csv_feedback_tags.length > 0){ %>
+				  <ul>
+					<%
+					var aFeedback = Data.reviewData[RecordIndex].csv_feedback_tags.split(",");
+					for(var iCnt = 0; iCnt < aFeedback.length; iCnt++){
+					%>
+					<li><%= Data.predefinedCommentCodes[aFeedback[iCnt]] %></li>
+					<%
+					}
+					%>
+				</ul>
+				<% } %>
+				<h3 class="margin-bootom0">My Comments</h3>
+				<p><%=(Data.reviewData[RecordIndex].comments != "" && Data.reviewData[RecordIndex].comments != "null") ? Data.reviewData[RecordIndex].comments : "No comments available." %></p>
+			</div>
+		<% } else { %>
+		<div class="multi-Library">
+			<div class="multi-Library-title" tabindex="0" aria-label="Please Choose review option 	"> - Please Choose - </div>
+			<ul id="listFeedback" class="multi-Library-content">
+				<% 
+				for(var iCnt = 0; iCnt < Data.predefinedComments.length; iCnt++){
+					if( typeof Data.reviewData[RecordIndex].csv_feedback_tags == "string" && Data.reviewData[RecordIndex].csv_feedback_tags.length > 0){
+						var aFeedback = Data.reviewData[RecordIndex].csv_feedback_tags.split(","),
+							activeClass = (aFeedback.indexOf(iCnt.toString()) != -1) ? "active" : "";
+					}
+				%>
+				<li data-idFeedback="<%= Data.predefinedComments[iCnt] %>" tabindex="0" data-isReviewed="<%= Data.reviewData[RecordIndex].is_reviewed %>" class="<%= activeClass %> valid-activity" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">
+					<%= Data.predefinedCommentCodes[Data.predefinedComments[iCnt]] %>
+					<span class="lib-mark sprite"></span>
+				</li>
+				<%
+				}
+				%>
+			</ul>
+		</div>
+		<% } %>
+	</div>
+	<div class="clearfix"></div>
+</script>
+
+<script type="text/template" id="templateButtonContent">
+	<%
+		var inactiveClass = (Data.reviewData[RecordIndex].is_reviewed == "Y") ? "inactive" : "",
+			disabledStatus = (Data.reviewData[RecordIndex].is_reviewed == "Y") ? "disabled" : "";
+	%>
+	<% if(Data.reviewData[RecordIndex].is_reviewed == "N"){ %>
+	<button 
+		id="addComment" 
+		data-recordIndex="<%= RecordIndex %>" 
+		data-bookId="<%= Data.reviewData[RecordIndex].book_id %>" 
+		class="btn-normal <%= inactiveClass %> valid-activity" 
+		 role='button'
+		<%= disabledStatus %>
+		type="button"
+		data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">Add Comments</button>
+	<% } %>
+	<% if(Data.reviewData[RecordIndex].is_reviewed != "Y") { %>
+	<button 
+		id="btnDetail" 
+		data-recordIndex="<%= RecordIndex %>" 
+		data-bookId="<%= Data.reviewData[RecordIndex].book_id %>" 
+		class="btn-normal margin-left5" 
+		type="button"
+	>Next</button>
+	<% } %>
+	<div class="clearfix"></div>
+</script>
+
+<script type="text/template" id="templateAddComment">
+
+	<div class="modal-head">Book Review</div>
+	<div class="modal-container">
+		<div class="modal-block">
+			<div class="modal-block-left left" style="width: 150px;">
+				<img src="<%= Data.reviewData[RecordIndex].book_image %>" alt="<%= Data.reviewData[RecordIndex].book_title %>" /> 
+			</div>
+			<div class="modal-block-right middle" role="dialog" aria-labelledby="dialog3_label" aria-modal="true" aria-describedby>
+				<h2 id="dialog3_label"><span class="font-weightnormal">Title :</span> <strong><%= Data.reviewData[RecordIndex].book_title %></strong></h2> 
+				<h3 aria-hidden="true"><span class="font-weightnormal">Authors :</span> <strong><%= Data.reviewData[RecordIndex].author_name %></strong></h3> 
+				<div class="clearfix"></div>
+				<textarea id="fldComment" cols="5" name=""  class="book-lib-textarea valid-activity" data-verbid="<%=TRACK_EVENT[5].Assignment['Typing'].c_s_VERBID%>"></textarea>
+				<!-- CLAS-568 -->
+				<!-- ILIT-6555 -->
+				<!-- <label class="char-limit-label">Write you review here (150 characters).</label> -->
+				<label class="char-limit-label">Write your review here (150 characters).</label>
+				<!-- End of CLAS-568 -->
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<div class="modal-foot">
+		<button id="btnSave" data-recordIndex="<%= RecordIndex %>" data-bookId="<%= Data.reviewData[RecordIndex].book_id %>" class="btn-normal margin-top10 valid-activity" type="button" data-verbid="<%=TRACK_EVENT[5].Assignment['AssignmentButtonClick'].c_s_VERBID%>">Save</button>
+		<button id="btnCancel" data-recordIndex="<%= RecordIndex %>" data-bookId="<%= Data.reviewData[RecordIndex].book_id %>" class="btn-normal margin-top10 btn-float-left" type="button">Cancel</button>
+		<div class="clearfix"></div>
+	</div>
+</script>
+<script type="text/template" id="templatePreviewReview">
+	<div class="modal-head">Book Review</div>
+	<div class="modal-container">
+		<div class="modal-block">
+			<div class="modal-block-left left" style="width:150px">
+				<img src="<%= Data.reviewData[RecordIndex].book_image %>" alt="<%= Data.reviewData[RecordIndex].book_title %>" /> 
+			</div>
+			<div class="modal-block-right middle">
+				<h2><span class="font-weightnormal">Title :</span> <strong><%= Data.reviewData[RecordIndex].book_title %></strong></h2> 
+				<h3><span class="font-weightnormal">Authors :</span> <strong><%= Data.reviewData[RecordIndex].author_name %></strong></h3> 
+				<p class="vertical-middle">
+					<% 	var rating = 0,
+							ratingImg = "",
+							totalRating = 5;							
+						if(Data.reviewData[RecordIndex].rating.length == 0){
+							rating = 5;
+							ratingImg = "star-off.png";
+						}else{
+							rating = Data.reviewData[RecordIndex].rating;
+							ratingImg = "star-on.png";
+						}	
+							for(var iI=0; iI<rating; iI++) {
+					  %>
+							<img src="media/<%=ratingImg%>" tabindex="0" alt="" class="left"/> 
+					  <% }
+							if(	Data.reviewData[RecordIndex].rating.length != 0 && 
+								totalRating > rating
+								){
+								ratingImg = "star-off.png";
+								for(var iI=0; iI< (totalRating - rating) ; iI++) {
+					   %>
+								<img src="media/<%=ratingImg%>" tabindex="0" alt="" class="left"/> 
+					   <% }
+					   } %>
+					<% 	if(Data.reviewData[RecordIndex].rating.length != 0){
+					%>
+						<span class="ratting-comt left"><%= Data.starRatings[Data.reviewData[RecordIndex].rating] %></span>
+					<% } %>
+				</p>
+				<div class="clearfix"></div>
+				<ul>
+					<%
+					var aFeedback = Data.reviewData[RecordIndex].csv_feedback_tags.split(",");					
+					for(var iCnt = 0; iCnt < aFeedback.length; iCnt++){
+					%>
+					<li><%= Data.predefinedCommentCodes[aFeedback[iCnt]] %></li>
+					<%
+					}
+					%>
+				</ul>
+				<h3 class="margin-bootom0">My Comments</h3>
+				<%
+				var sComments = (Data.reviewData[RecordIndex].comments != "") ? Data.reviewData[RecordIndex].comments : "No comments available.";
+				%>
+				<p><%= sComments %></p>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<div class="modal-foot">
+		<% if(Data.reviewData[RecordIndex].is_reviewed == "N"){ %>
+		<button id="btnSubmit" data-recordIndex="<%= RecordIndex %>" data-bookId="<%= Data.reviewData[RecordIndex].book_id %>" class="btn-normal margin-top10" type="button">Submit</button>
+		<% }%>
+		<button id="btnCancel" data-recordIndex="<%= RecordIndex %>" data-bookId="<%= Data.reviewData[RecordIndex].book_id %>" class="btn-normal margin-top10 btn-float-left" type="button">Cancel</button>
+		<div class="clearfix"></div>
+	</div>
+</script>
+
+<!-- For book review header -->
+<script type="text/template" id="bookreviewheaderTemplate">
+	<nav class="top_navbar">
+		<div class="left unitname"> 
+			<button class="left button9 active"  aria-label="Go Back To Library" tabindex='0' id="bookReviewDoneButton">Done</button>
+		</div>
+
+		<div class="clear"></div>
+	 </nav>
+	 <div class="clear"></div>
+
+</script>
+</html>

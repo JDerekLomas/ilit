@@ -86,7 +86,7 @@ button { font-size: 15px; -webkit-user-select: none; }
     display: flex;
     /* Push first child to left, last child to right, keep spacing between */
     justify-content: space-between; 
-    /* Align items to the top so they donï¿½t shift vertically */
+    /* Align items to the top so they don’t shift vertically */
     align-items: flex-start;        
     /* End of CLAS-1069 */
 }

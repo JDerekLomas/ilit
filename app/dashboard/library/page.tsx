@@ -100,6 +100,17 @@ export default function LibraryPage() {
     [filteredBooks.length]
   );
 
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") { e.preventDefault(); goTo(-1); }
+      else if (e.key === "ArrowRight") { e.preventDefault(); goTo(1); }
+      else if (e.key === "Enter" && selectedBook) { router.push(`/reader/${selectedBook.id}`); }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [goTo, selectedBook, router]);
+
   const onTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
     touchDeltaX.current = 0;

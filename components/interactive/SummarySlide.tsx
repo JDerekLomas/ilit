@@ -55,9 +55,9 @@ export default function SummarySlide({ slide }: Props) {
   }, []);
 
   return (
-    <div className="w-full h-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6 items-stretch min-h-0">
-      {/* Left: Writing panel */}
-      <div className="flex-1 bg-white rounded-xl shadow-2xl p-4 sm:p-6 overflow-y-auto w-full min-h-0 flex flex-col">
+    <div className="w-full h-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-0 items-stretch min-h-0">
+      {/* Left: Writing panel — 57% matching checkpoint panels */}
+      <div className="md:w-[57%] md:flex-none flex-1 bg-white rounded-xl border-[6px] border-black/30 p-4 sm:p-6 overflow-y-auto w-full min-h-0 flex flex-col">
         <h3 className="font-serif font-bold text-lg text-gray-900 mb-2">
           Write Your Summary
         </h3>
@@ -71,7 +71,7 @@ export default function SummarySlide({ slide }: Props) {
           onChange={(e) => setText(e.target.value)}
           disabled={submitted}
           placeholder="Type your summary here..."
-          className="flex-1 min-h-[160px] w-full p-4 border-2 border-gray-200 bg-white rounded-xl resize-none font-serif text-sm md:text-base leading-relaxed focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 disabled:bg-gray-50 disabled:text-gray-500 transition-colors"
+          className="flex-1 min-h-[160px] w-full p-4 border-2 border-gray-200 bg-white rounded-xl resize-none font-serif text-sm md:text-base leading-relaxed focus:outline-none focus:border-[#1c8ed5] focus:ring-2 focus:ring-blue-100 disabled:bg-gray-50 disabled:text-gray-500 transition-colors"
         />
 
         {/* Word count + actions */}
@@ -96,7 +96,8 @@ export default function SummarySlide({ slide }: Props) {
                 disabled={wordCount < MIN_WORDS}
                 whileHover={wordCount >= MIN_WORDS ? { scale: 1.03 } : {}}
                 whileTap={wordCount >= MIN_WORDS ? { scale: 0.97 } : {}}
-                className="px-5 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-full hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="px-5 py-2 text-sm font-medium rounded shadow disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                style={{ background: 'linear-gradient(to bottom, #e8e8e8 0%, #f5f5f5 3%, #e8e8e8 5%, #e8e8e8 95%, #ccc 100%)', color: '#333' }}
               >
                 Get Feedback
               </motion.button>
@@ -107,7 +108,8 @@ export default function SummarySlide({ slide }: Props) {
                 disabled={wordCount < MIN_WORDS}
                 whileHover={wordCount >= MIN_WORDS ? { scale: 1.03 } : {}}
                 whileTap={wordCount >= MIN_WORDS ? { scale: 0.97 } : {}}
-                className="px-6 py-2 bg-indigo-700 text-white text-sm font-semibold rounded-full hover:bg-indigo-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-md"
+                className="px-6 py-2 text-white text-sm font-semibold rounded shadow-md disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                style={{ background: 'linear-gradient(to bottom, #1c8ed5 0%, #79bde6 3%, #1c8ed5 5%, #1c8ed5 95%, #025e97 100%)', boxShadow: '0 1px 0 0 #025e97, inset 0 -2px 0 0 #025e97, inset 0 0 0 1px #025e97' }}
               >
                 Submit Summary
               </motion.button>
@@ -138,30 +140,30 @@ export default function SummarySlide({ slide }: Props) {
         </div>
       </div>
 
-      {/* Right: Instruction / Feedback tabs */}
-      <div className="flex-1 bg-white rounded-xl shadow-2xl overflow-hidden w-full min-h-0 flex flex-col">
-        <div className="flex border-b border-gray-200 flex-shrink-0">
+      {/* Right: Instruction / Feedback tabs — 43% with overlap */}
+      <div className="md:w-[43%] md:flex-none md:-ml-3 flex-1 bg-[#f7f9f9] rounded-xl border-[6px] border-black/30 overflow-hidden w-full min-h-0 flex flex-col">
+        <div className="flex bg-[#eeeeee] flex-shrink-0">
           <button
             onClick={() => setActiveTab("instruction")}
-            className={`flex-1 py-3 text-sm font-medium transition-colors ${
+            className={`flex-1 py-3 text-sm font-medium transition-colors border-b-2 ${
               activeTab === "instruction"
-                ? "bg-white text-gray-900 border-b-2 border-indigo-600"
-                : "bg-gray-50 text-gray-500 hover:text-gray-700"
+                ? "bg-white text-gray-900 border-[#1c8ed5]"
+                : "bg-[#eeeeee] text-gray-500 hover:text-gray-700 border-transparent"
             }`}
           >
             Instruction
           </button>
           <button
             onClick={() => setActiveTab("feedback")}
-            className={`flex-1 py-3 text-sm font-medium transition-colors ${
+            className={`flex-1 py-3 text-sm font-medium transition-colors border-b-2 ${
               activeTab === "feedback"
-                ? "bg-white text-gray-900 border-b-2 border-indigo-600"
-                : "bg-gray-50 text-gray-500 hover:text-gray-700"
+                ? "bg-white text-gray-900 border-[#1c8ed5]"
+                : "bg-[#eeeeee] text-gray-500 hover:text-gray-700 border-transparent"
             }`}
           >
             Feedback
             {feedback && (
-              <span className="ml-1.5 inline-block w-2 h-2 bg-indigo-500 rounded-full" />
+              <span className="ml-1.5 inline-block w-2 h-2 bg-[#1c8ed5] rounded-full" />
             )}
           </button>
         </div>
@@ -189,7 +191,7 @@ export default function SummarySlide({ slide }: Props) {
                 </p>
                 <ul className="space-y-2.5 ml-1">
                   <li className="flex gap-2">
-                    <span className="text-indigo-400 font-bold">1.</span>
+                    <span className="text-[#1c8ed5] font-bold">1.</span>
                     <span>
                       Write a{" "}
                       <span className="text-teal-600 font-semibold">
@@ -199,7 +201,7 @@ export default function SummarySlide({ slide }: Props) {
                     </span>
                   </li>
                   <li className="flex gap-2">
-                    <span className="text-indigo-400 font-bold">2.</span>
+                    <span className="text-[#1c8ed5] font-bold">2.</span>
                     <span>
                       Include the{" "}
                       <span className="text-teal-600 font-semibold">
@@ -209,7 +211,7 @@ export default function SummarySlide({ slide }: Props) {
                     </span>
                   </li>
                   <li className="flex gap-2">
-                    <span className="text-indigo-400 font-bold">3.</span>
+                    <span className="text-[#1c8ed5] font-bold">3.</span>
                     <span>
                       Use{" "}
                       <span className="text-teal-600 font-semibold">
@@ -219,7 +221,7 @@ export default function SummarySlide({ slide }: Props) {
                     </span>
                   </li>
                   <li className="flex gap-2">
-                    <span className="text-indigo-400 font-bold">4.</span>
+                    <span className="text-[#1c8ed5] font-bold">4.</span>
                     <span>
                       Write a{" "}
                       <span className="text-teal-600 font-semibold">
@@ -233,17 +235,17 @@ export default function SummarySlide({ slide }: Props) {
                 {/* Key concepts hint */}
                 {slide.expectedKeyConcepts &&
                   slide.expectedKeyConcepts.length > 0 && (
-                    <div className="mt-4 p-3 bg-indigo-50 border border-indigo-100 rounded-lg">
-                      <p className="text-xs text-indigo-600 font-medium mb-1.5">
+                    <div className="mt-4 p-3 bg-blue-50 border border-blue-100 rounded-lg">
+                      <p className="text-xs text-blue-600 font-medium mb-1.5">
                         Key ideas to include:
                       </p>
                       <ul className="space-y-1">
                         {slide.expectedKeyConcepts.map((concept, i) => (
                           <li
                             key={i}
-                            className="text-xs text-indigo-700 flex gap-1.5"
+                            className="text-xs text-blue-700 flex gap-1.5"
                           >
-                            <span className="text-indigo-300">&#8226;</span>
+                            <span className="text-blue-300">&#8226;</span>
                             {concept}
                           </li>
                         ))}

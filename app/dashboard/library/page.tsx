@@ -18,13 +18,13 @@ const BOOK_IDS = [
   "ocean-secrets",
 ];
 
-const FILTERS_LEFT = ["Titles", "My Level", "My Books"] as const;
+const FILTERS_LEFT = ["All Titles", "My Level", "My Books"] as const;
 const FILTERS_RIGHT = ["Recommended", "Reviewed", "Reserved"] as const;
 
 export default function LibraryPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(4);
-  const [filter, setFilter] = useState("Titles");
+  const [filter, setFilter] = useState("All Titles");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [studentData, setStudentData] = useState<StudentData | null>(null);
@@ -77,7 +77,7 @@ export default function LibraryPage() {
         case "Reviewed":
           result = result.filter((b) => b.id in (studentData.progress.bookReviews ?? {}));
           break;
-        // "Titles", "Recommended", "Reserved" show all books
+        // "All Titles", "Recommended", "Reserved" show all books
       }
     }
 
@@ -116,7 +116,7 @@ export default function LibraryPage() {
   }, [goTo]);
 
   return (
-    <div className="flex flex-col h-full bg-[#0a0a12]">
+    <div className="flex flex-col min-h-full bg-black">
       {/* Filter bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 px-3 sm:px-4 pt-3 pb-2">
         <div className="flex gap-0.5">
@@ -207,6 +207,21 @@ export default function LibraryPage() {
             onTouchEnd={onTouchEnd}
           >
             <div className="absolute inset-0 bg-black" />
+            {/* Bookshelf wood texture on sides */}
+            <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none"
+              style={{
+                background: "repeating-linear-gradient(90deg, #2a1f14 0px, #3b2a1a 3px, #2a1f14 6px, #231a10 9px)",
+                maskImage: "linear-gradient(to right, rgba(0,0,0,0.7), transparent)",
+                WebkitMaskImage: "linear-gradient(to right, rgba(0,0,0,0.7), transparent)",
+              }}
+            />
+            <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none"
+              style={{
+                background: "repeating-linear-gradient(90deg, #2a1f14 0px, #3b2a1a 3px, #2a1f14 6px, #231a10 9px)",
+                maskImage: "linear-gradient(to left, rgba(0,0,0,0.7), transparent)",
+                WebkitMaskImage: "linear-gradient(to left, rgba(0,0,0,0.7), transparent)",
+              }}
+            />
             <div
               ref={carouselRef}
               className="relative h-full flex items-center justify-center overflow-hidden"
@@ -253,13 +268,6 @@ export default function LibraryPage() {
                           priority={absOffset <= 2}
                           loading={absOffset > 2 ? "lazy" : undefined}
                         />
-                        <div className="absolute inset-0 flex items-end">
-                          <div className="w-full bg-gradient-to-t from-black/90 via-black/60 to-transparent pt-12 pb-3 px-2">
-                            <p className="text-white text-xs sm:text-sm font-extrabold leading-tight text-center drop-shadow-lg uppercase tracking-wide">
-                              {book.title}
-                            </p>
-                          </div>
-                        </div>
                       </div>
                       <div
                         className="absolute top-0 h-[195px] sm:h-[222px] md:h-[250px] w-[14px] bg-gradient-to-r from-gray-800 to-gray-600"
@@ -301,8 +309,8 @@ export default function LibraryPage() {
           )}
 
           {/* Bottom cards */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-3 px-3 sm:px-4 pb-4">
-            <div className="bg-black/40 rounded-lg p-2 sm:p-3 flex flex-col items-center gap-1.5 sm:gap-2">
+          <div className="grid grid-cols-3 gap-px px-3 sm:px-4 pb-4">
+            <div className="bg-[#1a1a1a] p-2 sm:p-3 flex flex-col items-center gap-1.5 sm:gap-2 rounded-l-md">
               <div className="w-16 h-22 sm:w-20 sm:h-28 rounded-sm overflow-hidden shadow-lg relative">
                 {selectedBook && (
                   <Image src={selectedBook.coverImage} alt={selectedBook.title} fill sizes="80px" className="object-cover" />
@@ -313,7 +321,7 @@ export default function LibraryPage() {
               </span>
             </div>
 
-            <div className="bg-black/40 rounded-lg p-2 sm:p-3 flex flex-col justify-center">
+            <div className="bg-[#1a1a1a] p-2 sm:p-3 flex flex-col justify-center">
               <h3 className="text-white/80 text-[10px] sm:text-[11px] font-semibold text-center mb-1.5 sm:mb-2 tracking-wide">
                 Progress
               </h3>
@@ -329,7 +337,7 @@ export default function LibraryPage() {
 
             <button
               onClick={() => { if (selectedBook) router.push(`/reader/${selectedBook.id}`); }}
-              className="bg-black/40 rounded-lg p-2 sm:p-3 flex flex-col items-center gap-1.5 sm:gap-2 hover:bg-black/50 transition-colors"
+              className="bg-[#1a1a1a] p-2 sm:p-3 flex flex-col items-center gap-1.5 sm:gap-2 hover:bg-[#222] transition-colors rounded-r-md"
             >
               <div className="w-16 h-22 sm:w-20 sm:h-28 rounded-sm overflow-hidden shadow-lg relative">
                 {selectedBook && (

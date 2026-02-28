@@ -200,41 +200,36 @@ export default function LibraryPage() {
       ) : (
         <>
           <div
-            className="relative flex-shrink-0"
-            style={{ height: "clamp(240px, 45vw, 360px)" }}
+            className="relative flex-1 min-h-0"
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
             <div className="absolute inset-0 bg-black" />
             {/* Bookshelf wood texture on sides */}
-            <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none"
+            <div className="absolute left-0 top-0 bottom-0 w-[6vw] z-10 pointer-events-none"
               style={{
-                background: "repeating-linear-gradient(90deg, #2a1f14 0px, #3b2a1a 3px, #2a1f14 6px, #231a10 9px)",
-                maskImage: "linear-gradient(to right, rgba(0,0,0,0.7), transparent)",
-                WebkitMaskImage: "linear-gradient(to right, rgba(0,0,0,0.7), transparent)",
+                background: "repeating-linear-gradient(90deg, #3d2b17 0px, #4e3820 4px, #33250f 8px, #2a1c0a 12px)",
+                maskImage: "linear-gradient(to right, rgba(0,0,0,0.85), transparent)",
+                WebkitMaskImage: "linear-gradient(to right, rgba(0,0,0,0.85), transparent)",
               }}
             />
-            <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 z-10 pointer-events-none"
+            <div className="absolute right-0 top-0 bottom-0 w-[6vw] z-10 pointer-events-none"
               style={{
-                background: "repeating-linear-gradient(90deg, #2a1f14 0px, #3b2a1a 3px, #2a1f14 6px, #231a10 9px)",
-                maskImage: "linear-gradient(to left, rgba(0,0,0,0.7), transparent)",
-                WebkitMaskImage: "linear-gradient(to left, rgba(0,0,0,0.7), transparent)",
+                background: "repeating-linear-gradient(90deg, #3d2b17 0px, #4e3820 4px, #33250f 8px, #2a1c0a 12px)",
+                maskImage: "linear-gradient(to left, rgba(0,0,0,0.85), transparent)",
+                WebkitMaskImage: "linear-gradient(to left, rgba(0,0,0,0.85), transparent)",
               }}
             />
             <div
               ref={carouselRef}
               className="relative h-full flex items-center justify-center overflow-hidden"
-              style={{ perspective: 1200 }}
+              style={{ perspective: "80vw" }}
             >
               {filteredBooks.map((book, i) => {
                 const offset = i - selectedIndex;
                 const absOffset = Math.abs(offset);
                 const isSelected = offset === 0;
-                const translateX = offset * 80;
-                const translateZ = isSelected ? 60 : -absOffset * 30;
-                const rotateY = offset * -20;
-                const scale = isSelected ? 1.05 : Math.max(0.75, 1 - absOffset * 0.08);
 
                 return (
                   <button
@@ -242,14 +237,16 @@ export default function LibraryPage() {
                     onClick={() => setSelectedIndex(i)}
                     className="absolute transition-all duration-500 ease-out"
                     style={{
-                      transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
+                      width: "clamp(100px, 12vw, 180px)",
+                      height: "clamp(140px, 16.8vw, 250px)",
+                      transform: `translateX(calc(${offset} * clamp(55px, 7vw, 100px))) translateZ(${isSelected ? "clamp(30px, 4vw, 60px)" : `calc(${-absOffset} * clamp(15px, 2vw, 30px))`}) rotateY(${offset * -20}deg) scale(${isSelected ? 1.05 : Math.max(0.75, 1 - absOffset * 0.08)})`,
                       zIndex: 10 - absOffset,
-                      opacity: absOffset > 4 ? 0 : 1,
+                      opacity: absOffset > 5 ? 0 : 1,
                     }}
                   >
-                    <div className="relative" style={{ transformStyle: "preserve-3d" }}>
+                    <div className="relative w-full h-full" style={{ transformStyle: "preserve-3d" }}>
                       <div
-                        className={`w-[140px] h-[195px] sm:w-[160px] sm:h-[222px] md:w-[180px] md:h-[250px] rounded-sm overflow-hidden shadow-2xl relative ${
+                        className={`w-full h-full rounded-sm overflow-hidden relative ${
                           isSelected ? "ring-2 ring-yellow-400/60" : ""
                         }`}
                         style={{
@@ -262,7 +259,7 @@ export default function LibraryPage() {
                           src={book.coverImage}
                           alt={book.title}
                           fill
-                          sizes="(max-width: 640px) 140px, (max-width: 768px) 160px, 180px"
+                          sizes="(max-width: 640px) 100px, 12vw"
                           className="object-cover"
                           draggable={false}
                           priority={absOffset <= 2}
@@ -270,8 +267,8 @@ export default function LibraryPage() {
                         />
                       </div>
                       <div
-                        className="absolute top-0 h-[195px] sm:h-[222px] md:h-[250px] w-[14px] bg-gradient-to-r from-gray-800 to-gray-600"
-                        style={{ left: -14, transform: "rotateY(-90deg)", transformOrigin: "right center" }}
+                        className="absolute top-0 w-[14px] bg-gradient-to-r from-gray-800 to-gray-600"
+                        style={{ left: -14, height: "100%", transform: "rotateY(-90deg)", transformOrigin: "right center" }}
                       />
                     </div>
                   </button>

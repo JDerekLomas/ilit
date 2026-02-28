@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { loadStudentData, toggleAssignmentComplete, type StudentData } from "@/lib/storage";
+import assignmentCategoriesRaw from "@/content/assignment-categories.json";
 
 interface AssignmentItem {
   id: string;
@@ -16,62 +17,62 @@ interface AssignmentCategory {
   items: AssignmentItem[];
 }
 
-const categories: AssignmentCategory[] = [
-  {
-    label: "Interactive Reading",
-    type: "interactive-reading",
-    items: [
-      { id: "bomb-dogs", title: "Bomb Dogs: Canine Heroes", type: "interactive-reading" },
-      { id: "turn-it-down", title: "Turn It Down!", type: "interactive-reading" },
-      { id: "hidden-ads", title: "Hidden Ads", type: "interactive-reading" },
-    ],
-  },
-  {
-    label: "Study Plan",
-    type: "vocabulary",
-    items: [
-      { id: "study-plan-1", title: "Study Plan Week 1", type: "vocabulary" },
-    ],
-  },
-  {
-    label: "Vocabulary, Word Study, and Reading Comprehension",
-    type: "vocabulary",
-    items: [
-      { id: "long-vowels", title: "Long Vowels CVCe", type: "vocabulary" },
-      { id: "word-slam", title: "Word Slam", type: "vocabulary" },
-    ],
-  },
-  {
-    label: "iPractice",
-    type: "ipractice",
-    items: [
-      { id: "multimedia", title: "Plan a Multimedia Presentation", type: "ipractice" },
-      { id: "poem", title: "Write a Poem", type: "ipractice" },
-      { id: "drama", title: "Elements of Drama", type: "ipractice" },
-    ],
-  },
-  {
-    label: "Writing",
-    type: "writing",
-    items: [],
-  },
-  {
-    label: "Monitor Progress",
-    type: "monitor",
-    items: [
-      { id: "grade-a-mid", title: "GRADE Level A — Middle of the Year", type: "monitor" },
-      { id: "reading-check-7", title: "Reading Check 7", type: "monitor" },
-    ],
-  },
-  {
-    label: "Information",
-    type: "info",
-    items: [
-      { id: "lo-u3w1", title: "Learning Objectives, Unit 3, Week 1", type: "info" },
-      { id: "lo-u5w1", title: "Learning Objectives, Unit 5, Week 1", type: "info" },
-    ],
-  },
-];
+// Deduplicate categories from JSON (removes duplicate EXTRA PRACTICE entries)
+const uniqueCategories = assignmentCategoriesRaw.filter(
+  (cat, idx, arr) => arr.findIndex((c) => c.name === cat.name) === idx
+);
+
+// Map category names to types
+const TYPE_MAP: Record<string, AssignmentItem["type"]> = {
+  "INTERACTIVE READING": "interactive-reading",
+  "STUDY PLAN": "vocabulary",
+  "VOCABULARY, WORD STUDY, AND ACADEMIC TEXTS": "vocabulary",
+  "iPRACTICE": "ipractice",
+  "WRITING": "writing",
+  "INFORMATION": "info",
+  "EXTRA PRACTICE": "vocabulary",
+  "SORT": "vocabulary",
+  "UNIT BENCHMARK ASSESSMENT": "monitor",
+  "WEEKLY READING CHECK": "monitor",
+  "GRADE": "monitor",
+};
+
+// Existing items mapped to category popupNames
+const EXISTING_ITEMS: Record<string, AssignmentItem[]> = {
+  "Interactive Reading": [
+    { id: "bomb-dogs", title: "Bomb Dogs: Canine Heroes", type: "interactive-reading" },
+    { id: "turn-it-down", title: "Turn It Down!", type: "interactive-reading" },
+    { id: "hidden-ads", title: "Hidden Ads", type: "interactive-reading" },
+  ],
+  "Study Plan": [
+    { id: "study-plan-1", title: "Study Plan Week 1", type: "vocabulary" },
+  ],
+  "Vocabulary, Word Study, And Academic Texts": [
+    { id: "long-vowels", title: "Long Vowels CVCe", type: "vocabulary" },
+    { id: "word-slam", title: "Word Slam", type: "vocabulary" },
+  ],
+  "iPractice": [
+    { id: "multimedia", title: "Plan a Multimedia Presentation", type: "ipractice" },
+    { id: "poem", title: "Write a Poem", type: "ipractice" },
+    { id: "drama", title: "Elements of Drama", type: "ipractice" },
+  ],
+  "Information": [
+    { id: "lo-u3w1", title: "Learning Objectives, Unit 3, Week 1", type: "info" },
+    { id: "lo-u5w1", title: "Learning Objectives, Unit 5, Week 1", type: "info" },
+  ],
+  "Weekly Reading Check": [
+    { id: "reading-check-7", title: "Reading Check 7", type: "monitor" },
+  ],
+  "Grade": [
+    { id: "grade-a-mid", title: "GRADE Level A — Middle of the Year", type: "monitor" },
+  ],
+};
+
+const categories: AssignmentCategory[] = uniqueCategories.map((cat) => ({
+  label: cat.popupName,
+  type: TYPE_MAP[cat.name] ?? "info",
+  items: EXISTING_ITEMS[cat.popupName] ?? [],
+}));
 
 // ── Main page ──
 

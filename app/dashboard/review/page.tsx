@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { loadStudentData, saveStudentData, type StudentData } from "@/lib/storage";
+import reviewPresets from "@/content/review-presets.json";
 
 const STAR_COUNT = 5;
 
@@ -13,23 +14,7 @@ const STAR_LABELS: Record<number, string> = {
   5: "It was awesome",
 };
 
-const FEEDBACK_TAGS = [
-  "I liked it",
-  "I didn't like it",
-  "I learned a lot",
-  "It was too hard to read",
-  "I didn't understand it",
-  "It was exciting",
-  "It was boring",
-  "I liked the setting",
-  "I liked the characters",
-  "I related to the characters",
-  "It was funny",
-  "It was sad",
-  "It was scary",
-  "It was suspenseful",
-  "It changed my point of view",
-];
+const FEEDBACK_TAGS = reviewPresets.map((p) => p.text);
 
 export default function ReviewPage() {
   const [data, setData] = useState<StudentData | null>(null);

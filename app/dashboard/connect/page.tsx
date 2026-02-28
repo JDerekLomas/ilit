@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import teacherPresets from "@/content/teacher-presets.json";
 
 interface BuzzComment {
   date: string;
@@ -9,13 +10,11 @@ interface BuzzComment {
   stars: number;
 }
 
-const SAMPLE_COMMENTS: BuzzComment[] = [
-  { date: "02/28/26", comment: "Great participation in today's discussion! Your ideas about the main character really helped the group.", stars: 2 },
-  { date: "02/27/26", comment: "Nice job finishing your reading assignment on time.", stars: 1 },
-  { date: "02/25/26", comment: "Keep up the excellent work with your vocabulary practice!", stars: 3 },
-  { date: "02/24/26", comment: "I noticed you helped a classmate during partner reading. That's great teamwork!", stars: 1 },
-  { date: "02/21/26", comment: "Your journal entry today showed strong comprehension. Well done!", stars: 2 },
-];
+const SAMPLE_COMMENTS: BuzzComment[] = teacherPresets.quickComments.map((comment, i) => ({
+  date: new Date(2026, 1, 28 - i).toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "2-digit" }),
+  comment,
+  stars: i % 3 === 0 ? 2 : i % 3 === 1 ? 1 : 0,
+}));
 
 export default function ConnectPage() {
   const [comments] = useState(SAMPLE_COMMENTS);

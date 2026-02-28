@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import type { Passage, Slide } from "@/lib/types";
+import type { Passage, Slide, VocabularyWord } from "@/lib/types";
 import ReadingSlide from "./ReadingSlide";
 import CheckpointSlide from "./CheckpointSlide";
 import SummarySlide from "./SummarySlide";
@@ -19,6 +19,17 @@ export default function InteractiveShell({ passage, onExit }: Props) {
     new Set()
   );
   const [showCheckpoint, setShowCheckpoint] = useState(false);
+  const [vocabWords, setVocabWords] = useState<VocabularyWord[]>([]);
+
+  // Load vocabulary for this passage
+  useEffect(() => {
+    fetch("/content/vocabulary/vocabulary.json")
+      .then((res) => res.json())
+      .then((all: VocabularyWord[]) => {
+        setVocabWords(all.filter((w) => w.passageId === passage.id));
+      })
+      .catch(() => {});
+  }, [passage.id]);
 
   const slide = passage.slides[currentSlide];
   const totalSlides = passage.slides.length;
@@ -133,6 +144,8 @@ export default function InteractiveShell({ passage, onExit }: Props) {
                   hasAttachedCheckpoint ? handleShowCheckpoint : undefined
                 }
                 checkpointCompleted={completedCheckpoints.has(currentSlide)}
+                vocabWords={vocabWords}
+                passageId={passage.id}
               />
             )}
             {slide.type === "reading" && showingCheckpointOnReading && (

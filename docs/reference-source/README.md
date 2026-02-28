@@ -38,6 +38,34 @@ Actual HTML, CSS, and JavaScript extracted from the production Savvas I-LIT app 
 | `js/ilit_flatbook_shelf_rounder.js` | 10KB | Flat (non-3D) carousel variant |
 | `js/libraryview.js` | 204KB | Library view controller — book loading, filtering, carousel init, detail pane |
 | `js/application.js` | 10KB | App framework — tab switching, iframe communication, session management |
+| `js/student.js` | 74KB | Main student app framework, login, tab switching, session management |
+| `js/assignments.js` | 1.3MB | Assignments view controller, accordion behavior, category management |
+| `js/assignment_helper.js` | 7KB | Assignment helper utilities |
+| `js/assignments_frs.js` | 154KB | Assignments FRS (Free Response Scoring) module |
+| `js/constants.js` | 120KB | App constants and configuration |
+| `js/util.js` | 62KB | Utility functions |
+| `js/globals.js` | 496B | Global variables |
+| `js/swipe.js` | 33KB | Touch/swipe interaction handling |
+| `js/g4_library.js` | varies | Grade 4 library book data (from CloudFront CDN) |
+| `js/grade_items.js` | varies | Grade items/assignment data (from CloudFront CDN) |
+
+### Media Assets
+| File | Size | Description |
+|------|------|-------------|
+| `media/bgnn.png` | 29KB | Library/page tiled dark background |
+| `media/book_bg.jpg` | 41KB | Book shelf/carousel wood texture background |
+| `media/bg2.png` | 3KB | Library detail area gradient |
+| `media/bg3.jpg` | 509KB | Assignments/Connect constellation pattern background |
+| `media/sprite.png` | 64KB | Global icon sprite sheet (all nav/toolbar icons) |
+| `media/sprite3.png` | 26KB | Notebook tab label sprite sheet (vertical text) |
+| `media/note_book.png` | 189KB | Notebook closed cover image |
+| `media/finger_stamp.png` | 11KB | Notebook fingerprint scanner button |
+| `media/notes_rgt_bg.png` | 2KB | Notebook spiral binding (repeat-y PNG) |
+| `media/lading_page_bg.jpg` | 1KB | Notebook landing page background |
+| `media/left_border.png` | 1KB | Library detail pane left border decoration |
+| `media/right_border.png` | 1KB | Library detail pane right border decoration |
+| `media/top_bg.png` | 1KB | Library detail pane top border decoration |
+| `media/shadow_bg.png` | 1KB | Shadow effect image |
 
 ## How to Use
 

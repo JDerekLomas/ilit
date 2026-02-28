@@ -38,15 +38,22 @@ lib/
 - **Our current build**: `docs/screenshots/current/*.png`
 - **Comparison HTML**: `docs/screenshots/compare.html`
 
+### Design Spec (`docs/reference-design-spec.md`)
+Complete design specification with every color, font size, spacing value, and layout detail extracted from the original app. **Read this first** before implementing any feature.
+
 ### Source Code (`docs/reference-source/`)
-Actual HTML/CSS/JS extracted from the production Savvas I-LIT app. Use these to understand *how* the original implements features:
+Actual HTML/CSS/JS/media extracted from the production Savvas I-LIT app. 41 files total:
+- **HTML**: `library.html`, `notebook.html`, `assignment.html`
+- **CSS** (9 files): `style.css` (global), `library.css`, `notebook.css`, `assignments.css`, plus `_dev.css` variants and carousel CSS
+- **JS** (14 files): `student.js`, `application.js`, `libraryview.js`, `assignments.js`, `ilit_book_shelf_rounder.js`, `swipe.js`, and data files
+- **Media** (14 files): Background images, sprite sheets, notebook assets — see `docs/reference-source/README.md`
 
-- **Library**: `library.html`, `css/library.css`, `css/library.3dflow.css`, `css/ILITBookShelfRounder.css`, `js/ilit_book_shelf_rounder.js`
-- **Notebook**: `notebook.html`, `css/notebook.css` (151KB — the spiral-bound skeuomorphic design)
-- **Assignments**: `assignment.html`, `css/assignments.css`
-- **Global**: `css/style.css`, `js/application.js`
+Key insight: Spiral binding, ruled lines, and constellation patterns are **PNG/JPEG images**, NOT CSS. See design spec for details.
 
-Read these files before implementing a feature to match the original's behavior and visual design.
+### UI Audit (`docs/ui-audit.md`)
+Comprehensive screen-by-screen audit of every element in the original app.
+
+Read the design spec and reference source files before implementing a feature to match the original's behavior and visual design.
 
 ## Visual Comparison Workflow
 

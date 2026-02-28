@@ -2,12 +2,16 @@
 
 import Image from "next/image";
 import { useState, useCallback, useRef } from "react";
-import type { FlatPage } from "./types";
+import type { FlatPage, PageAnnotations, AnnotationColor } from "./types";
+import type { HighlightColor } from "./ReaderToolbar";
 import TextHelpToolbar from "./TextHelpToolbar";
 
 interface Props {
   page: FlatPage;
   fontSize: "sm" | "md" | "lg";
+  activeHighlight: HighlightColor;
+  annotations: PageAnnotations;
+  onAnnotateWord: (wordKey: string, color: AnnotationColor | "clear") => void;
 }
 
 const fontSizeClasses = {
@@ -16,20 +20,36 @@ const fontSizeClasses = {
   lg: "text-xl leading-relaxed",
 } as const;
 
+const annotationStyles: Record<AnnotationColor, string> = {
+  cyan: "bg-cyan-300",
+  magenta: "bg-fuchsia-300",
+  green: "bg-green-300",
+  strike: "line-through",
+};
+
 interface TextHelpState {
   text: string;
   scope: "word" | "sentence";
   anchorRect: DOMRect;
 }
 
-export default function BookPageView({ page, fontSize }: Props) {
+export default function BookPageView({
+  page,
+  fontSize,
+  activeHighlight,
+  annotations,
+  onAnnotateWord,
+}: Props) {
   const paragraphs = page.text.split("\n\n");
-  const [highlight, setHighlight] = useState<{
+  const [selectionHighlight, setSelectionHighlight] = useState<{
     paraIndex: number;
-    wordIndex: number | null; // null = whole paragraph selected
+    wordIndex: number | null;
   } | null>(null);
   const [textHelp, setTextHelp] = useState<TextHelpState | null>(null);
-  const lastTapRef = useRef<{ time: number; paraIndex: number }>({ time: 0, paraIndex: -1 });
+  const lastTapRef = useRef<{ time: number; paraIndex: number }>({
+    time: 0,
+    paraIndex: -1,
+  });
 
   const handleWordClick = useCallback(
     (
@@ -39,34 +59,45 @@ export default function BookPageView({ page, fontSize }: Props) {
       wordIndex: number
     ) => {
       e.stopPropagation();
+      const wordKey = `${paraIndex}:${wordIndex}`;
+
+      // If annotation pen is active, apply the annotation color instead of TextHelp
+      if (activeHighlight === "cyan" || activeHighlight === "magenta" || activeHighlight === "green" || activeHighlight === "strike") {
+        onAnnotateWord(wordKey, activeHighlight);
+        return;
+      }
+      if (activeHighlight === "clear") {
+        onAnnotateWord(wordKey, "clear");
+        return;
+      }
+
+      // Normal TextHelp mode (activeHighlight === "none")
       const now = Date.now();
       const lastTap = lastTapRef.current;
-      const isDoubleTap = now - lastTap.time < 400 && lastTap.paraIndex === paraIndex;
+      const isDoubleTap =
+        now - lastTap.time < 400 && lastTap.paraIndex === paraIndex;
       lastTapRef.current = { time: now, paraIndex };
 
       if (isDoubleTap) {
-        // Double-tap: select the whole paragraph
         const paraEl = (e.target as HTMLElement).closest("[data-para]");
         if (paraEl) {
           const rect = paraEl.getBoundingClientRect();
           const paraText = paragraphs[paraIndex];
-          setHighlight({ paraIndex, wordIndex: null });
+          setSelectionHighlight({ paraIndex, wordIndex: null });
           setTextHelp({ text: paraText, scope: "sentence", anchorRect: rect });
         }
       } else {
-        // Single tap: select this word
         const rect = (e.target as HTMLElement).getBoundingClientRect();
-        setHighlight({ paraIndex, wordIndex });
+        setSelectionHighlight({ paraIndex, wordIndex });
         setTextHelp({ text: word, scope: "word", anchorRect: rect });
       }
     },
-    [paragraphs]
+    [paragraphs, activeHighlight, onAnnotateWord]
   );
 
   const closeTextHelp = useCallback(() => {
     setTextHelp(null);
-    setHighlight(null);
-    // Cancel any ongoing speech
+    setSelectionHighlight(null);
     if (typeof window !== "undefined" && window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
     }
@@ -97,33 +128,54 @@ export default function BookPageView({ page, fontSize }: Props) {
       )}
 
       {/* Text with word-level wrapping */}
-      <div className={`flex-1 font-serif text-gray-800 text-justify ${fontSizeClasses[fontSize]}`}>
+      <div
+        className={`flex-1 font-serif text-gray-800 text-justify ${fontSizeClasses[fontSize]}`}
+      >
         {paragraphs.map((para, pIdx) => {
-          const isParaHighlighted = highlight?.paraIndex === pIdx && highlight.wordIndex === null;
+          const isParaSelected =
+            selectionHighlight?.paraIndex === pIdx &&
+            selectionHighlight.wordIndex === null;
           return (
             <p
               key={pIdx}
               data-para={pIdx}
               className={`${pIdx < paragraphs.length - 1 ? "mb-3" : ""} ${
-                isParaHighlighted ? "bg-yellow-200" : ""
+                isParaSelected ? "bg-yellow-200" : ""
               } rounded-sm transition-colors`}
             >
               {splitIntoWords(para).map((token, wIdx) => {
                 if (token.type === "space") {
                   return <span key={wIdx}>{token.value}</span>;
                 }
-                const isWordHighlighted =
-                  highlight?.paraIndex === pIdx && highlight.wordIndex === wIdx;
+                const wordKey = `${pIdx}:${wIdx}`;
+                const annotation = annotations[wordKey];
+                const isWordSelected =
+                  selectionHighlight?.paraIndex === pIdx &&
+                  selectionHighlight.wordIndex === wIdx;
+
+                // Build class list
+                let wordClass = "cursor-pointer rounded-sm transition-colors";
+                if (isWordSelected && !isParaSelected) {
+                  wordClass += " bg-yellow-300";
+                } else if (annotation) {
+                  wordClass += ` ${annotationStyles[annotation]}`;
+                } else {
+                  wordClass += " hover:bg-amber-100/50";
+                }
+
+                // Show highlight pen cursor when an annotation tool is active
+                if (activeHighlight !== "none") {
+                  wordClass += " cursor-crosshair";
+                }
+
                 return (
                   <span
                     key={wIdx}
                     tabIndex={0}
-                    onClick={(e) => handleWordClick(e, token.value, pIdx, wIdx)}
-                    className={`cursor-pointer rounded-sm transition-colors ${
-                      isWordHighlighted && !isParaHighlighted
-                        ? "bg-yellow-300"
-                        : "hover:bg-amber-100/50"
-                    }`}
+                    onClick={(e) =>
+                      handleWordClick(e, token.value, pIdx, wIdx)
+                    }
+                    className={wordClass}
                   >
                     {token.value}
                   </span>

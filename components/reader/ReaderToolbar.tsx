@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 
-export type HighlightColor = "cyan" | "magenta" | "green" | "none";
+export type HighlightColor = "cyan" | "magenta" | "green" | "strike" | "clear" | "none";
 
 interface Props {
   title: string;
@@ -16,13 +16,15 @@ interface Props {
   onHighlightChange: (color: HighlightColor) => void;
   screenMaskEnabled: boolean;
   onToggleScreenMask: () => void;
+  onCollectHighlights: () => void;
 }
 
-const HIGHLIGHT_COLORS: { color: HighlightColor; label: string; bg: string }[] = [
-  { color: "cyan", label: "Cyan", bg: "#00e5ff" },
-  { color: "magenta", label: "Magenta", bg: "#ff4081" },
-  { color: "green", label: "Green", bg: "#69f0ae" },
-  { color: "none", label: "Remove highlights", bg: "transparent" },
+const HIGHLIGHT_COLORS: { color: HighlightColor; label: string; bg: string; textLabel?: string }[] = [
+  { color: "strike", label: "Strikethrough", bg: "transparent", textLabel: "S" },
+  { color: "cyan", label: "Cyan", bg: "#00ffff" },
+  { color: "magenta", label: "Magenta", bg: "#ff00ff" },
+  { color: "green", label: "Green", bg: "#45eb53" },
+  { color: "clear", label: "Remove highlights", bg: "transparent" },
 ];
 
 export default function ReaderToolbar({
@@ -37,6 +39,7 @@ export default function ReaderToolbar({
   onHighlightChange,
   screenMaskEnabled,
   onToggleScreenMask,
+  onCollectHighlights,
 }: Props) {
   const [showAnnotation, setShowAnnotation] = useState(false);
   const annotationRef = useRef<HTMLDivElement>(null);
@@ -78,12 +81,12 @@ export default function ReaderToolbar({
           <ToolButton
             onClick={() => setShowAnnotation(!showAnnotation)}
             title="Annotation Pen"
-            active={activeHighlight !== "none"}
+            active={activeHighlight !== "none" && activeHighlight !== "clear"}
           >
             <PenIcon />
           </ToolButton>
           {showAnnotation && (
-            <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-xl border border-gray-200 py-1.5 min-w-[160px] z-50">
+            <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-xl border border-gray-200 py-1.5 min-w-[180px] z-50">
               {HIGHLIGHT_COLORS.map((h) => (
                 <button
                   key={h.color}
@@ -92,18 +95,34 @@ export default function ReaderToolbar({
                     activeHighlight === h.color ? "font-bold" : ""
                   }`}
                 >
-                  {h.color !== "none" ? (
-                    <span className="w-4 h-4 rounded-full border border-gray-300" style={{ background: h.bg }} />
-                  ) : (
-                    <span className="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center text-gray-400">
+                  {h.color === "strike" ? (
+                    <span className="w-5 h-5 rounded border border-gray-300 flex items-center justify-center text-gray-600 font-bold text-sm line-through">S</span>
+                  ) : h.color === "clear" ? (
+                    <span className="w-5 h-5 rounded-full border border-gray-300 flex items-center justify-center text-gray-400">
                       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                         <line x1="4" y1="4" x2="20" y2="20" />
                       </svg>
                     </span>
+                  ) : (
+                    <span className="w-5 h-5 rounded-full border border-gray-300" style={{ background: h.bg }} />
                   )}
                   <span className="text-gray-700">{h.label}</span>
                 </button>
               ))}
+              <div className="border-t border-gray-200 mt-1 pt-1">
+                <button
+                  onClick={() => { onCollectHighlights(); setShowAnnotation(false); }}
+                  className="w-full flex items-center gap-2.5 px-3 py-1.5 text-sm hover:bg-gray-50 transition-colors"
+                >
+                  <span className="w-5 h-5 flex items-center justify-center text-gray-500">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" />
+                      <line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
+                    </svg>
+                  </span>
+                  <span className="text-gray-700">Collect highlights</span>
+                </button>
+              </div>
             </div>
           )}
         </div>

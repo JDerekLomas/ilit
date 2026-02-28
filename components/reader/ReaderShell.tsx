@@ -3,11 +3,12 @@
 import { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Book } from "@/lib/types";
-import type { FlatPage } from "./types";
+import type { FlatPage, BookAnnotations, AnnotationColor } from "./types";
 import BookPageView from "./BookPage";
 import ReaderToolbar, { type HighlightColor } from "./ReaderToolbar";
 import TableOfContents from "./TableOfContents";
 import PageSlider from "./PageSlider";
+import CollectedHighlights from "./CollectedHighlights";
 
 interface Props {
   book: Book;
@@ -25,6 +26,50 @@ export default function ReaderShell({ book, onExit }: Props) {
   const [isWide, setIsWide] = useState(false);
   const [activeHighlight, setActiveHighlight] = useState<HighlightColor>("none");
   const [screenMaskEnabled, setScreenMaskEnabled] = useState(false);
+  const [annotations, setAnnotations] = useState<BookAnnotations>({});
+  const [showCollected, setShowCollected] = useState(false);
+
+  // Load annotations from localStorage on mount
+  useEffect(() => {
+    try {
+      const key = `ilit-annotations-${book.id}`;
+      const saved = localStorage.getItem(key);
+      if (saved) setAnnotations(JSON.parse(saved));
+    } catch { /* ignore parse errors */ }
+  }, [book.id]);
+
+  // Persist annotations to localStorage on change
+  const saveAnnotations = useCallback(
+    (next: BookAnnotations) => {
+      setAnnotations(next);
+      try {
+        localStorage.setItem(`ilit-annotations-${book.id}`, JSON.stringify(next));
+      } catch { /* ignore quota errors */ }
+    },
+    [book.id]
+  );
+
+  const handleAnnotateWord = useCallback(
+    (pageNumber: number, wordKey: string, color: AnnotationColor | "clear") => {
+      setAnnotations((prev) => {
+        const pageKey = String(pageNumber);
+        const pageAnns = { ...prev[pageKey] };
+        if (color === "clear") {
+          delete pageAnns[wordKey];
+        } else {
+          pageAnns[wordKey] = color;
+        }
+        const next = { ...prev, [pageKey]: pageAnns };
+        // Clean up empty pages
+        if (Object.keys(pageAnns).length === 0) delete next[pageKey];
+        try {
+          localStorage.setItem(`ilit-annotations-${book.id}`, JSON.stringify(next));
+        } catch { /* ignore */ }
+        return next;
+      });
+    },
+    [book.id]
+  );
 
   // Flatten chapters into a single page array
   const flatPages = useMemo<FlatPage[]>(() => {
@@ -165,6 +210,7 @@ export default function ReaderShell({ book, onExit }: Props) {
         onHighlightChange={setActiveHighlight}
         screenMaskEnabled={screenMaskEnabled}
         onToggleScreenMask={() => setScreenMaskEnabled((v) => !v)}
+        onCollectHighlights={() => setShowCollected(true)}
       />
 
       {/* Book frame + nav arrows */}
@@ -203,7 +249,15 @@ export default function ReaderShell({ book, onExit }: Props) {
                 {/* Left page */}
                 <div className={`${isWide ? "w-1/2 pr-2 md:pr-4" : "w-full"} min-h-0 overflow-y-auto`}>
                   {leftPage && (
-                    <BookPageView page={leftPage} fontSize={fontSize} />
+                    <BookPageView
+                      page={leftPage}
+                      fontSize={fontSize}
+                      activeHighlight={activeHighlight}
+                      annotations={annotations[String(leftPage.pageNumber)] ?? {}}
+                      onAnnotateWord={(wordKey, color) =>
+                        handleAnnotateWord(leftPage.pageNumber, wordKey, color)
+                      }
+                    />
                   )}
                 </div>
 
@@ -216,7 +270,15 @@ export default function ReaderShell({ book, onExit }: Props) {
                 {isWide && (
                   <div className="w-1/2 pl-2 md:pl-4 min-h-0 overflow-y-auto">
                     {rightPage ? (
-                      <BookPageView page={rightPage} fontSize={fontSize} />
+                      <BookPageView
+                        page={rightPage}
+                        fontSize={fontSize}
+                        activeHighlight={activeHighlight}
+                        annotations={annotations[String(rightPage.pageNumber)] ?? {}}
+                        onAnnotateWord={(wordKey, color) =>
+                          handleAnnotateWord(rightPage.pageNumber, wordKey, color)
+                        }
+                      />
                     ) : (
                       <div className="h-full" />
                     )}
@@ -258,6 +320,15 @@ export default function ReaderShell({ book, onExit }: Props) {
             setShowTOC(false);
           }}
           onClose={() => setShowTOC(false)}
+        />
+      )}
+
+      {/* Collected Highlights overlay */}
+      {showCollected && (
+        <CollectedHighlights
+          annotations={annotations}
+          flatPages={flatPages}
+          onClose={() => setShowCollected(false)}
         />
       )}
     </div>

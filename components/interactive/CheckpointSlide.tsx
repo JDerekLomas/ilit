@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Slide, Checkpoint } from "@/lib/types";
 import HighlightCheckpoint from "./HighlightCheckpoint";
 import MultipleChoiceCheckpoint, { type McState } from "./MultipleChoiceCheckpoint";
+import TextAnswerCheckpoint from "./TextAnswerCheckpoint";
 
 interface Props {
   slide: Slide;
@@ -19,12 +20,18 @@ interface Props {
 const MAX_SCORE = 2.0;
 const MAX_ATTEMPTS = 2;
 
+// Timing delays from original ClassView
+const INCORRECT_DELAY_MS = 2000;
+const INCORRECT_FINAL_DELAY_MS = 3000;
+
 type DndState =
   | "interacting"     // student is dragging/dropping
   | "shaking"         // wrong answer animation playing
+  | "showingOverlay"  // overlay visible during incorrect delay
   | "retryPrompt"     // wrong on attempt 1, showing fail text + retry
   | "snapSuccess"     // correct answer, snap animation
   | "finalCorrect"    // done, correct
+  | "showingFinalOverlay" // overlay visible during final incorrect delay
   | "finalIncorrect"; // done, both wrong, showing correct answer
 
 type HighlightState =
@@ -32,6 +39,12 @@ type HighlightState =
   | "correct"         // answered correctly
   | "showingWrong"    // wrong on attempt 1, showing fail text + retry
   | "revealAnswer";   // both attempts wrong, showing correct answer
+
+// Right panel slide-in animation (issue #36)
+const rightPanelVariants = {
+  hidden: { opacity: 0, x: 60 },
+  visible: { opacity: 1, x: 0 },
+};
 
 export default function CheckpointSlide({
   slide,
@@ -74,7 +87,7 @@ export default function CheckpointSlide({
     onComplete(finalScore, MAX_SCORE, attempts);
   }, [onComplete]);
 
-  // Highlight answer handler (receives score from HighlightCheckpoint)
+  // Highlight answer handler
   const handleHighlightAnswer = useCallback((correct: boolean, hlScore: number) => {
     setScore(hlScore);
     setIsCorrect(correct);
@@ -91,6 +104,7 @@ export default function CheckpointSlide({
   const isDragDrop = checkpoint.type === "drag-drop";
   const isHighlight = checkpoint.type === "highlight";
   const isMultipleChoice = checkpoint.type === "multiple-choice";
+  const isTextAnswer = checkpoint.type === "text-answer";
 
   const options = checkpoint.options || [];
   const template = checkpoint.template || "";
@@ -120,15 +134,23 @@ export default function CheckpointSlide({
       setDndState("shaking");
       setTimeout(() => {
         if (newAttempt >= MAX_ATTEMPTS) {
-          const correctWord = Array.isArray(checkpoint.correctAnswer)
-            ? checkpoint.correctAnswer[0]
-            : checkpoint.correctAnswer;
-          setDroppedWord(correctWord);
-          setScore(0);
-          setDndState("finalIncorrect");
-          setTimeout(() => handleAnswer(false, 0, newAttempt), 1000);
+          // Show overlay during delay, then reveal answer
+          setDndState("showingFinalOverlay");
+          setTimeout(() => {
+            const correctWord = Array.isArray(checkpoint.correctAnswer)
+              ? checkpoint.correctAnswer[0]
+              : checkpoint.correctAnswer;
+            setDroppedWord(correctWord);
+            setScore(0);
+            setDndState("finalIncorrect");
+            handleAnswer(false, 0, newAttempt);
+          }, INCORRECT_FINAL_DELAY_MS);
         } else {
-          setDndState("retryPrompt");
+          // Show overlay during delay, then show retry
+          setDndState("showingOverlay");
+          setTimeout(() => {
+            setDndState("retryPrompt");
+          }, INCORRECT_DELAY_MS);
         }
       }, 600);
     }
@@ -155,6 +177,13 @@ export default function CheckpointSlide({
     }
   };
 
+  // Text answer handler — always passes
+  const handleTextAnswerComplete = useCallback(() => {
+    setAnswered(true);
+    setIsCorrect(true);
+    onComplete(0, 0, 1);
+  }, [onComplete]);
+
   const passageText = slide.text || sentences.join(" ") || precedingText || "";
 
   const wordBankVisible = isDragDrop && (dndState === "interacting" || dndState === "retryPrompt");
@@ -173,8 +202,24 @@ export default function CheckpointSlide({
   const showMcFeedback = mcState === "correct" || mcState === "revealAnswer";
   const highlightToolsDisabled = highlightState !== "selecting";
 
+  // Overlay visible during timing delays
+  const showOverlay = dndState === "showingOverlay" || dndState === "showingFinalOverlay";
+
   return (
-    <div className="w-full h-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6 items-stretch min-h-0">
+    <div className="w-full h-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6 items-stretch min-h-0 relative">
+      {/* Semi-transparent overlay during feedback delays (#34) */}
+      <AnimatePresence>
+        {showOverlay && (
+          <motion.div
+            className="absolute inset-0 bg-black/30 z-30 rounded-xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Left: Text panel with sentences */}
       <div className="flex-1 bg-white rounded-xl shadow-2xl p-4 sm:p-6 overflow-y-auto w-full min-h-0">
         {slide.heading && (
@@ -261,11 +306,39 @@ export default function CheckpointSlide({
         )}
       </div>
 
-      {/* Right: Question / Feedback panel */}
-      <div className="flex-1 bg-white rounded-xl shadow-2xl p-4 sm:p-6 overflow-y-auto w-full min-h-0">
+      {/* Right: Question / Feedback panel — slides in from right (#36) */}
+      <motion.div
+        className="flex-1 bg-white rounded-xl shadow-2xl p-4 sm:p-6 overflow-y-auto w-full min-h-0"
+        variants={rightPanelVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.4, ease: "easeOut", delay: 0.15 }}
+      >
         <AnimatePresence mode="wait">
-          {/* DnD feedback panel */}
-          {showDndFeedback && !isHighlight ? (
+          {/* Text Answer checkpoint */}
+          {isTextAnswer ? (
+            <motion.div
+              key="text-answer"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 30 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h3 className="font-bold text-base text-gray-900 mb-1">
+                {checkpoint.skill}
+              </h3>
+              <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
+                {checkpoint.prompt}
+              </p>
+              <TextAnswerCheckpoint
+                checkpoint={checkpoint}
+                onComplete={handleTextAnswerComplete}
+                completed={answered}
+              />
+            </motion.div>
+
+          /* DnD feedback panel (with three-tier support) */
+          ) : showDndFeedback && !isHighlight ? (
             <motion.div
               key="dnd-feedback"
               initial={{ opacity: 0, y: 20 }}
@@ -277,6 +350,7 @@ export default function CheckpointSlide({
                 isCorrect={dndState === "finalCorrect"}
                 feedback={checkpoint.feedback}
                 score={score}
+                isFinalIncorrect={dndState === "finalIncorrect"}
                 revealedAnswer={
                   dndState === "finalIncorrect"
                     ? (Array.isArray(checkpoint.correctAnswer)
@@ -300,6 +374,7 @@ export default function CheckpointSlide({
                 isCorrect={highlightState === "correct"}
                 feedback={checkpoint.feedback}
                 score={score}
+                isFinalIncorrect={highlightState === "revealAnswer"}
                 revealedAnswer={null}
               />
             </motion.div>
@@ -317,6 +392,7 @@ export default function CheckpointSlide({
                 isCorrect={mcState === "correct"}
                 feedback={checkpoint.feedback}
                 score={score}
+                isFinalIncorrect={mcState === "revealAnswer"}
                 revealedAnswer={
                   mcState === "revealAnswer"
                     ? (Array.isArray(checkpoint.correctAnswer)
@@ -365,7 +441,7 @@ export default function CheckpointSlide({
                 {checkpoint.skill}
               </h3>
 
-              {/* Retry prompt after first wrong answer */}
+              {/* Retry prompt after first wrong answer (with timing delay feedback) */}
               {dndState === "retryPrompt" && (
                 <motion.div
                   className="mb-3 p-3 bg-orange-50 border border-orange-200 rounded-lg"
@@ -380,6 +456,18 @@ export default function CheckpointSlide({
                   >
                     Try Again (1 attempt remaining)
                   </button>
+                </motion.div>
+              )}
+
+              {/* Overlay loading state during delay */}
+              {(dndState === "showingOverlay" || dndState === "showingFinalOverlay") && (
+                <motion.div
+                  className="mb-3 p-3 bg-gray-100 border border-gray-200 rounded-lg flex items-center gap-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                  <p className="text-sm text-gray-600">Checking your answer...</p>
                 </motion.div>
               )}
 
@@ -519,7 +607,6 @@ export default function CheckpointSlide({
               <div className={`mt-auto pt-4 border-t border-gray-100 ${highlightToolsDisabled ? "opacity-40 pointer-events-none" : ""}`}>
                 <p className="text-xs text-gray-500 mb-3 uppercase tracking-wide">Highlighter Tools</p>
                 <div className="flex items-center gap-3">
-                  {/* Yellow marker */}
                   <motion.button
                     onClick={() => setActiveMarker("yellow")}
                     whileHover={{ scale: 1.1 }}
@@ -538,7 +625,6 @@ export default function CheckpointSlide({
                     <span className="text-xs font-medium text-gray-700">Yellow</span>
                   </motion.button>
 
-                  {/* Pink/Red marker */}
                   <motion.button
                     onClick={() => setActiveMarker("pink")}
                     whileHover={{ scale: 1.1 }}
@@ -558,7 +644,6 @@ export default function CheckpointSlide({
                   </motion.button>
                 </div>
 
-                {/* Attempt counter */}
                 {attemptCount > 0 && highlightState === "selecting" && (
                   <p className="mt-3 text-xs text-gray-400">
                     Attempt {attemptCount + 1} of {MAX_ATTEMPTS}
@@ -572,7 +657,7 @@ export default function CheckpointSlide({
             </div>
           )}
         </AnimatePresence>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -588,16 +673,25 @@ function FeedbackPanel({
   isCorrect,
   feedback,
   score,
+  isFinalIncorrect,
   revealedAnswer,
 }: {
   isCorrect: boolean;
-  feedback: { correct: string; incorrect: string };
+  feedback: { correct: string; incorrect: string; incorrectFinal?: string };
   score: number | null;
+  isFinalIncorrect: boolean;
   revealedAnswer: string | null;
 }) {
   const [celebrationMsg] = useState(
     () => CELEBRATION_MESSAGES[Math.floor(Math.random() * CELEBRATION_MESSAGES.length)]
   );
+
+  // Three-tier feedback: use incorrectFinal when both attempts fail
+  const feedbackText = isCorrect
+    ? feedback.correct
+    : isFinalIncorrect && feedback.incorrectFinal
+    ? feedback.incorrectFinal
+    : feedback.incorrect;
 
   return (
     <div>
@@ -639,7 +733,7 @@ function FeedbackPanel({
       </motion.div>
 
       <p className="text-sm md:text-base text-gray-700 leading-relaxed">
-        {isCorrect ? feedback.correct : feedback.incorrect}
+        {feedbackText}
       </p>
 
       {revealedAnswer && (

@@ -30,7 +30,7 @@ export interface Slide {
 }
 
 export interface Checkpoint {
-  type: "highlight" | "drag-drop" | "multiple-choice";
+  type: "highlight" | "drag-drop" | "multiple-choice" | "text-answer";
   /** Reading skill being assessed (e.g., "Make Inferences", "Main Idea") */
   skill: string;
   /** The question/instruction prompt */
@@ -46,6 +46,8 @@ export interface Checkpoint {
   feedback: {
     correct: string;
     incorrect: string;
+    /** Third-tier feedback shown after both attempts fail (reveals correct answer) */
+    incorrectFinal?: string;
   };
 }
 
@@ -108,11 +110,15 @@ export interface VocabularyWord {
   passageId: string;
 }
 
+// ── IR Leveling (matches original Savvas algorithm) ──
+
+export type IrLevel = "L1" | "L2" | "L3";
+
 // ── Student Progress ──
 
 export interface CheckpointScore {
   slideIndex: number;
-  type: "highlight" | "drag-drop" | "multiple-choice";
+  type: "highlight" | "drag-drop" | "multiple-choice" | "text-answer";
   score: number;
   maxScore: number;
   attempts: number;

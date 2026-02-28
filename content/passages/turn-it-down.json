@@ -31,7 +31,8 @@
         "correctAnswer": "hair cells",
         "feedback": {
           "correct": "That's right! Loud sounds damage the tiny hair cells inside the cochlea. Once these cells are destroyed, they do not grow back, so the hearing loss is permanent.",
-          "incorrect": "Not quite. Go back and reread the section called \"How Hearing Works.\" Look for what gets damaged by loud vibrations inside the ear."
+          "incorrect": "Not quite. Go back and reread the section called \"How Hearing Works.\" Look for what gets damaged by loud vibrations inside the ear.",
+          "incorrectFinal": "The correct answer is 'hair cells.' The passage explains that strong vibrations can bend and break the tiny hair cells inside the cochlea, and they do not grow back."
         }
       }
     },
@@ -64,7 +65,8 @@
         "correctAnswer": "Experts say you should follow the 60/60 rule: listen at no more than 60 percent volume for no more than 60 minutes at a time.",
         "feedback": {
           "correct": "Great job! The 60/60 rule is a simple guideline: keep your volume at 60 percent or lower, and listen for no more than 60 minutes before taking a break.",
-          "incorrect": "Try again. Look for the sentence that names a specific rule with numbers that tells you how loud and how long you should listen."
+          "incorrect": "Try again. Look for the sentence that names a specific rule with numbers that tells you how loud and how long you should listen.",
+          "incorrectFinal": "The answer is 'Experts say you should follow the 60/60 rule: listen at no more than 60 percent volume for no more than 60 minutes at a time.' This is the specific rule the passage describes."
         }
       }
     },

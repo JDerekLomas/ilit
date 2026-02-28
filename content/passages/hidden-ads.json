@@ -35,7 +35,8 @@
         "correctAnswer": "B. To inform readers about how advertising targets teens",
         "feedback": {
           "correct": "That's right! The author's main purpose is to inform readers about the different ways companies use hidden advertising to reach teenagers.",
-          "incorrect": "Think about what the author is doing throughout the passage. Is the author trying to sell something, tell funny stories, or share information? Read the first few paragraphs again for clues."
+          "incorrect": "Think about what the author is doing throughout the passage. Is the author trying to sell something, tell funny stories, or share information? Read the first few paragraphs again for clues.",
+          "incorrectFinal": "The correct answer is B. The author's purpose is to inform readers about how advertising targets teens through influencers, product placement, sponsored content, and data tracking."
         }
       }
     },
@@ -63,7 +64,8 @@
         "correctAnswer": "When you browse the internet, companies track what you search for, what you click on, and what you buy.",
         "feedback": {
           "correct": "Great job! This sentence explains the three types of information companies collect: your searches, your clicks, and your purchases.",
-          "incorrect": "Look for the sentence that lists the specific things companies track when you use the internet. What do they pay attention to?"
+          "incorrect": "Look for the sentence that lists the specific things companies track when you use the internet. What do they pay attention to?",
+          "incorrectFinal": "The answer is 'When you browse the internet, companies track what you search for, what you click on, and what you buy.' This sentence lists all three types of data companies collect."
         }
       },
       "sentences": [

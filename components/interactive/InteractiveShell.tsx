@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Passage, Slide, VocabularyWord } from "@/lib/types";
 import ReadingSlide from "./ReadingSlide";
@@ -13,6 +13,25 @@ interface Props {
   onExit: () => void;
 }
 
+// 3D slit transition variants (from original ClassView assignments.css)
+const slideVariants = {
+  enter: (dir: number) => ({
+    rotateY: dir > 0 ? 90 : -90,
+    z: -250,
+    opacity: 0,
+  }),
+  center: {
+    rotateY: 0,
+    z: 0,
+    opacity: 1,
+  },
+  exit: (dir: number) => ({
+    rotateY: dir > 0 ? -90 : 90,
+    z: -250,
+    opacity: 0,
+  }),
+};
+
 export default function InteractiveShell({ passage, onExit }: Props) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -21,6 +40,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
   );
   const [showCheckpoint, setShowCheckpoint] = useState(false);
   const [vocabWords, setVocabWords] = useState<VocabularyWord[]>([]);
+  const [checkpointScores, setCheckpointScores] = useState<Map<number, { score: number; maxScore: number }>>(new Map());
 
   // Load vocabulary for this passage
   useEffect(() => {
@@ -35,6 +55,36 @@ export default function InteractiveShell({ passage, onExit }: Props) {
   const slide = passage.slides[currentSlide];
   const totalSlides = passage.slides.length;
 
+  // All checkpoint indices (for score tracking and completion)
+  const scoredCheckpointIndices = useMemo(() =>
+    passage.slides
+      .map((s, i) => ((s.type === "checkpoint" || s.checkpoint) && s.checkpoint?.type !== "text-answer" ? i : -1))
+      .filter((i) => i >= 0),
+    [passage.slides]
+  );
+
+  // Score calculation
+  const totalEarned = useMemo(() => {
+    let sum = 0;
+    checkpointScores.forEach((v) => { sum += v.score; });
+    return sum;
+  }, [checkpointScores]);
+
+  const totalPossible = useMemo(() => {
+    let sum = 0;
+    checkpointScores.forEach((v) => { sum += v.maxScore; });
+    return sum;
+  }, [checkpointScores]);
+
+  // Check if all checkpoints (including summary) are complete
+  const allCheckpointIndices = useMemo(() =>
+    passage.slides
+      .map((s, i) => (s.type === "checkpoint" || s.checkpoint ? i : -1))
+      .filter((i) => i >= 0),
+    [passage.slides]
+  );
+  const allDone = allCheckpointIndices.length > 0 && allCheckpointIndices.every((i) => completedCheckpoints.has(i));
+
   // For checkpoint slides with no text, gather text from preceding reading slides
   const getPrecedingText = useCallback(
     (index: number): string => {
@@ -43,7 +93,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
         const s = passage.slides[i];
         if (s.type === "reading" && s.text) {
           texts.unshift(s.text);
-          break; // Just the immediately preceding reading slide
+          break;
         }
       }
       return texts.join("\n\n");
@@ -65,6 +115,15 @@ export default function InteractiveShell({ passage, onExit }: Props) {
     (score: number, maxScore: number, attempts: number) => {
       setCompletedCheckpoints((prev) => new Set([...prev, currentSlide]));
 
+      // Track scores for display
+      if (maxScore > 0) {
+        setCheckpointScores((prev) => {
+          const next = new Map(prev);
+          next.set(currentSlide, { score, maxScore });
+          return next;
+        });
+      }
+
       // Persist checkpoint score
       const slideData = passage.slides[currentSlide];
       const checkpointType = slideData.checkpoint?.type || "highlight";
@@ -78,14 +137,10 @@ export default function InteractiveShell({ passage, onExit }: Props) {
       markSlideComplete(passage.id, currentSlide);
 
       // Check if all checkpoints are now complete
-      const allCheckpointIndices = passage.slides
-        .map((s, i) => (s.type === "checkpoint" || s.checkpoint ? i : -1))
-        .filter((i) => i >= 0);
       const newCompleted = new Set([...completedCheckpoints, currentSlide]);
-      const allDone = allCheckpointIndices.every((i) => newCompleted.has(i));
-      if (allDone) {
+      const done = allCheckpointIndices.every((i) => newCompleted.has(i));
+      if (done) {
         markPassageComplete(passage.id);
-        // Count total words across all slides in the passage
         const totalWords = passage.slides.reduce((sum, s) => {
           const text = s.text || s.sentences?.join(" ") || "";
           return sum + text.split(/\s+/).filter(Boolean).length;
@@ -94,7 +149,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
         updateLexileFromPassage(passage.lexileLevel);
       }
     },
-    [currentSlide, passage, completedCheckpoints]
+    [currentSlide, passage, completedCheckpoints, allCheckpointIndices]
   );
 
   const handleShowCheckpoint = useCallback(() => {
@@ -110,8 +165,8 @@ export default function InteractiveShell({ passage, onExit }: Props) {
   const bgImage = slide.backgroundImage || passage.backgroundImage;
 
   return (
-    <div className="fixed inset-0 bg-gray-900 overflow-hidden flex flex-col">
-      {/* Background image — per-slide or passage-level fallback */}
+    <div className="fixed inset-0 overflow-hidden flex flex-col" style={{ background: "linear-gradient(to bottom, #6cbaf8 0%, #3a8ae1 100%)" }}>
+      {/* Background image — per-slide or passage-level fallback, layered over blue gradient */}
       <div
         className="absolute inset-0 bg-cover bg-center transition-all duration-700"
         style={{
@@ -125,14 +180,24 @@ export default function InteractiveShell({ passage, onExit }: Props) {
       <div className="relative z-10 flex items-center justify-between px-4 py-3">
         <button
           onClick={onExit}
-          className="px-4 py-1.5 bg-indigo-700 text-white text-sm font-medium rounded-full hover:bg-indigo-800 transition-colors"
+          className={`px-4 py-1.5 text-white text-sm font-medium rounded-full transition-colors ${
+            allDone
+              ? "bg-[#66CC00] hover:bg-[#5ab800]"
+              : "bg-indigo-700 hover:bg-indigo-800"
+          }`}
         >
-          Save &amp; Exit
+          {allDone ? "Done" : "Save & Exit"}
         </button>
         <h1 className="text-white font-semibold text-sm md:text-base truncate mx-4">
           {passage.title}
         </h1>
         <div className="flex items-center gap-2">
+          {/* Score display */}
+          {totalPossible > 0 && (
+            <span className="text-white/90 text-xs sm:text-sm font-bold bg-black/30 rounded-full px-3 py-1">
+              {totalEarned} / {totalPossible}
+            </span>
+          )}
           <button className="w-8 h-8 flex items-center justify-center text-white/80 hover:text-white">
             <AccessibilityIcon />
           </button>
@@ -140,13 +205,13 @@ export default function InteractiveShell({ passage, onExit }: Props) {
         </div>
       </div>
 
-      {/* Slide content */}
-      <div className="relative z-10 flex-1 flex items-center justify-center px-2 sm:px-4 md:px-16 pb-14 pt-1 sm:pt-2 min-h-0">
-        {/* Left arrow */}
+      {/* Slide content with 3D perspective */}
+      <div className="relative z-10 flex-1 flex items-center justify-center px-2 sm:px-4 md:px-16 pb-14 pt-1 sm:pt-2 min-h-0" style={{ perspective: 1200 }}>
+        {/* Left arrow — white border with shadow for contrast against blue gradient */}
         <button
           onClick={() => goToSlide(currentSlide - 1)}
           disabled={currentSlide === 0}
-          className="absolute left-1 sm:left-2 md:left-4 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-lg disabled:opacity-20 hover:bg-white transition-colors"
+          className="absolute left-1 sm:left-2 md:left-4 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-white/90 text-gray-700 border-[2.5px] border-white shadow-[0_0_15px_rgba(0,0,0,0.3)] disabled:opacity-20 hover:bg-white transition-colors"
         >
           <ChevronLeft />
         </button>
@@ -155,7 +220,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
         <button
           onClick={() => goToSlide(currentSlide + 1)}
           disabled={currentSlide === totalSlides - 1}
-          className="absolute right-1 sm:right-2 md:right-4 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-lg disabled:opacity-20 hover:bg-white transition-colors"
+          className="absolute right-1 sm:right-2 md:right-4 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-white/90 text-gray-700 border-[2.5px] border-white shadow-[0_0_15px_rgba(0,0,0,0.3)] disabled:opacity-20 hover:bg-white transition-colors"
         >
           <ChevronRight />
         </button>
@@ -164,10 +229,12 @@ export default function InteractiveShell({ passage, onExit }: Props) {
           <motion.div
             key={`${currentSlide}-${showCheckpoint}`}
             custom={direction}
-            initial={{ opacity: 0, x: direction * 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: direction * -100 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            style={{ transformStyle: "preserve-3d" }}
             className="w-full max-w-5xl mx-auto h-full flex items-start min-h-0"
           >
             {slide.type === "reading" && !showingCheckpointOnReading && (
@@ -205,19 +272,25 @@ export default function InteractiveShell({ passage, onExit }: Props) {
         </AnimatePresence>
       </div>
 
-      {/* Dot navigation — small dots matching reference (6x6px) */}
+      {/* Dot navigation */}
       <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center gap-2">
-        {passage.slides.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => goToSlide(i)}
-            className={`w-2 h-2 rounded-full transition-all ${
-              i === currentSlide
-                ? "bg-white scale-150 shadow-md"
-                : "bg-white/40 hover:bg-white/60"
-            }`}
-          />
-        ))}
+        {passage.slides.map((s, i) => {
+          const isCheckpoint = s.type === "checkpoint" || s.checkpoint;
+          const isCompleted = isCheckpoint && completedCheckpoints.has(i);
+          return (
+            <button
+              key={i}
+              onClick={() => goToSlide(i)}
+              className={`w-2 h-2 rounded-full transition-all ${
+                i === currentSlide
+                  ? "bg-white scale-150 shadow-md"
+                  : isCompleted
+                  ? "bg-green-400"
+                  : "bg-white/40 hover:bg-white/60"
+              }`}
+            />
+          );
+        })}
       </div>
     </div>
   );
@@ -264,7 +337,6 @@ function AudioControls({ text }: { text: string }) {
     setPlaying(true);
     setProgress(0);
 
-    // Approximate progress tracker
     const startTime = Date.now();
     intervalRef.current = setInterval(() => {
       const elapsed = (Date.now() - startTime) / 1000;
@@ -272,7 +344,6 @@ function AudioControls({ text }: { text: string }) {
     }, 250);
   }, [playing, text, totalSeconds]);
 
-  // Cleanup on unmount or text change
   useEffect(() => {
     return () => {
       if (typeof window !== "undefined") window.speechSynthesis.cancel();

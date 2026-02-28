@@ -29,7 +29,8 @@
         "correctAnswer": "Not every dog can be a bomb dog.",
         "feedback": {
           "correct": "That's right! The sentence 'Not every dog can be a bomb dog' tells us that some dogs do not have what it takes for this special job.",
-          "incorrect": "Try again. Look for the sentence that tells you not all dogs are able to do this work."
+          "incorrect": "Try again. Look for the sentence that tells you not all dogs are able to do this work.",
+          "incorrectFinal": "The correct answer is 'Not every dog can be a bomb dog.' This sentence directly tells us that only some dogs have the right qualities for this job."
         }
       },
       "sentences": [
@@ -75,7 +76,8 @@
         "correctAnswer": "Suppose you walk into a kitchen where someone is cooking.",
         "feedback": {
           "correct": "Great job! The author uses the kitchen example to help you picture how a dog's nose works. This comparison makes a difficult idea easier to understand.",
-          "incorrect": "Not quite. Look for the sentence where the author asks you to imagine being in a specific place. That is where the comparison begins."
+          "incorrect": "Not quite. Look for the sentence where the author asks you to imagine being in a specific place. That is where the comparison begins.",
+          "incorrectFinal": "The answer is 'Suppose you walk into a kitchen where someone is cooking.' This sentence starts the comparison between how humans and dogs experience smells."
         }
       },
       "sentences": [
@@ -128,7 +130,8 @@
         "correctAnswer": "battlefields",
         "feedback": {
           "correct": "Correct! The passage says that dogs find bombs on battlefields where soldiers might miss them.",
-          "incorrect": "Read the section 'Bomb Dogs on the Battlefield' again. Where do soldiers use bomb dogs to find hidden bombs?"
+          "incorrect": "Read the section 'Bomb Dogs on the Battlefield' again. Where do soldiers use bomb dogs to find hidden bombs?",
+          "incorrectFinal": "The correct answer is 'battlefields.' The passage explains that bomb dogs walk ahead of soldiers on dangerous roads and paths to find hidden bombs."
         }
       }
     },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Passage, Slide } from "@/lib/types";
 import ReadingSlide from "./ReadingSlide";
@@ -97,12 +97,12 @@ export default function InteractiveShell({ passage, onExit }: Props) {
       </div>
 
       {/* Slide content */}
-      <div className="relative z-10 flex-1 flex items-center justify-center px-4 md:px-16 pb-16 pt-2 h-[calc(100vh-120px)]">
+      <div className="relative z-10 flex-1 flex items-center justify-center px-2 sm:px-4 md:px-16 pb-14 pt-1 sm:pt-2 h-[calc(100vh-110px)] sm:h-[calc(100vh-120px)]">
         {/* Left arrow */}
         <button
           onClick={() => goToSlide(currentSlide - 1)}
           disabled={currentSlide === 0}
-          className="absolute left-2 md:left-4 z-20 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-lg disabled:opacity-20 hover:bg-white transition-colors"
+          className="absolute left-1 sm:left-2 md:left-4 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-lg disabled:opacity-20 hover:bg-white transition-colors"
         >
           <ChevronLeft />
         </button>
@@ -111,7 +111,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
         <button
           onClick={() => goToSlide(currentSlide + 1)}
           disabled={currentSlide === totalSlides - 1}
-          className="absolute right-2 md:right-4 z-20 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-lg disabled:opacity-20 hover:bg-white transition-colors"
+          className="absolute right-1 sm:right-2 md:right-4 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-lg disabled:opacity-20 hover:bg-white transition-colors"
         >
           <ChevronRight />
         </button>
@@ -159,15 +159,15 @@ export default function InteractiveShell({ passage, onExit }: Props) {
         </AnimatePresence>
       </div>
 
-      {/* Dot navigation — larger dots matching original */}
-      <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center gap-2.5">
+      {/* Dot navigation — small dots matching reference (6x6px) */}
+      <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center gap-2">
         {passage.slides.map((_, i) => (
           <button
             key={i}
             onClick={() => goToSlide(i)}
-            className={`w-3 h-3 rounded-full transition-all ${
+            className={`w-2 h-2 rounded-full transition-all ${
               i === currentSlide
-                ? "bg-white scale-125 shadow-md"
+                ? "bg-white scale-150 shadow-md"
                 : "bg-white/40 hover:bg-white/60"
             }`}
           />
@@ -179,26 +179,77 @@ export default function InteractiveShell({ passage, onExit }: Props) {
 
 function AudioControls({ text }: { text: string }) {
   const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval>>(null);
 
-  // Estimate duration from word count (~150 words per minute for TTS)
   const wordCount = text.split(/\s+/).filter(Boolean).length;
   const totalSeconds = Math.max(5, Math.round((wordCount / 150) * 60));
   const mins = Math.floor(totalSeconds / 60);
   const secs = totalSeconds % 60;
   const duration = `${mins}:${secs.toString().padStart(2, "0")}`;
 
+  const elapsed = Math.round(progress * totalSeconds);
+  const eMins = Math.floor(elapsed / 60);
+  const eSecs = elapsed % 60;
+  const elapsedStr = `${eMins}:${eSecs.toString().padStart(2, "0")}`;
+
+  const togglePlay = useCallback(() => {
+    if (typeof window === "undefined") return;
+    const synth = window.speechSynthesis;
+
+    if (playing) {
+      synth.cancel();
+      setPlaying(false);
+      setProgress(0);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      return;
+    }
+
+    if (!text.trim()) return;
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9;
+    utterance.onend = () => {
+      setPlaying(false);
+      setProgress(1);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+    synth.speak(utterance);
+    setPlaying(true);
+    setProgress(0);
+
+    // Approximate progress tracker
+    const startTime = Date.now();
+    intervalRef.current = setInterval(() => {
+      const elapsed = (Date.now() - startTime) / 1000;
+      setProgress(Math.min(1, elapsed / totalSeconds));
+    }, 250);
+  }, [playing, text, totalSeconds]);
+
+  // Cleanup on unmount or text change
+  useEffect(() => {
+    return () => {
+      if (typeof window !== "undefined") window.speechSynthesis.cancel();
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [text]);
+
   return (
-    <div className="flex items-center gap-2 bg-black/30 rounded-full px-3 py-1.5">
+    <div className="flex items-center gap-1.5 sm:gap-2 bg-black/30 rounded-full px-2 sm:px-3 py-1.5">
       <button
-        onClick={() => setPlaying(!playing)}
+        onClick={togglePlay}
         className="w-6 h-6 flex items-center justify-center text-white"
       >
         {playing ? <PauseIcon /> : <PlayIcon />}
       </button>
-      <span className="text-white/70 text-xs font-mono">0:00 / {duration}</span>
-      {/* Scrubber bar */}
-      <div className="w-16 md:w-24 h-1 bg-white/20 rounded-full overflow-hidden">
-        <div className="h-full w-0 bg-white/70 rounded-full" />
+      <span className="text-white/70 text-[10px] sm:text-xs font-mono hidden sm:inline">
+        {elapsedStr} / {duration}
+      </span>
+      <div className="w-12 sm:w-16 md:w-24 h-1 bg-white/20 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-white/70 rounded-full transition-all duration-200"
+          style={{ width: `${progress * 100}%` }}
+        />
       </div>
       <button className="w-5 h-5 flex items-center justify-center text-white/70">
         <VolumeIcon />

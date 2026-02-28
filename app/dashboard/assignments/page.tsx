@@ -136,7 +136,33 @@ function ParticleNetwork() {
     resize();
     window.addEventListener("resize", resize);
 
+    // Pause animation when tab/page not visible
+    let isVisible = true;
+    const handleVisibility = () => {
+      isVisible = document.visibilityState === "visible";
+      if (isVisible && !animFrameRef.current) {
+        animFrameRef.current = requestAnimationFrame(animate);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    // Also pause when scrolled out of view
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting && document.visibilityState === "visible";
+        if (isVisible && !animFrameRef.current) {
+          animFrameRef.current = requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (canvas.parentElement) observer.observe(canvas.parentElement);
+
     const animate = () => {
+      if (!isVisible) {
+        animFrameRef.current = 0;
+        return;
+      }
       const rect = canvas.parentElement?.getBoundingClientRect();
       if (!rect) return;
       const w = rect.width;
@@ -146,7 +172,6 @@ function ParticleNetwork() {
 
       const particles = particlesRef.current;
 
-      // Update positions
       for (const p of particles) {
         p.x += p.vx;
         p.y += p.vy;
@@ -156,7 +181,6 @@ function ParticleNetwork() {
         p.y = Math.max(0, Math.min(h, p.y));
       }
 
-      // Draw connections
       ctx.strokeStyle = `rgba(255, 255, 255, ${PARTICLE_OPACITY * 0.6})`;
       ctx.lineWidth = 0.5;
       for (let i = 0; i < particles.length; i++) {
@@ -175,7 +199,6 @@ function ParticleNetwork() {
         }
       }
 
-      // Draw particles
       ctx.fillStyle = `rgba(255, 255, 255, ${PARTICLE_OPACITY})`;
       for (const p of particles) {
         ctx.beginPath();
@@ -190,6 +213,8 @@ function ParticleNetwork() {
 
     return () => {
       window.removeEventListener("resize", resize);
+      document.removeEventListener("visibilitychange", handleVisibility);
+      observer.disconnect();
       cancelAnimationFrame(animFrameRef.current);
     };
   }, [initParticles]);
@@ -230,10 +255,10 @@ export default function AssignmentsPage() {
       <ParticleNetwork />
 
       {/* Content */}
-      <div className="relative max-w-2xl mx-auto px-4 pt-8 pb-4" style={{ zIndex: 1 }}>
+      <div className="relative max-w-2xl mx-auto px-3 sm:px-4 pt-6 sm:pt-8 pb-4" style={{ zIndex: 1 }}>
         {/* Header */}
         <div
-          className="rounded-xl px-6 py-4 mb-6 backdrop-blur-sm"
+          className="rounded-xl px-4 sm:px-6 py-3 sm:py-4 mb-4 sm:mb-6 backdrop-blur-sm"
           style={{
             background: "linear-gradient(135deg, rgba(140, 30, 80, 0.5) 0%, rgba(60, 30, 100, 0.5) 50%, rgba(30, 60, 130, 0.5) 100%)",
           }}

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Merriweather, Inter } from "next/font/google";
 import "./globals.css";
 
@@ -16,6 +16,13 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "I-LIT — Interactive Literacy Intervention",
   description: "Reading intervention app for grades 4-8",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

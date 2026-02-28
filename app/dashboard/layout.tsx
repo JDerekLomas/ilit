@@ -56,9 +56,9 @@ export default function DashboardLayout({
         {children}
       </main>
 
-      {/* Bottom navigation */}
-      <nav className="fixed bottom-0 inset-x-0 z-50 bg-black border-t border-gray-700">
-        <div className="flex justify-around items-center h-14 max-w-lg mx-auto px-2">
+      {/* Bottom navigation — responsive sizing */}
+      <nav className="fixed bottom-0 inset-x-0 z-50 bg-black border-t border-gray-700 safe-area-bottom">
+        <div className="flex justify-around items-center h-14 max-w-lg mx-auto px-1 sm:px-2">
           {tabs.map((tab) => {
             const isActive =
               pathname === tab.href ||
@@ -67,14 +67,14 @@ export default function DashboardLayout({
               <Link
                 key={tab.label}
                 href={tab.href}
-                className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-colors ${
+                className={`flex flex-col items-center gap-0.5 px-1 sm:px-2 py-1 rounded-lg transition-colors min-w-0 ${
                   isActive
                     ? "text-white"
                     : "text-gray-400 hover:text-gray-200"
                 }`}
               >
                 <tab.icon active={isActive} />
-                <span className="text-[10px] font-medium">{tab.label}</span>
+                <span className="text-[9px] sm:text-[10px] font-medium truncate">{tab.label}</span>
               </Link>
             );
           })}

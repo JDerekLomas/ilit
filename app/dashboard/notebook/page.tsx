@@ -90,20 +90,22 @@ export default function NotebookPage() {
   const activeColor = tabs.find((t) => t.name === activeTab)?.color ?? "#0b89b7";
 
   return (
-    <div className="max-w-3xl mx-auto px-4 pt-6 pb-8">
+    <div className="max-w-3xl mx-auto px-2 sm:px-4 pt-4 sm:pt-6 pb-8">
       {/* Outer notebook container — dark background simulating the cover */}
       <div
         className="relative flex rounded-lg overflow-visible"
         style={{ background: "#5a5957" }}
       >
-        {/* Spiral binding on the left */}
-        <SpiralBinding />
+        {/* Spiral binding on the left — hidden on very small screens */}
+        <div className="hidden sm:block">
+          <SpiralBinding />
+        </div>
 
         {/* Main notebook body */}
-        <div className="flex-1 flex flex-col min-h-[576px] relative">
+        <div className="flex-1 flex flex-col min-h-[400px] sm:min-h-[576px] relative">
           {/* Paper surface */}
           <div
-            className="flex-1 flex flex-col rounded-r-md overflow-hidden"
+            className="flex-1 flex flex-col rounded-md sm:rounded-r-md sm:rounded-l-none overflow-hidden"
             style={{
               background: "#fff",
               boxShadow: "inset 2px 2px 6px rgba(0,0,0,0.12), inset -1px -1px 3px rgba(0,0,0,0.05)",
@@ -190,10 +192,10 @@ export default function NotebookPage() {
           </div>
         </div>
 
-        {/* Right-side colored tabs */}
+        {/* Right-side colored tabs — responsive sizing */}
         <div
           className="absolute flex flex-col gap-0.5"
-          style={{ right: -36, top: 20 }}
+          style={{ right: -32, top: 16 }}
         >
           {tabs.map((tab) => {
             const isActive = activeTab === tab.name;
@@ -208,7 +210,7 @@ export default function NotebookPage() {
                 <div
                   className="flex items-center justify-center transition-all"
                   style={{
-                    width: isActive ? 40 : 36,
+                    width: isActive ? 36 : 32,
                     background: tab.color,
                     borderRadius: "0 6px 6px 0",
                     border: `1px solid rgba(0,0,0,0.25)`,
@@ -216,12 +218,12 @@ export default function NotebookPage() {
                     boxShadow: isActive
                       ? "2px 1px 4px rgba(0,0,0,0.3)"
                       : "1px 1px 2px rgba(0,0,0,0.2)",
-                    padding: "14px 4px",
+                    padding: "10px 3px",
                     marginLeft: isActive ? -4 : 0,
                   }}
                 >
                   <span
-                    className="text-white font-bold text-[10px] leading-tight tracking-wide"
+                    className="text-white font-bold text-[9px] sm:text-[10px] leading-tight tracking-wide"
                     style={{
                       writingMode: "vertical-rl",
                       textOrientation: "mixed",
@@ -230,7 +232,6 @@ export default function NotebookPage() {
                     {tab.name}
                   </span>
                 </div>
-                {/* Active indicator — triangle pointing left into the page */}
                 {isActive && (
                   <div
                     className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full"

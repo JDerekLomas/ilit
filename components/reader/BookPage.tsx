@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import type { FlatPage } from "./types";
 
 interface Props {
@@ -28,11 +29,15 @@ export default function BookPageView({ page, fontSize }: Props) {
       {/* Illustration */}
       {page.image && (
         <div className="flex justify-center mb-4">
-          <img
-            src={page.image}
-            alt=""
-            className="max-h-48 rounded-lg shadow-md object-cover"
-          />
+          <div className="relative w-full max-h-48 aspect-video">
+            <Image
+              src={page.image}
+              alt=""
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="rounded-lg shadow-md object-cover"
+            />
+          </div>
         </div>
       )}
 

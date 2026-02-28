@@ -37,9 +37,9 @@ export default function CheckpointSlide({
   };
 
   return (
-    <div className="w-full flex flex-col md:flex-row gap-4 md:gap-6 items-start">
+    <div className="w-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6 items-start">
       {/* Left: Text panel with sentences */}
-      <div className="flex-1 bg-white rounded-xl shadow-2xl p-6 max-h-[70vh] overflow-y-auto">
+      <div className="flex-1 bg-white rounded-xl shadow-2xl p-4 sm:p-6 max-h-[50vh] md:max-h-[70vh] overflow-y-auto w-full">
         {slide.heading && (
           <h2 className="font-serif font-bold text-lg mb-3 text-gray-900">
             {slide.heading}
@@ -65,7 +65,7 @@ export default function CheckpointSlide({
       </div>
 
       {/* Right: Question / Feedback panel */}
-      <div className="flex-1 bg-white rounded-xl shadow-2xl p-6 max-h-[70vh] overflow-y-auto">
+      <div className="flex-1 bg-white rounded-xl shadow-2xl p-4 sm:p-6 max-h-[40vh] md:max-h-[70vh] overflow-y-auto w-full">
         {answered && isCorrect !== null ? (
           <FeedbackPanel
             isCorrect={isCorrect}

@@ -1,0 +1,84 @@
+{
+  "id": "turn-it-down",
+  "title": "Turn It Down!",
+  "author": "I-LIT Staff",
+  "lexileLevel": 600,
+  "backgroundImage": "/images/passages/turn-it-down-bg.jpg",
+  "slides": [
+    {
+      "type": "reading",
+      "heading": "A Noisy World",
+      "text": "Think about all the sounds you hear every day. Cars honk on the street. Music plays from speakers and phones. Construction workers use loud machines to build roads and buildings. Even inside your home, the TV, dishwasher, and vacuum cleaner create noise. At school, the cafeteria buzzes with voices, and the bell rings between classes. Sound is everywhere.\n\nMost of these sounds are harmless. They are just part of daily life. But some sounds are so loud that they can actually damage your hearing. This kind of damage is serious because it does not go away. Once your hearing is harmed, it cannot be fixed. Your ears do not heal the way a cut on your skin does. Doctors cannot give you new ears or repair the parts that break down. That is why it is so important to understand how sound works and how to protect yourself from dangerous noise."
+    },
+    {
+      "type": "reading",
+      "heading": "Measuring Sound",
+      "text": "Scientists measure sound using units called decibels. The higher the number of decibels, the louder the sound. A whisper is about 30 decibels. That is very quiet. A normal conversation between two people is about 60 decibels. A lawn mower is about 90 decibels. That is loud enough to bother your ears if you stand near it for a long time.\n\nSome sounds are even louder. A rock concert can reach 120 decibels. A firecracker can be 150 decibels. Experts say that any sound above 85 decibels can hurt your hearing if you listen for too long. The louder the sound, the less time it takes to cause damage. A sound at 85 decibels can harm your ears after about eight hours. But a sound at 100 decibels can cause damage in just fifteen minutes."
+    },
+    {
+      "type": "reading",
+      "heading": "How Hearing Works",
+      "text": "To understand hearing damage, it helps to know how your ears work. Sound travels through the air as vibrations. These vibrations enter your ear and move through a canal to your eardrum. The eardrum shakes, and the vibrations pass to three tiny bones in your middle ear. These bones are the smallest bones in your entire body.\n\nDeep inside your ear, there is a small, snail-shaped organ called the cochlea. Inside the cochlea, there are thousands of tiny hair cells. These hair cells pick up the vibrations and turn them into signals. The signals travel along a nerve to your brain, and your brain understands them as sound. This all happens in less than a second. It is an amazing process that most people never think about.\n\nWhen sounds are too loud, the strong vibrations can bend and break these tiny hair cells. Unlike other cells in your body, these hair cells do not grow back. Once damaged, they are gone forever. This kind of hearing loss is permanent. It cannot be reversed with medicine or surgery."
+    },
+    {
+      "type": "checkpoint",
+      "checkpoint": {
+        "type": "drag-drop",
+        "skill": "Cause and Effect",
+        "prompt": "Drag and drop the correct word to complete this cause-and-effect statement.",
+        "template": "Loud sounds can damage the tiny ___ in your ears, causing permanent hearing loss.",
+        "options": ["hair cells", "decibels", "vibrations", "signals"],
+        "correctAnswer": "hair cells",
+        "feedback": {
+          "correct": "That's right! Loud sounds damage the tiny hair cells inside the cochlea. Once these cells are destroyed, they do not grow back, so the hearing loss is permanent.",
+          "incorrect": "Not quite. Go back and reread the section called \"How Hearing Works.\" Look for what gets damaged by loud vibrations inside the ear."
+        }
+      }
+    },
+    {
+      "type": "reading",
+      "heading": "Earbuds and Headphones",
+      "text": "Today, many young people listen to music through earbuds or headphones. Earbuds are small and easy to carry. They fit right inside the ear. Headphones cover the whole ear. Both can produce very loud sound. A recent study found that one in five teenagers already has some hearing loss. Many experts believe earbuds and headphones are a big reason why.\n\nListening with earbuds or headphones can be dangerous because the sound goes directly into the ear canal. There is no space for the sound to spread out. This means the full force of the sound hits the delicate parts of your ear. Over time, even medium-loud music can add up and cause real harm.\n\nExperts say you should follow the 60/60 rule: listen at no more than 60 percent volume for no more than 60 minutes at a time. After 60 minutes, give your ears a break. If someone standing next to you can hear your music through your earbuds, it is too loud. Turn it down right away."
+    },
+    {
+      "type": "reading",
+      "heading": "Protecting Your Hearing",
+      "text": "The good news is that there are simple ways to protect your hearing. First, turn down the volume on your devices. You do not need to blast your music to enjoy it. Second, take breaks from loud sounds. Give your ears time to rest and recover. Even a few minutes of quiet can help.\n\nIf you go to a concert or a sporting event, wear earplugs. You can buy simple foam earplugs at most stores for just a few dollars. They lower the volume without blocking all the sound. You can still hear the music or the game. Many professional musicians wear special earplugs on stage to protect their own hearing.\n\nTry to move away from speakers and loud machinery whenever you can. Distance makes a big difference. The farther you are from the source of the sound, the quieter it is. Just moving a few steps back can lower the decibels reaching your ears.\n\nFinally, pay attention to warning signs. If your ears ring after being exposed to loud sounds, that is your body telling you something is wrong. The ringing means some of your hair cells may have been harmed. Take it seriously and protect your ears the next time. Your hearing is a gift. Once you lose it, you cannot get it back."
+    },
+    {
+      "type": "checkpoint",
+      "checkpoint": {
+        "type": "highlight",
+        "skill": "Identify Key Details",
+        "prompt": "The passage describes a simple rule to follow when using earbuds. Highlight the sentence that explains this rule.",
+        "sentences": [
+          "Listening with earbuds or headphones can be dangerous because the sound goes directly into the ear canal.",
+          "There is no space for the sound to spread out.",
+          "Experts say you should follow the 60/60 rule: listen at no more than 60 percent volume for no more than 60 minutes at a time.",
+          "After 60 minutes, give your ears a break.",
+          "If someone standing next to you can hear your music through your earbuds, it is too loud.",
+          "First, turn down the volume on your devices.",
+          "If you go to a concert or a sporting event, wear earplugs.",
+          "If your ears ring after being exposed to loud sounds, that is your body telling you something is wrong."
+        ],
+        "correctAnswer": "Experts say you should follow the 60/60 rule: listen at no more than 60 percent volume for no more than 60 minutes at a time.",
+        "feedback": {
+          "correct": "Great job! The 60/60 rule is a simple guideline: keep your volume at 60 percent or lower, and listen for no more than 60 minutes before taking a break.",
+          "incorrect": "Try again. Look for the sentence that names a specific rule with numbers that tells you how loud and how long you should listen."
+        }
+      }
+    },
+    {
+      "type": "summary",
+      "summaryPrompt": "Write a summary of the text you have just read. Tap on the white space below to type your answer.",
+      "expectedKeyConcepts": [
+        "sound is measured in decibels",
+        "sounds above 85 decibels can damage hearing",
+        "tiny hair cells in the ear can be permanently damaged",
+        "earbuds send sound directly into the ear canal",
+        "the 60/60 rule helps protect hearing",
+        "earplugs and volume control prevent hearing loss"
+      ]
+    }
+  ]
+}

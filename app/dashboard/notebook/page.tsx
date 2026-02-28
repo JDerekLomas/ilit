@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 import type { VocabularyWord } from "@/lib/types";
 import {
   loadStudentData,
@@ -23,73 +24,106 @@ const tabs = [
   { name: "Resources" as const, color: "#d42a2a" },
 ] as const;
 
-// Shared ruled-paper background styles
-const RULED_LINE_HEIGHT = 28;
-const ruledPaperStyle: React.CSSProperties = {
-  backgroundImage: `
-    repeating-linear-gradient(
-      transparent,
-      transparent ${RULED_LINE_HEIGHT - 1}px,
-      #c8d4df ${RULED_LINE_HEIGHT - 1}px,
-      #c8d4df ${RULED_LINE_HEIGHT}px
-    )
-  `,
-  backgroundSize: `100% ${RULED_LINE_HEIGHT}px`,
-  lineHeight: `${RULED_LINE_HEIGHT}px`,
-};
-
-// Paper texture applied to the content area — subtle warm parchment
-const paperTextureStyle: React.CSSProperties = {
-  backgroundColor: "#f8f5f0",
-  backgroundImage: `
-    radial-gradient(ellipse at 20% 50%, rgba(210,195,170,0.15) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 20%, rgba(190,180,160,0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(200,190,175,0.12) 0%, transparent 55%)
-  `,
-};
-
 type TabName = (typeof tabs)[number]["name"];
 
-// ── Spiral binding ──
+// ── Spiral binding — matches reference: dark rectangular rings on dark strip ──
 
 function SpiralBinding() {
   const ringCount = 18;
   const ringSpacing = 32;
-  const ringWidth = 28;
-  const ringHeight = 16;
   const totalHeight = ringCount * ringSpacing;
 
   return (
     <div
       className="flex-shrink-0 relative z-10"
-      style={{ width: 48, minHeight: totalHeight }}
+      style={{ width: 44, minHeight: totalHeight }}
     >
-      <svg
-        width="48"
-        height={totalHeight}
-        viewBox={`0 0 48 ${totalHeight}`}
-        className="absolute inset-0"
-      >
-        {Array.from({ length: ringCount }, (_, i) => {
-          const cy = i * ringSpacing + ringSpacing / 2;
-          return (
-            <g key={i}>
-              <ellipse cx={24} cy={cy + 1} rx={ringWidth / 2} ry={ringHeight / 2} fill="none" stroke="#1a1a1a" strokeWidth={3.5} opacity={0.3} />
-              <ellipse cx={24} cy={cy} rx={ringWidth / 2} ry={ringHeight / 2} fill="none" stroke="url(#ringGradient)" strokeWidth={3} />
-              <ellipse cx={24} cy={cy - 1} rx={ringWidth / 2 - 1.5} ry={ringHeight / 2 - 1.5} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={1} />
-            </g>
-          );
-        })}
-        <defs>
-          <linearGradient id="ringGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#8a8a8a" />
-            <stop offset="30%" stopColor="#c0c0c0" />
-            <stop offset="50%" stopColor="#e0e0e0" />
-            <stop offset="70%" stopColor="#b0b0b0" />
-            <stop offset="100%" stopColor="#707070" />
-          </linearGradient>
-        </defs>
-      </svg>
+      {Array.from({ length: ringCount }, (_, i) => {
+        const top = i * ringSpacing + ringSpacing / 2 - 10;
+        return (
+          <div
+            key={i}
+            className="absolute"
+            style={{
+              left: 8,
+              top,
+              width: 28,
+              height: 20,
+              borderRadius: 3,
+              border: "2.5px solid #3a3a3a",
+              background: "linear-gradient(135deg, #555 0%, #2a2a2a 50%, #444 100%)",
+              boxShadow: "inset 0 1px 1px rgba(255,255,255,0.1), 0 1px 2px rgba(0,0,0,0.4)",
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+// ── Notebook locked cover — uses note_book.png and finger_stamp.png ──
+
+function NotebookCover({ onUnlock }: { onUnlock: () => void }) {
+  const [pressing, setPressing] = useState(false);
+  const [glowing, setGlowing] = useState(false);
+
+  const handlePress = () => {
+    setPressing(true);
+    setGlowing(true);
+    setTimeout(() => {
+      onUnlock();
+    }, 600);
+  };
+
+  return (
+    <div className="flex items-center justify-center py-8">
+      <div className="relative" style={{ width: 422, height: 605 }}>
+        {/* Notebook cover image */}
+        <Image
+          src="/images/notebook/note_book.png"
+          alt="Notebook cover"
+          width={422}
+          height={605}
+          className="w-full h-full object-contain"
+          priority
+        />
+        {/* Fingerprint stamp button — positioned to match original CSS */}
+        <button
+          onClick={handlePress}
+          className="absolute cursor-pointer transition-all duration-300"
+          style={{
+            width: 64,
+            height: 85,
+            right: 42,
+            top: "50%",
+            marginTop: -43,
+            border: "none",
+            background: "none",
+            padding: 0,
+            filter: glowing
+              ? "brightness(1.8) drop-shadow(0 0 12px rgba(0,255,100,0.8))"
+              : pressing
+              ? "brightness(1.3)"
+              : "none",
+          }}
+          aria-label="Unlock notebook with fingerprint"
+        >
+          <Image
+            src="/images/notebook/finger_stamp.png"
+            alt="Fingerprint scanner"
+            width={64}
+            height={85}
+            className="w-full h-full object-contain"
+          />
+        </button>
+        {/* "NOTEBOOK" label at bottom */}
+        <div
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 text-[11px] tracking-[0.3em] font-semibold"
+          style={{ color: "#6a6a6a" }}
+        >
+          NOTEBOOK
+        </div>
+      </div>
     </div>
   );
 }
@@ -145,10 +179,17 @@ const RESOURCE_CATEGORIES = [
 // ── Main component ──
 
 export default function NotebookPage() {
+  const [isLocked, setIsLocked] = useState(true);
   const [activeTab, setActiveTab] = useState<TabName>("Journal");
   const [data, setData] = useState<StudentData | null>(null);
   const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null);
   const [vocabulary, setVocabulary] = useState<VocabularyWord[]>([]);
+
+  // Check if user has previously unlocked
+  useEffect(() => {
+    const unlocked = sessionStorage.getItem("notebook-unlocked");
+    if (unlocked === "true") setIsLocked(false);
+  }, []);
 
   // Load persisted data
   useEffect(() => {
@@ -163,10 +204,23 @@ export default function NotebookPage() {
       .catch(() => {});
   }, []);
 
-  const activeColor = tabs.find((t) => t.name === activeTab)?.color ?? "#0b89b7";
+  const handleUnlock = () => {
+    sessionStorage.setItem("notebook-unlocked", "true");
+    setIsLocked(false);
+  };
 
   if (!data) return null;
 
+  // Show locked cover
+  if (isLocked) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <NotebookCover onUnlock={handleUnlock} />
+      </div>
+    );
+  }
+
+  const activeColor = tabs.find((t) => t.name === activeTab)?.color ?? "#0b89b7";
   const selectedEntry = data.journalEntries.find((e) => e.id === selectedEntryId);
 
   // Journal handlers
@@ -206,62 +260,93 @@ export default function NotebookPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-2 sm:px-4 pt-4 sm:pt-6 pb-8">
-      <div
-        className="relative flex rounded-lg overflow-visible"
-        style={{ background: "#5a5957" }}
-      >
+    <div className="max-w-4xl mx-auto px-2 sm:px-4 pt-4 sm:pt-6 pb-8">
+      <div className="relative flex overflow-visible">
         {/* Spiral binding — hidden on small screens */}
-        <div className="hidden sm:block">
+        <div className="hidden sm:block" style={{ background: "#2a2a2a" }}>
           <SpiralBinding />
         </div>
 
         {/* Main notebook body */}
-        <div className="flex-1 flex flex-col min-h-[400px] sm:min-h-[576px] relative">
+        <div className="flex-1 flex flex-col min-h-[500px] sm:min-h-[600px] relative">
           <div
             className="flex-1 flex flex-col rounded-md sm:rounded-r-md sm:rounded-l-none overflow-hidden"
             style={{
-              ...paperTextureStyle,
-              boxShadow: "inset 2px 2px 6px rgba(0,0,0,0.12), inset -1px -1px 3px rgba(0,0,0,0.05)",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
             }}
           >
-            {/* Colored header strip */}
-            <div className="h-1.5 flex-shrink-0" style={{ background: activeColor }} />
+            {/* Colored header strip matching active tab */}
+            <div
+              className="flex items-center justify-between px-4"
+              style={{
+                background: activeColor,
+                boxShadow: `inset 0 2px 1px 0 rgba(207,213,217,0.3), inset 0 0 1px 2px rgba(0,0,0,0.2)`,
+                minHeight: 42,
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => { setIsLocked(true); sessionStorage.removeItem("notebook-unlocked"); }}
+                  className="w-7 h-7 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
+                  title="Close notebook"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+                <span className="text-white font-bold text-sm tracking-wide">
+                  {activeTab === "Journal" ? "Notes" : activeTab}
+                </span>
+              </div>
+              {/* Toolbar icons */}
+              <div className="flex items-center gap-1">
+                {activeTab === "Journal" && (
+                  <>
+                    <ToolbarButton icon="menu" onClick={() => {}} />
+                    <ToolbarButton icon="trash" onClick={handleDeleteEntry} />
+                    <ToolbarButton icon="plus" onClick={handleNewEntry} />
+                  </>
+                )}
+              </div>
+            </div>
 
-            {/* Tab content */}
-            {activeTab === "Journal" && (
-              <JournalTab
-                entries={data.journalEntries}
-                selectedId={selectedEntryId}
-                selectedEntry={selectedEntry ?? null}
-                onSelect={setSelectedEntryId}
-                onNew={handleNewEntry}
-                onDelete={handleDeleteEntry}
-                onUpdate={handleUpdateEntry}
-              />
-            )}
-            {activeTab === "Word Bank" && (
-              <WordBankTab
-                savedWords={data.savedWords}
-                vocabulary={vocabulary}
-                onAdd={handleAddWord}
-                onRemove={handleRemoveWord}
-              />
-            )}
-            {activeTab === "Class Notes" && (
-              <ClassNotesTab />
-            )}
-            {activeTab === "My Work" && (
-              <MyWorkTab />
-            )}
-            {activeTab === "Resources" && (
-              <ResourcesTab />
-            )}
+            {/* Tab content area — uses pad_bg texture */}
+            <div
+              className="flex-1 flex flex-col"
+              style={{
+                backgroundImage: "url(/images/notebook/pad_bg.png)",
+                backgroundRepeat: "repeat",
+                backgroundColor: "#fff",
+              }}
+            >
+              {activeTab === "Journal" && (
+                <JournalTab
+                  entries={data.journalEntries}
+                  selectedId={selectedEntryId}
+                  selectedEntry={selectedEntry ?? null}
+                  onSelect={setSelectedEntryId}
+                  onNew={handleNewEntry}
+                  onDelete={handleDeleteEntry}
+                  onUpdate={handleUpdateEntry}
+                />
+              )}
+              {activeTab === "Word Bank" && (
+                <WordBankTab
+                  savedWords={data.savedWords}
+                  vocabulary={vocabulary}
+                  onAdd={handleAddWord}
+                  onRemove={handleRemoveWord}
+                />
+              )}
+              {activeTab === "Class Notes" && <ClassNotesTab />}
+              {activeTab === "My Work" && <MyWorkTab />}
+              {activeTab === "Resources" && <ResourcesTab />}
+            </div>
           </div>
         </div>
 
-        {/* Right-side colored tabs */}
-        <div className="absolute flex flex-col gap-0.5" style={{ right: -32, top: 16 }}>
+        {/* Right-side colored tabs — matches original notebook tab style */}
+        <div className="absolute flex flex-col gap-0.5" style={{ right: -47, top: 20 }}>
           {tabs.map((tab) => {
             const isActive = activeTab === tab.name;
             return (
@@ -275,34 +360,41 @@ export default function NotebookPage() {
                 <div
                   className="flex items-center justify-center transition-all"
                   style={{
-                    width: isActive ? 36 : 32,
+                    width: 47,
                     background: tab.color,
-                    borderRadius: "0 6px 6px 0",
-                    border: "1px solid rgba(0,0,0,0.25)",
-                    borderLeft: "none",
-                    boxShadow: isActive ? "2px 1px 4px rgba(0,0,0,0.3)" : "1px 1px 2px rgba(0,0,0,0.2)",
-                    padding: "10px 3px",
-                    marginLeft: isActive ? -4 : 0,
+                    border: "1px solid #363636",
+                    borderLeft: isActive ? "none" : "1px solid #363636",
+                    padding: "18px 6px",
+                    marginBottom: 2,
                   }}
                 >
                   <span
-                    className="text-white font-bold text-[9px] sm:text-[10px] leading-tight tracking-wide"
+                    className="text-white font-bold text-[10px] leading-tight tracking-wide"
                     style={{ writingMode: "vertical-rl", textOrientation: "mixed" }}
                   >
                     {tab.name}
                   </span>
                 </div>
+                {/* Active arrow indicator */}
                 {isActive && (
-                  <div
-                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full"
-                    style={{
-                      width: 0,
-                      height: 0,
-                      borderTop: "6px solid transparent",
-                      borderBottom: "6px solid transparent",
-                      borderRight: `6px solid ${tab.color}`,
-                    }}
-                  />
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full">
+                    <div style={{
+                      width: 0, height: 0,
+                      borderTop: "11px solid transparent",
+                      borderBottom: "11px solid transparent",
+                      borderRight: "11px solid #363636",
+                    }}>
+                      <div style={{
+                        position: "absolute",
+                        left: 2,
+                        top: -11,
+                        width: 0, height: 0,
+                        borderTop: "11px solid transparent",
+                        borderBottom: "11px solid transparent",
+                        borderRight: "11px solid #fff",
+                      }} />
+                    </div>
+                  </div>
                 )}
               </button>
             );
@@ -310,6 +402,37 @@ export default function NotebookPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// ── Toolbar button matching original dark inset style ──
+
+function ToolbarButton({ icon, onClick }: { icon: "menu" | "trash" | "plus"; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-[35px] h-[35px] flex items-center justify-center rounded-[5px] cursor-pointer"
+      style={{
+        backgroundColor: "#555350",
+        boxShadow: "0 0 0 0 #000, 0 -2px 1px 0 #CFD5D9 inset, 0 0 1px 2px #000 inset",
+      }}
+    >
+      {icon === "menu" && (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
+          <line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="18" x2="20" y2="18" />
+        </svg>
+      )}
+      {icon === "trash" && (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+        </svg>
+      )}
+      {icon === "plus" && (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
+          <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+      )}
+    </button>
   );
 }
 
@@ -344,20 +467,23 @@ function JournalTab({
 
   return (
     <div className="flex-1 flex overflow-hidden">
-      {/* Left sidebar — entry list */}
-      <div className="w-36 sm:w-44 flex-shrink-0 bg-[#f0ebe4] border-r border-gray-300 flex flex-col overflow-hidden">
-        <div className="px-2 py-2 border-b border-gray-300 flex items-center justify-between">
-          <span className="text-xs font-semibold text-gray-500">Notes</span>
-          <button
-            onClick={onNew}
-            className="w-6 h-6 flex items-center justify-center rounded hover:bg-gray-200 text-gray-400 hover:text-gray-600"
-            title="New entry"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-          </button>
+      {/* Left sidebar — entry list with notes_rgt_bg edge */}
+      <div
+        className="w-36 sm:w-56 flex-shrink-0 flex flex-col overflow-hidden"
+        style={{
+          background: "#cdd9e2",
+          backgroundImage: "url(/images/notebook/notes_rgt_bg.png)",
+          backgroundRepeat: "repeat-y",
+          backgroundPosition: "right 0",
+          paddingRight: 8,
+        }}
+      >
+        <div className="px-3 py-2.5 border-b border-[#1a5479]/30 flex items-center justify-between">
+          <select className="text-xs font-semibold text-gray-600 bg-transparent border-none focus:outline-none cursor-pointer">
+            <option>All Units</option>
+            <option>Unit 1</option>
+            <option>Unit 2</option>
+          </select>
         </div>
         <div className="flex-1 overflow-y-auto">
           {entries.map((entry) => {
@@ -367,13 +493,12 @@ function JournalTab({
               <button
                 key={entry.id}
                 onClick={() => onSelect(entry.id)}
-                className={`w-full text-left px-3 py-2 border-b border-gray-300/60 transition-colors ${
-                  isActive ? "bg-white/70" : "hover:bg-white/40"
+                className={`w-full text-left px-3 py-2.5 border-b border-[#b8c5cf] transition-colors ${
+                  isActive ? "bg-white/60" : "hover:bg-white/30"
                 }`}
               >
-                <span className="text-[10px] text-gray-400 block">{dateStr}</span>
-                <span className={`text-xs leading-tight block truncate ${isActive ? "text-blue-600 font-medium" : "text-gray-600"}`}>
-                  {entry.title || "Untitled"}
+                <span className={`text-xs block truncate ${isActive ? "text-[#0b89b7] font-medium" : "text-[#272727]"}`}>
+                  {dateStr} {entry.title || "Untitled"}
                 </span>
               </button>
             );
@@ -381,58 +506,39 @@ function JournalTab({
         </div>
       </div>
 
-      {/* Right content — editor */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Toolbar */}
-        <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-300 bg-white/80">
-          <span className="text-sm font-semibold text-gray-500 flex-shrink-0">Title:</span>
-          <input
-            key={selectedEntry?.id ?? "none"}
-            type="text"
-            defaultValue={selectedEntry?.title ?? ""}
-            onChange={(e) => handleChange("title", e.target.value)}
-            placeholder="Untitled"
-            className="flex-1 text-sm font-medium border-b border-gray-300 bg-transparent py-1 focus:outline-none focus:border-gray-500 placeholder:text-gray-300"
-          />
-          <button
-            onClick={onDelete}
-            className="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
-            aria-label="Delete"
-            title="Delete entry"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="3 6 5 6 21 6" />
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-            </svg>
-          </button>
-          <button
-            onClick={onNew}
-            className="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
-            aria-label="Add new"
-            title="New entry"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-          </button>
+      {/* Right content — editor with pad_bg texture */}
+      <div className="flex-1 flex flex-col overflow-hidden bg-white">
+        {/* Title bar */}
+        <div className="flex items-center gap-3 px-4 py-2.5 border-b border-gray-200">
+          <span className="text-base font-medium text-gray-500 flex-shrink-0">Title:</span>
+          <div className="flex-1 rounded-[5px] border border-gray-300 px-2 py-1" style={{ boxShadow: "0 0 1px 0 #ddd" }}>
+            <input
+              key={selectedEntry?.id ?? "none"}
+              type="text"
+              defaultValue={selectedEntry?.title ?? ""}
+              onChange={(e) => handleChange("title", e.target.value)}
+              placeholder="Untitled"
+              className="w-full text-base bg-transparent focus:outline-none placeholder:text-gray-300"
+            />
+          </div>
         </div>
 
-        {/* Text area with ruled paper */}
-        <div className="flex-1 relative overflow-auto" style={paperTextureStyle}>
-          {/* Red margin line */}
-          <div
-            className="absolute top-0 bottom-0 pointer-events-none"
-            style={{ left: 48, width: 2, background: "rgba(220,80,80,0.35)" }}
-          />
-          <div className="pl-14 pr-6 pt-4 pb-6">
+        {/* Text area — pad_bg repeating ruled lines */}
+        <div
+          className="flex-1 relative overflow-auto"
+          style={{
+            backgroundImage: "url(/images/notebook/pad_bg.png)",
+            backgroundRepeat: "repeat",
+          }}
+        >
+          <div className="px-6 pt-4 pb-6">
             <textarea
               key={selectedEntry?.id ?? "none"}
               defaultValue={selectedEntry?.body ?? ""}
               onChange={(e) => handleChange("body", e.target.value)}
               placeholder="Start writing..."
-              className="w-full min-h-[350px] bg-transparent resize-none text-sm text-gray-700 focus:outline-none placeholder:text-gray-300"
-              style={ruledPaperStyle}
+              className="w-full min-h-[400px] bg-transparent resize-none text-base text-[#272727] leading-[28px] focus:outline-none placeholder:text-gray-300"
+              style={{ lineHeight: "28px" }}
             />
           </div>
         </div>
@@ -458,24 +564,22 @@ function WordBankTab({
   const savedWordSet = new Set(savedWords.map((w) => w.word));
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden bg-white">
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 bg-white">
-        <span className="text-sm font-semibold text-gray-500">My Words</span>
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-200">
+        <span className="text-base font-semibold text-gray-500">My Words</span>
         <button
           onClick={() => setShowPicker(!showPicker)}
-          className="flex items-center gap-1 px-3 py-1 rounded-full bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition-colors"
+          className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#1a5479] text-white text-xs font-medium hover:bg-[#0f3a54] transition-colors"
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
+            <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
           </svg>
           Add Word
         </button>
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {/* Word picker dropdown */}
         {showPicker && (
           <div className="border-b border-gray-200 bg-blue-50 px-4 py-3">
             <p className="text-xs text-gray-500 mb-2">Tap a word to add it to your bank:</p>
@@ -485,7 +589,7 @@ function WordBankTab({
                 .map((vw) => (
                   <button
                     key={vw.word}
-                    onClick={() => { onAdd(vw); }}
+                    onClick={() => onAdd(vw)}
                     className="px-2.5 py-1 rounded-full bg-white border border-blue-200 text-xs text-blue-700 hover:bg-blue-100 transition-colors"
                   >
                     {vw.word}
@@ -498,7 +602,6 @@ function WordBankTab({
           </div>
         )}
 
-        {/* Saved words list */}
         {savedWords.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-gray-400">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="mb-3 opacity-40">
@@ -524,8 +627,7 @@ function WordBankTab({
                     title="Remove word"
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <line x1="18" y1="6" x2="6" y2="18" />
-                      <line x1="6" y1="6" x2="18" y2="18" />
+                      <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
                   </button>
                 </div>
@@ -542,26 +644,28 @@ function WordBankTab({
 
 function ClassNotesTab() {
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
-      <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-200 bg-white/80">
-        <span className="text-sm font-semibold text-gray-500 flex-shrink-0">Title:</span>
-        <input
-          type="text"
-          placeholder="Untitled"
-          className="flex-1 text-sm font-medium border-b border-gray-300 bg-transparent py-1 focus:outline-none focus:border-gray-500 placeholder:text-gray-300"
-        />
+    <div className="flex-1 flex flex-col overflow-hidden bg-white">
+      <div className="flex items-center gap-3 px-4 py-2.5 border-b border-gray-200">
+        <span className="text-base font-medium text-gray-500 flex-shrink-0">Title:</span>
+        <div className="flex-1 rounded-[5px] border border-gray-300 px-2 py-1" style={{ boxShadow: "0 0 1px 0 #ddd" }}>
+          <input
+            type="text"
+            placeholder="Untitled"
+            className="w-full text-base bg-transparent focus:outline-none placeholder:text-gray-300"
+          />
+        </div>
       </div>
-      <div className="flex-1 relative overflow-auto" style={paperTextureStyle}>
-        {/* Red margin line */}
-        <div
-          className="absolute top-0 bottom-0 pointer-events-none"
-          style={{ left: 48, width: 2, background: "rgba(220,80,80,0.35)" }}
-        />
-        <div className="pl-14 pr-6 pt-4 pb-6">
+      <div
+        className="flex-1 relative overflow-auto"
+        style={{
+          backgroundImage: "url(/images/notebook/pad_bg.png)",
+          backgroundRepeat: "repeat",
+        }}
+      >
+        <div className="px-6 pt-4 pb-6">
           <textarea
             placeholder="Take notes during class..."
-            className="w-full min-h-[350px] bg-transparent resize-none text-sm text-gray-700 focus:outline-none placeholder:text-gray-300"
-            style={ruledPaperStyle}
+            className="w-full min-h-[400px] bg-transparent resize-none text-base text-[#272727] leading-[28px] focus:outline-none placeholder:text-gray-300"
           />
         </div>
       </div>
@@ -576,37 +680,46 @@ function MyWorkTab() {
 
   return (
     <div className="flex-1 flex overflow-hidden">
-      {/* Left sidebar — unit list */}
-      <div className="w-36 sm:w-44 flex-shrink-0 bg-gray-100 border-r border-gray-200 flex flex-col overflow-hidden">
-        <div className="px-3 py-2 border-b border-gray-200">
-          <span className="text-xs font-semibold text-gray-500">Units</span>
+      {/* Left sidebar — unit list with sidebar edge texture */}
+      <div
+        className="w-36 sm:w-48 flex-shrink-0 flex flex-col overflow-hidden"
+        style={{
+          background: "#cdd9e2",
+          backgroundImage: "url(/images/notebook/notes_rgt_bg.png)",
+          backgroundRepeat: "repeat-y",
+          backgroundPosition: "right 0",
+          paddingRight: 8,
+        }}
+      >
+        <div className="px-3 py-2.5 border-b border-[#1a5479]/30">
+          <span className="text-xs font-semibold text-gray-600">Units</span>
         </div>
         <div className="flex-1 overflow-y-auto">
           {MY_WORK_UNITS.map((u) => (
             <button
               key={u.unit}
               onClick={() => setExpandedUnit(u.unit)}
-              className={`w-full text-left px-3 py-2.5 border-b border-gray-200 text-xs transition-colors ${
-                expandedUnit === u.unit ? "bg-white font-semibold text-orange-600" : "text-gray-600 hover:bg-gray-50"
+              className={`w-full text-left px-3 py-2.5 border-b border-[#b8c5cf] text-sm transition-colors ${
+                expandedUnit === u.unit ? "bg-white/60 font-semibold text-[#ff8c00]" : "text-[#272727] hover:bg-white/30"
               }`}
             >
               {u.unit}
-              <span className="text-gray-400 ml-1">({u.items.length})</span>
+              <span className="text-gray-400 ml-1 text-xs">({u.items.length})</span>
             </button>
           ))}
         </div>
       </div>
 
-      {/* Right content — assignments in selected unit */}
-      <div className="flex-1 flex flex-col overflow-auto">
-        <div className="px-4 py-3 border-b border-gray-200 bg-white">
-          <h3 className="text-sm font-bold text-gray-800">{expandedUnit}</h3>
+      {/* Right content — assignments */}
+      <div className="flex-1 flex flex-col overflow-auto bg-white">
+        <div className="px-4 py-3 border-b border-gray-200">
+          <h3 className="text-base font-bold text-[#272727]">{expandedUnit}</h3>
         </div>
         <div className="flex-1 overflow-y-auto divide-y divide-gray-100">
           {MY_WORK_UNITS.find((u) => u.unit === expandedUnit)?.items.map((item, i) => (
-            <div key={i} className="flex items-center justify-between px-4 py-3 hover:bg-gray-50">
-              <span className="text-sm text-gray-700 flex-1 min-w-0 truncate pr-2">{item.title}</span>
-              <div className="flex items-center gap-2 flex-shrink-0">
+            <div key={i} className="flex items-center justify-between px-4 py-3.5 hover:bg-gray-50">
+              <span className="text-sm text-[#262626] flex-1 min-w-0 truncate pr-2">{item.title}</span>
+              <div className="flex items-center gap-3 flex-shrink-0">
                 <span className={`text-sm font-bold ${item.score === "—" ? "text-gray-300" : "text-gray-800"}`}>
                   {item.score}
                 </span>
@@ -632,29 +745,37 @@ function ResourcesTab() {
   const [selectedCategory, setSelectedCategory] = useState<string>("Vocabulary");
   const [selectedLesson, setSelectedLesson] = useState<string>("Unit 1, Lessons 1-5");
 
-  // Find the currently selected vocabulary items
   const vocabCategory = RESOURCE_CATEGORIES[0]?.children?.[0];
   const selectedItems = vocabCategory?.items.find((i) => i.label === selectedLesson);
 
   return (
     <div className="flex-1 flex overflow-hidden">
       {/* Left sidebar — resource tree */}
-      <div className="w-40 sm:w-48 flex-shrink-0 bg-gray-100 border-r border-gray-200 flex flex-col overflow-hidden">
-        <div className="px-3 py-2 border-b border-gray-200 bg-orange-500">
+      <div
+        className="w-44 sm:w-52 flex-shrink-0 flex flex-col overflow-hidden"
+        style={{
+          background: "#cdd9e2",
+          backgroundImage: "url(/images/notebook/notes_rgt_bg.png)",
+          backgroundRepeat: "repeat-y",
+          backgroundPosition: "right 0",
+          paddingRight: 8,
+        }}
+      >
+        <div className="px-3 py-2.5 bg-[#d42a2a]">
           <span className="text-xs font-bold text-white">Resources</span>
         </div>
         <div className="flex-1 overflow-y-auto text-xs">
           {RESOURCE_CATEGORIES.map((cat) => (
             <div key={cat.label}>
-              <div className="px-3 py-2 font-semibold text-orange-600 border-b border-gray-200 bg-gray-50">
+              <div className="px-3 py-2 font-semibold text-[#d42a2a] border-b border-[#b8c5cf] bg-white/30">
                 {cat.label}
               </div>
               {cat.children?.map((child) => (
                 <div key={child.label}>
                   <button
                     onClick={() => setSelectedCategory(child.label)}
-                    className={`w-full text-left px-4 py-1.5 border-b border-gray-200 transition-colors ${
-                      selectedCategory === child.label ? "text-orange-600 font-medium bg-white" : "text-gray-600 hover:bg-gray-50"
+                    className={`w-full text-left px-4 py-1.5 border-b border-[#b8c5cf] transition-colors ${
+                      selectedCategory === child.label ? "text-[#ff8c00] font-medium bg-white/50" : "text-[#343434] hover:bg-white/30"
                     }`}
                   >
                     {child.label}
@@ -664,8 +785,8 @@ function ResourcesTab() {
                       <button
                         key={item.label}
                         onClick={() => setSelectedLesson(item.label)}
-                        className={`w-full text-left pl-6 pr-3 py-1.5 border-b border-gray-100 transition-colors ${
-                          selectedLesson === item.label ? "text-orange-600 font-medium bg-orange-50" : "text-gray-500 hover:bg-gray-50"
+                        className={`w-full text-left pl-6 pr-3 py-1.5 border-b border-[#b8c5cf]/50 transition-colors ${
+                          selectedLesson === item.label ? "text-[#ff8c00] font-medium bg-white/40" : "text-gray-500 hover:bg-white/20"
                         }`}
                       >
                         {item.label}
@@ -679,17 +800,17 @@ function ResourcesTab() {
       </div>
 
       {/* Right content — resource links */}
-      <div className="flex-1 flex flex-col overflow-auto">
-        <div className="px-4 py-3 border-b border-gray-200 bg-white">
-          <h3 className="text-sm font-bold text-gray-800">{selectedLesson}</h3>
+      <div className="flex-1 flex flex-col overflow-auto bg-white">
+        <div className="px-4 py-3 border-b border-gray-200">
+          <h3 className="text-base font-bold text-[#272727]">{selectedLesson}</h3>
         </div>
-        <div className="flex-1 overflow-y-auto bg-gray-50">
+        <div className="flex-1 overflow-y-auto">
           {selectedItems?.links.map((link, i) => (
             <div
               key={i}
-              className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white hover:bg-gray-50"
+              className="flex items-center justify-between px-4 py-3.5 border-b border-gray-200 hover:bg-gray-50"
             >
-              <span className="text-sm text-gray-700">{link}</span>
+              <span className="text-sm text-[#262626]">{link}</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                 <polyline points="15 3 21 3 21 9" />

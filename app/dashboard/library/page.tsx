@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { loadStudentData, getLevelLexileRange, type StudentData } from "@/lib/storage";
 import type { CatalogBook } from "@/lib/types";
 
@@ -254,9 +255,14 @@ export default function LibraryPage() {
 
       {/* 3D Book Carousel */}
       {filteredBooks.length === 0 ? (
-        <div className="flex-1 flex items-center justify-center">
+        <motion.div
+          className="flex-1 flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
           <p className="text-white/40 text-sm italic">No books match your search</p>
-        </div>
+        </motion.div>
       ) : (
         <>
           <div
@@ -347,12 +353,22 @@ export default function LibraryPage() {
 
           {/* Divider + Selected book title */}
           <div className="h-px bg-white/10" />
-          {selectedBook && (
-            <div className="text-center py-2 sm:py-3">
-              <h2 className="text-white text-lg sm:text-xl font-bold">{selectedBook.title}</h2>
-              <p className="text-white/50 text-xs sm:text-sm">{selectedBook.author}</p>
-            </div>
-          )}
+          <AnimatePresence mode="wait">
+            {selectedBook && (
+              <motion.div
+                key={selectedBook.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="text-center py-2 sm:py-3">
+                  <h2 className="text-white text-lg sm:text-xl font-bold">{selectedBook.title}</h2>
+                  <p className="text-white/50 text-xs sm:text-sm">{selectedBook.author}</p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Book detail panel */}
           <div className="flex justify-center px-3 sm:px-4 pb-4">

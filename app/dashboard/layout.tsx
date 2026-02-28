@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 
 const tabs = [
   { label: "Review", href: "/dashboard/review", icon: ReviewIcon },
@@ -29,7 +30,18 @@ export default function DashboardLayout({
 
       {/* Main content */}
       <main className="flex-1 relative z-10 pb-20 overflow-y-auto flex flex-col">
-        {children}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="flex-1 flex flex-col"
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       {/* Bottom navigation — responsive sizing */}

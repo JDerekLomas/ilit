@@ -233,7 +233,7 @@ export default function InteractiveShell({ passage, onExit }: Props) {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.7, ease: "easeOut" }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
             style={{ transformStyle: "preserve-3d" }}
             className="w-full max-w-5xl mx-auto h-full flex items-start min-h-0"
           >

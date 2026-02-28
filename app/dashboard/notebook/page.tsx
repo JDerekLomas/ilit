@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import type { VocabularyWord } from "@/lib/types";
 import {
   loadStudentData,
@@ -420,28 +421,39 @@ export default function NotebookPage() {
                 backgroundColor: "#fff",
               }}
             >
-              {activeTab === "Journal" && (
-                <JournalTab
-                  entries={data.journalEntries}
-                  selectedId={selectedEntryId}
-                  selectedEntry={selectedEntry ?? null}
-                  onSelect={setSelectedEntryId}
-                  onNew={handleNewEntry}
-                  onDelete={handleDeleteEntry}
-                  onUpdate={handleUpdateEntry}
-                />
-              )}
-              {activeTab === "Word Bank" && (
-                <WordBankTab
-                  savedWords={data.savedWords}
-                  vocabulary={vocabulary}
-                  onAdd={handleAddWord}
-                  onRemove={handleRemoveWord}
-                />
-              )}
-              {activeTab === "Class Notes" && <ClassNotesTab />}
-              {activeTab === "My Work" && <MyWorkTab />}
-              {activeTab === "Resources" && <ResourcesTab />}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="h-full"
+                >
+                  {activeTab === "Journal" && (
+                    <JournalTab
+                      entries={data.journalEntries}
+                      selectedId={selectedEntryId}
+                      selectedEntry={selectedEntry ?? null}
+                      onSelect={setSelectedEntryId}
+                      onNew={handleNewEntry}
+                      onDelete={handleDeleteEntry}
+                      onUpdate={handleUpdateEntry}
+                    />
+                  )}
+                  {activeTab === "Word Bank" && (
+                    <WordBankTab
+                      savedWords={data.savedWords}
+                      vocabulary={vocabulary}
+                      onAdd={handleAddWord}
+                      onRemove={handleRemoveWord}
+                    />
+                  )}
+                  {activeTab === "Class Notes" && <ClassNotesTab />}
+                  {activeTab === "My Work" && <MyWorkTab />}
+                  {activeTab === "Resources" && <ResourcesTab />}
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
         </div>

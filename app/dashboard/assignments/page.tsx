@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { loadStudentData, toggleAssignmentComplete, type StudentData } from "@/lib/storage";
 import assignmentCategoriesRaw from "@/content/assignment-categories.json";
 
@@ -120,7 +121,12 @@ export default function AssignmentsPage() {
   };
 
   return (
-    <div className="relative min-h-full">
+    <motion.div
+      className="relative min-h-full"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+    >
       <div className="relative max-w-2xl mx-auto px-3 sm:px-4 pt-6 sm:pt-8 pb-4">
         {/* Header */}
         <div
@@ -151,17 +157,19 @@ export default function AssignmentsPage() {
                   }`}
                 >
                   <div className="flex items-center gap-2 text-left flex-1 min-w-0">
-                    <svg
+                    <motion.svg
                       width="12"
                       height="12"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2.5"
-                      className={`flex-shrink-0 text-gray-400 transition-transform ${isOpen ? "rotate-90" : ""}`}
+                      className="flex-shrink-0 text-gray-400"
+                      animate={{ rotate: isOpen ? 90 : 0 }}
+                      transition={{ duration: 0.2 }}
                     >
                       <polyline points="9 18 15 12 9 6" />
-                    </svg>
+                    </motion.svg>
                     <span className="text-sm font-bold text-gray-900 truncate">
                       {cat.label}
                     </span>
@@ -177,59 +185,67 @@ export default function AssignmentsPage() {
                   </span>
                 </button>
 
-                {isOpen && (
-                  <div className={`bg-gray-50 ${!isLast ? "border-b border-gray-200" : ""}`}>
-                    {cat.items.length > 0 ? (
-                      cat.items.map((item, itemIndex) => {
-                        const isDone = completedSet.has(item.id);
-                        const isClickable = item.type === "interactive-reading";
-                        return (
-                          <button
-                            key={item.id}
-                            onClick={() => handleItemClick(item)}
-                            className={`w-full text-left px-5 py-3 text-sm transition-colors flex items-center gap-3 ${
-                              isClickable ? "text-gray-800 hover:bg-gray-100 cursor-pointer" : "text-gray-500 cursor-default"
-                            } ${itemIndex < cat.items.length - 1 ? "border-b border-gray-100" : ""}`}
-                          >
-                            {/* Completion checkbox */}
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className={`overflow-hidden bg-gray-50 ${!isLast ? "border-b border-gray-200" : ""}`}
+                    >
+                      {cat.items.length > 0 ? (
+                        cat.items.map((item, itemIndex) => {
+                          const isDone = completedSet.has(item.id);
+                          const isClickable = item.type === "interactive-reading";
+                          return (
                             <button
-                              onClick={(e) => handleToggleComplete(e, item.id)}
-                              className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                                isDone
-                                  ? "bg-green-500 border-green-500 text-white"
-                                  : "border-gray-300 hover:border-gray-400"
-                              }`}
-                              aria-label={isDone ? "Mark incomplete" : "Mark complete"}
+                              key={item.id}
+                              onClick={() => handleItemClick(item)}
+                              className={`w-full text-left px-5 py-3 text-sm transition-colors flex items-center gap-3 ${
+                                isClickable ? "text-gray-800 hover:bg-gray-100 cursor-pointer" : "text-gray-500 cursor-default"
+                              } ${itemIndex < cat.items.length - 1 ? "border-b border-gray-100" : ""}`}
                             >
-                              {isDone && (
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                  <polyline points="20 6 9 17 4 12" />
+                              {/* Completion checkbox */}
+                              <button
+                                onClick={(e) => handleToggleComplete(e, item.id)}
+                                className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+                                  isDone
+                                    ? "bg-green-500 border-green-500 text-white"
+                                    : "border-gray-300 hover:border-gray-400"
+                                }`}
+                                aria-label={isDone ? "Mark incomplete" : "Mark complete"}
+                              >
+                                {isDone && (
+                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="20 6 9 17 4 12" />
+                                  </svg>
+                                )}
+                              </button>
+                              <span className={isDone ? "line-through text-gray-400" : ""}>
+                                {item.title}
+                              </span>
+                              {isClickable && !isDone && (
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="ml-auto flex-shrink-0 text-gray-300">
+                                  <polyline points="9 18 15 12 9 6" />
                                 </svg>
                               )}
                             </button>
-                            <span className={isDone ? "line-through text-gray-400" : ""}>
-                              {item.title}
-                            </span>
-                            {isClickable && !isDone && (
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="ml-auto flex-shrink-0 text-gray-300">
-                                <polyline points="9 18 15 12 9 6" />
-                              </svg>
-                            )}
-                          </button>
-                        );
-                      })
-                    ) : (
-                      <div className="px-8 py-3 text-sm text-gray-400 italic">
-                        All complete
-                      </div>
-                    )}
-                  </div>
-                )}
+                          );
+                        })
+                      ) : (
+                        <div className="px-8 py-3 text-sm text-gray-400 italic">
+                          All complete
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

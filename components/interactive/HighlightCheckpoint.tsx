@@ -9,8 +9,9 @@ const HIGHLIGHT_FIRST_TRIAL_SCORE = 2.0;
 const HIGHLIGHT_SECOND_TRIAL_SCORE = 1.5;
 const MAX_ATTEMPTS = 2;
 
-// Timing delays from original ClassView
-const INCORRECT_DELAY_MS = 2000;
+// Timing delays from original ClassView source (assignments.js)
+// Highlight uses 5s loader on incorrect, 3s on final incorrect
+const INCORRECT_DELAY_MS = 5000;
 const INCORRECT_FINAL_DELAY_MS = 3000;
 
 // Highlight colors matching the reference app

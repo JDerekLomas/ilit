@@ -85,6 +85,20 @@ export default function InteractiveShell({ passage, onExit }: Props) {
   );
   const allDone = allCheckpointIndices.length > 0 && allCheckpointIndices.every((i) => completedCheckpoints.has(i));
 
+  // Freeze/unfreeze: compute the furthest slide the student can navigate to.
+  // Students can navigate TO the first incomplete checkpoint but not past it.
+  // Backward navigation is always allowed. Forward is blocked past freeze point.
+  const freezePoint = useMemo(() => {
+    for (let i = 0; i < passage.slides.length; i++) {
+      const s = passage.slides[i];
+      const hasCheckpoint = s.type === "checkpoint" || s.checkpoint;
+      if (hasCheckpoint && !completedCheckpoints.has(i)) {
+        return i;
+      }
+    }
+    return passage.slides.length - 1;
+  }, [passage.slides, completedCheckpoints]);
+
   // For checkpoint slides with no text, gather text from preceding reading slides
   const getPrecedingText = useCallback(
     (index: number): string => {
@@ -104,11 +118,13 @@ export default function InteractiveShell({ passage, onExit }: Props) {
   const goToSlide = useCallback(
     (index: number) => {
       if (index < 0 || index >= totalSlides) return;
+      // Freeze: block forward navigation past the first incomplete checkpoint
+      if (index > freezePoint) return;
       setDirection(index > currentSlide ? 1 : -1);
       setShowCheckpoint(false);
       setCurrentSlide(index);
     },
-    [currentSlide, totalSlides]
+    [currentSlide, totalSlides, freezePoint]
   );
 
   const handleCheckpointComplete = useCallback(
@@ -217,10 +233,10 @@ export default function InteractiveShell({ passage, onExit }: Props) {
           <ChevronLeft />
         </button>
 
-        {/* Right arrow */}
+        {/* Right arrow — disabled when frozen or at end */}
         <button
           onClick={() => goToSlide(currentSlide + 1)}
-          disabled={currentSlide === totalSlides - 1}
+          disabled={currentSlide === totalSlides - 1 || currentSlide >= freezePoint}
           className="absolute right-1 sm:right-2 md:right-4 z-20 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-black/30 text-white border-[2.5px] border-white shadow-[0_0_15px_rgba(0,0,0,0.3)] disabled:opacity-20 hover:bg-black/40 transition-colors"
         >
           <ChevronRight />
@@ -273,20 +289,24 @@ export default function InteractiveShell({ passage, onExit }: Props) {
         </AnimatePresence>
       </div>
 
-      {/* Dot navigation */}
+      {/* Dot navigation — frozen dots past freeze point are dimmed */}
       <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center gap-2">
         {passage.slides.map((s, i) => {
           const isCheckpoint = s.type === "checkpoint" || s.checkpoint;
           const isCompleted = isCheckpoint && completedCheckpoints.has(i);
+          const isFrozen = i > freezePoint;
           return (
             <button
               key={i}
               onClick={() => goToSlide(i)}
+              disabled={isFrozen}
               className={`w-[9px] h-[9px] rounded-full transition-all ${
                 i === currentSlide
                   ? "bg-black shadow-[0_3px_2px_0_rgba(0,0,0,0.3)]"
                   : isCompleted
                   ? "bg-green-400"
+                  : isFrozen
+                  ? "bg-[#444] opacity-30 cursor-not-allowed"
                   : "bg-[#666] hover:bg-[#888]"
               }`}
             />

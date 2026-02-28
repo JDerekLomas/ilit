@@ -1,0 +1,114 @@
+// ── Interactive Reader ──
+
+export interface Passage {
+  id: string;
+  title: string;
+  author: string;
+  lexileLevel: number;
+  backgroundImage: string;
+  slides: Slide[];
+}
+
+export interface Slide {
+  type: "reading" | "checkpoint" | "summary";
+  /** Section heading shown above text (e.g., "Finding Explosives") */
+  heading?: string;
+  /** The passage text for this slide */
+  text?: string;
+  /** Pre-split sentences for highlight checkpoints — UI needs sentence boundaries */
+  sentences?: string[];
+  /** Checkpoint data (only for type: "checkpoint") */
+  checkpoint?: Checkpoint;
+  /** Summary instructions (only for type: "summary") */
+  summaryPrompt?: string;
+  /** Key concepts the student should include in their summary */
+  expectedKeyConcepts?: string[];
+}
+
+export interface Checkpoint {
+  type: "highlight" | "drag-drop" | "multiple-choice";
+  /** Reading skill being assessed (e.g., "Make Inferences", "Main Idea") */
+  skill: string;
+  /** The question/instruction prompt */
+  prompt: string;
+  /** Correct answer — sentence text for highlight, word(s) for drag-drop, letter for MC */
+  correctAnswer: string | string[];
+  /** Draggable options for drag-drop, answer choices for MC */
+  options?: string[];
+  /** Fill-in-the-blank template for drag-drop (use ___ for blanks) */
+  template?: string;
+  feedback: {
+    correct: string;
+    incorrect: string;
+  };
+}
+
+// ── Digital Library ──
+
+export interface Book {
+  id: string;
+  title: string;
+  author: string;
+  coverImage: string;
+  lexileLevel: number;
+  genre: string;
+  /** Short description for library card display */
+  summary: string;
+  totalPages: number;
+  chapters: Chapter[];
+}
+
+export interface Chapter {
+  title: string;
+  pages: BookPage[];
+}
+
+export interface BookPage {
+  pageNumber: number;
+  text: string;
+  image?: string;
+}
+
+// ── Vocabulary ──
+
+export interface VocabularyWord {
+  word: string;
+  definition: string;
+  exampleSentence: string;
+  wordParts?: {
+    base: string;
+    affix?: string;
+    affixType?: "prefix" | "suffix";
+    result: string;
+  };
+  image?: string;
+  /** Which passage this word belongs to */
+  passageId: string;
+}
+
+// ── Student Progress ──
+
+export interface StudentProgress {
+  studentName: string;
+  currentLexile: number;
+  totalWords: number;
+  totalPages: number;
+  totalBooks: number;
+  completedPassages: string[];
+  bookProgress: Record<string, number>; // bookId -> last page
+  highlights: Record<string, Highlight[]>;
+  bookReviews: Record<string, BookReview>;
+}
+
+export interface Highlight {
+  pageNumber: number;
+  text: string;
+  color: "yellow" | "pink" | "cyan" | "green";
+}
+
+export interface BookReview {
+  bookId: string;
+  rating: number;
+  text: string;
+  date: string;
+}

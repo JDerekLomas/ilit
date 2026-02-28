@@ -1,0 +1,114 @@
+{
+  "id": "hidden-ads",
+  "title": "Hidden Ads",
+  "author": "I-LIT Staff",
+  "lexileLevel": 700,
+  "backgroundImage": "/images/passages/hidden-ads-bg.jpg",
+  "slides": [
+    {
+      "type": "reading",
+      "heading": "Ads Are Everywhere",
+      "text": "Advertisements are a part of daily life. You see them on television, on websites, on social media, and even in video games. Some ads are easy to spot. A commercial during a television show is clearly an ad. A colorful banner on a website is obviously trying to sell you something. But many ads today are designed to blend in with the content around them. These hidden ads are made to look like regular posts, articles, or entertainment. Their goal is to make you interested in a product without you even realizing that you are looking at an advertisement. You might scroll past a hidden ad dozens of times each day without knowing it. Understanding how these hidden ads work can help you become a smarter consumer."
+    },
+    {
+      "type": "reading",
+      "heading": "Targeting Teens",
+      "text": "Companies spend billions of dollars each year trying to reach young consumers. Teenagers have money to spend on snacks, clothing, games, and apps. According to recent studies, American teens spend more than two hundred billion dollars each year. Many teens also influence what their families buy, from breakfast cereal to vacation destinations. But there is an even bigger reason companies want to reach young people. They know that brand loyalty often starts when people are young. If you start buying a certain brand of sneakers as a teenager, you might keep buying that brand for years. Companies see teenagers not just as today's customers but as tomorrow's lifelong buyers. That is why they work so hard to get their products in front of young audiences."
+    },
+    {
+      "type": "reading",
+      "heading": "Social Media Influencers",
+      "text": "One of the most common forms of hidden advertising involves social media influencers. An influencer is someone with a large following on platforms like Instagram, TikTok, or YouTube. Companies pay influencers to use or mention their products in posts and videos. The influencer might show a product casually, as if they simply enjoy using it. They might film themselves opening a package or trying on new clothes while chatting with their audience. It looks natural and genuine, like a friend sharing a recommendation. But the influencer was paid to feature that product. The Federal Trade Commission requires influencers to label these posts as ads, but the labels are often small and easy to miss. Many viewers never notice them at all."
+    },
+    {
+      "type": "checkpoint",
+      "checkpoint": {
+        "type": "multiple-choice",
+        "skill": "Author's Purpose",
+        "prompt": "What is the author's main purpose in writing this passage?",
+        "options": [
+          "A. To persuade readers to buy certain products",
+          "B. To inform readers about how advertising targets teens",
+          "C. To entertain readers with stories about famous ads",
+          "D. To argue that all advertising should be banned"
+        ],
+        "correctAnswer": "B. To inform readers about how advertising targets teens",
+        "feedback": {
+          "correct": "That's right! The author's main purpose is to inform readers about the different ways companies use hidden advertising to reach teenagers.",
+          "incorrect": "Think about what the author is doing throughout the passage. Is the author trying to sell something, tell funny stories, or share information? Read the first few paragraphs again for clues."
+        }
+      }
+    },
+    {
+      "type": "reading",
+      "heading": "Product Placement",
+      "text": "Another form of hidden advertising is product placement. This happens when a company pays to have its product appear in a movie, television show, or video game. A character in a movie might drink a specific brand of soda during an important scene. A hero in a video game might drive a real-world brand of car. The product is woven into the story so that viewers see it without feeling like they are watching a commercial. You might not even think about why that particular brand appeared on screen. Product placement has been around for decades, but it has become more common in recent years. Companies now spend billions of dollars on product placement alone. Studies show that people are more likely to remember a brand when they see it used by a character they admire."
+    },
+    {
+      "type": "reading",
+      "heading": "Sponsored Content",
+      "text": "Sponsored content is another sneaky form of advertising. A company pays a website or app to create an article or video that looks like regular content but actually promotes a product. For example, a gaming website might publish a review of a new video game that was actually written or paid for by the game company itself. The review might praise the game's graphics and gameplay without mentioning any problems. The article might have a small label that says \"sponsored\" or \"paid partnership,\" but many readers miss it. The writing style matches the rest of the website, so readers assume they are getting an honest opinion. In reality, the content was created to make the product look good."
+    },
+    {
+      "type": "reading",
+      "heading": "The Power of Data",
+      "text": "Companies also use data to target ads to specific people. When you browse the internet, companies track what you search for, what you click on, and what you buy. They collect this information using small files called cookies that are stored on your device. They use all of this data to build a profile of your interests and habits. Then they show you ads for things you are likely to want. If you searched for basketball shoes last week, you might start seeing ads for basketball shoes on every website you visit. This is not a coincidence. It is the result of careful data collection and analysis. This kind of targeted advertising is powerful because it feels personal. The ads seem to know exactly what you want, which makes you more likely to click on them."
+    },
+    {
+      "type": "checkpoint",
+      "checkpoint": {
+        "type": "highlight",
+        "skill": "Identify Key Details",
+        "prompt": "The passage explains how companies learn what ads to show you. Highlight the sentence that describes what information companies collect about you online.",
+        "correctAnswer": "When you browse the internet, companies track what you search for, what you click on, and what you buy.",
+        "feedback": {
+          "correct": "Great job! This sentence explains the three types of information companies collect: your searches, your clicks, and your purchases.",
+          "incorrect": "Look for the sentence that lists the specific things companies track when you use the internet. What do they pay attention to?"
+        }
+      },
+      "sentences": [
+        "A character in a movie might drink a specific brand of soda during an important scene.",
+        "A hero in a video game might drive a real-world brand of car.",
+        "The product is woven into the story so that viewers see it without feeling like they are watching a commercial.",
+        "You might not even think about why that particular brand appeared on screen.",
+        "Product placement has been around for decades, but it has become more common in recent years.",
+        "Companies now spend billions of dollars on product placement alone.",
+        "Studies show that people are more likely to remember a brand when they see it used by a character they admire.",
+        "Sponsored content is another sneaky form of advertising.",
+        "A company pays a website or app to create an article or video that looks like regular content but actually promotes a product.",
+        "For example, a gaming website might publish a review of a new video game that was actually written or paid for by the game company itself.",
+        "The review might praise the game's graphics and gameplay without mentioning any problems.",
+        "The article might have a small label that says \"sponsored\" or \"paid partnership,\" but many readers miss it.",
+        "The writing style matches the rest of the website, so readers assume they are getting an honest opinion.",
+        "In reality, the content was created to make the product look good.",
+        "Companies also use data to target ads to specific people.",
+        "When you browse the internet, companies track what you search for, what you click on, and what you buy.",
+        "They collect this information using small files called cookies that are stored on your device.",
+        "They use all of this data to build a profile of your interests and habits.",
+        "Then they show you ads for things you are likely to want.",
+        "If you searched for basketball shoes last week, you might start seeing ads for basketball shoes on every website you visit.",
+        "This is not a coincidence.",
+        "It is the result of careful data collection and analysis.",
+        "This kind of targeted advertising is powerful because it feels personal.",
+        "The ads seem to know exactly what you want, which makes you more likely to click on them."
+      ]
+    },
+    {
+      "type": "reading",
+      "heading": "Being a Smart Consumer",
+      "text": "The good news is that once you know about hidden ads, you can start watching for them. Ask yourself a few simple questions when you see content online. Is this post or video sponsored by a company? Is someone being paid to show this product? Does this article seem like it is trying to sell me something rather than inform me? You can also check for labels like \"ad\" or \"sponsored\" on social media posts and articles. Being a smart consumer means thinking critically about the messages you see every day. You do not have to avoid all advertising. Ads can actually help you discover new products that you enjoy. But you should be aware of when someone is trying to influence what you buy. The more you practice spotting hidden ads, the better you will become at making your own choices about what to spend your money on."
+    },
+    {
+      "type": "summary",
+      "summaryPrompt": "Write a summary of the text you have just read. Tap on the white space below to type your answer.",
+      "expectedKeyConcepts": [
+        "companies target teens because they spend money and develop brand loyalty",
+        "social media influencers are paid to promote products",
+        "product placement puts brands in movies and games",
+        "sponsored content looks like regular articles but is paid for",
+        "companies use browsing data to target ads",
+        "consumers should think critically about hidden advertising"
+      ]
+    }
+  ]
+}

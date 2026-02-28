@@ -1,0 +1,147 @@
+{
+  "id": "bomb-dogs",
+  "title": "Bomb Dogs: Canine Heroes",
+  "author": "I-LIT Staff",
+  "lexileLevel": 500,
+  "backgroundImage": "/images/passages/bomb-dogs-bg.jpg",
+  "slides": [
+    {
+      "type": "reading",
+      "heading": "Bomb Dogs: Canine Heroes",
+      "text": "Some dogs have very special jobs. They do not fetch balls or guard houses. Instead, they use their powerful noses to sniff out bombs. These dogs work side by side with the police and the military. They search buildings, cars, and open fields for hidden explosives. When they find something dangerous, they let their handler know right away. A handler is the person who works with the dog as a team. Together, they go wherever they are needed. Bomb dogs save lives every single day. They are some of the bravest animals in the world. People call them canine heroes, and they have earned that name."
+    },
+    {
+      "type": "reading",
+      "heading": "Training Begins",
+      "text": "Bomb dogs are chosen when they are still puppies. Trainers watch young dogs carefully to find the right ones. Not every dog can be a bomb dog. The best candidates are calm, smart, and eager to please their handlers. German Shepherds and Labrador Retrievers are two of the most popular breeds for this kind of work. These dogs love to learn new things and they do not give up easily. Training starts with basic obedience, just like any other dog might learn. The dogs practice how to sit, stay, and come when called. They must follow commands every single time without fail. A bomb dog that does not listen could put people in danger."
+    },
+    {
+      "type": "reading",
+      "heading": "Learning to Alert",
+      "text": "After obedience training, the dogs move on to the most important part. They learn to recognize the smell of explosives. A trainer hides small amounts of explosive material in different places. The dog searches the area using only its nose. When it finds the scent, it learns to sit down or paw the ground near the spot. This special behavior is called an alert. The alert tells the handler that something dangerous is hidden nearby. The handler then calls in experts to deal with the threat. Training takes about ten weeks of hard work. By the end of training, the dogs can find explosives that are hidden very well. Even tiny amounts of explosive material cannot fool a trained bomb dog."
+    },
+    {
+      "type": "checkpoint",
+      "checkpoint": {
+        "type": "highlight",
+        "skill": "Make Inferences",
+        "prompt": "You can infer from this passage that some dogs do not have the right personality to become bomb dogs. Highlight the sentence that supports this inference.",
+        "correctAnswer": "Not every dog can be a bomb dog.",
+        "feedback": {
+          "correct": "That's right! The sentence 'Not every dog can be a bomb dog' tells us that some dogs do not have what it takes for this special job.",
+          "incorrect": "Try again. Look for the sentence that tells you not all dogs are able to do this work."
+        }
+      },
+      "sentences": [
+        "Bomb dogs are chosen when they are still puppies.",
+        "Trainers watch young dogs carefully to find the right ones.",
+        "Not every dog can be a bomb dog.",
+        "The best candidates are calm, smart, and eager to please their handlers.",
+        "German Shepherds and Labrador Retrievers are two of the most popular breeds for this kind of work.",
+        "These dogs love to learn new things and they do not give up easily.",
+        "Training starts with basic obedience, just like any other dog might learn.",
+        "The dogs practice how to sit, stay, and come when called.",
+        "They must follow commands every single time without fail.",
+        "A bomb dog that does not listen could put people in danger.",
+        "After obedience training, the dogs move on to the most important part.",
+        "They learn to recognize the smell of explosives.",
+        "A trainer hides small amounts of explosive material in different places.",
+        "The dog searches the area using only its nose.",
+        "When it finds the scent, it learns to sit down or paw the ground near the spot.",
+        "This special behavior is called an alert.",
+        "The alert tells the handler that something dangerous is hidden nearby.",
+        "The handler then calls in experts to deal with the threat.",
+        "Training takes about ten weeks of hard work.",
+        "By the end of training, the dogs can find explosives that are hidden very well.",
+        "Even tiny amounts of explosive material cannot fool a trained bomb dog."
+      ]
+    },
+    {
+      "type": "reading",
+      "heading": "Finding Explosives",
+      "text": "What exactly are bomb dogs trained to smell? A bomb is made of many different parts. Each part gives off its own scent. A bomb dog is trained to recognize the scent of each part separately. When a dog discovers any of these scents, it sits down right away. Then the police know that something dangerous could be nearby. They can move people to safety and call the bomb squad. A dog's sense of smell is extremely sharp and powerful. It is much stronger than a human nose. Suppose you walk into a kitchen where someone is cooking. Your nose tells you that someone is making pasta sauce. But a dog can smell each ingredient on its own. It can pick out the tomatoes, the garlic, and the onions one by one. Bomb dogs use this same amazing skill to detect the ingredients in bombs."
+    },
+    {
+      "type": "reading",
+      "heading": "Where Bomb Dogs Work",
+      "text": "Today, security companies train dogs called Explosive Detection Canines, or bomb dogs. These dogs are specially trained to sniff out bombs in all kinds of places. The dogs are actually better at detecting explosives than electronic machines are. A machine might miss something, but a dog's nose almost never does. Bomb dogs go into banks and post offices to check for threats. They sniff luggage at airports before it goes onto planes. They patrol busy train stations and large sports stadiums on game days. They also go to special events like concerts and parades where large crowds gather. Security companies train only calm and gentle dogs to do this important work. The dogs help people feel safe wherever they go. A police officer carrying a gun may make some people nervous. But everyone likes a friendly dog."
+    },
+    {
+      "type": "checkpoint",
+      "checkpoint": {
+        "type": "highlight",
+        "skill": "Author's Purpose",
+        "prompt": "The author includes a comparison between a dog smelling pasta sauce ingredients and smelling bomb ingredients to help the reader understand how sharp a dog's sense of smell is. Highlight the sentence that introduces this comparison.",
+        "correctAnswer": "Suppose you walk into a kitchen where someone is cooking.",
+        "feedback": {
+          "correct": "Great job! The author uses the kitchen example to help you picture how a dog's nose works. This comparison makes a difficult idea easier to understand.",
+          "incorrect": "Not quite. Look for the sentence where the author asks you to imagine being in a specific place. That is where the comparison begins."
+        }
+      },
+      "sentences": [
+        "What exactly are bomb dogs trained to smell?",
+        "A bomb is made of many different parts.",
+        "Each part gives off its own scent.",
+        "A bomb dog is trained to recognize the scent of each part separately.",
+        "When a dog discovers any of these scents, it sits down right away.",
+        "Then the police know that something dangerous could be nearby.",
+        "They can move people to safety and call the bomb squad.",
+        "A dog's sense of smell is extremely sharp and powerful.",
+        "It is much stronger than a human nose.",
+        "Suppose you walk into a kitchen where someone is cooking.",
+        "Your nose tells you that someone is making pasta sauce.",
+        "But a dog can smell each ingredient on its own.",
+        "It can pick out the tomatoes, the garlic, and the onions one by one.",
+        "Bomb dogs use this same amazing skill to detect the ingredients in bombs.",
+        "Today, security companies train dogs called Explosive Detection Canines, or bomb dogs.",
+        "These dogs are specially trained to sniff out bombs in all kinds of places.",
+        "The dogs are actually better at detecting explosives than electronic machines are.",
+        "A machine might miss something, but a dog's nose almost never does.",
+        "Bomb dogs go into banks and post offices to check for threats.",
+        "They sniff luggage at airports before it goes onto planes.",
+        "They patrol busy train stations and large sports stadiums on game days.",
+        "They also go to special events like concerts and parades where large crowds gather.",
+        "Security companies train only calm and gentle dogs to do this important work.",
+        "The dogs help people feel safe wherever they go.",
+        "A police officer carrying a gun may make some people nervous.",
+        "But everyone likes a friendly dog."
+      ]
+    },
+    {
+      "type": "reading",
+      "heading": "Bomb Dogs on the Battlefield",
+      "text": "Bomb dogs do not just work in cities and airports. They also find bombs on battlefields far from home. Some bomb dogs work for the United States Army and the Marines. They walk ahead of soldiers on dangerous roads and paths. The dogs are able to find hidden bombs that soldiers might walk right past. These hidden bombs are one of the biggest dangers that soldiers face in war zones. When a dog alerts, the soldiers stop and mark the spot carefully. Experts can then take the bomb apart safely so that no one gets hurt. The dogs help keep soldiers safe every single day. Many soldiers say that their bomb dog is their closest friend. The bond between a soldier and a bomb dog is very strong. After years of service, some bomb dogs retire and go home to live with their handlers. Bomb dogs have a very important job, whether at home or overseas. They protect soldiers on the battlefield. They keep you and me safe in our towns and cities. They are true canine heroes!"
+    },
+    {
+      "type": "checkpoint",
+      "checkpoint": {
+        "type": "drag-drop",
+        "skill": "Check Your Understanding",
+        "prompt": "Drag and drop a word from the text to complete this sentence.",
+        "template": "Soldiers use dogs on ___ to find bombs that are difficult to find.",
+        "options": [
+          "battlefields",
+          "airports",
+          "kitchens",
+          "stadiums"
+        ],
+        "correctAnswer": "battlefields",
+        "feedback": {
+          "correct": "Correct! The passage says that dogs find bombs on battlefields where soldiers might miss them.",
+          "incorrect": "Read the section 'Bomb Dogs on the Battlefield' again. Where do soldiers use bomb dogs to find hidden bombs?"
+        }
+      }
+    },
+    {
+      "type": "summary",
+      "summaryPrompt": "Write a summary of the text you have just read. Tap on the white space below to type your answer.",
+      "expectedKeyConcepts": [
+        "bomb dogs are trained to detect explosives",
+        "training involves learning scent recognition",
+        "dogs alert handlers by sitting",
+        "bomb dogs work at airports, stadiums, and battlefields",
+        "bomb dogs help keep people safe"
+      ]
+    }
+  ]
+}

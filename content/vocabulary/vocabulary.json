@@ -1,0 +1,152 @@
+[
+  {
+    "word": "handler",
+    "definition": "A person who trains and works with an animal, especially a dog.",
+    "exampleSentence": "The handler gave a command, and the dog began searching the building.",
+    "wordParts": {
+      "base": "handle",
+      "affix": "-er",
+      "affixType": "suffix",
+      "result": "handler"
+    },
+    "image": "/images/vocabulary/handler.jpg",
+    "passageId": "bomb-dogs"
+  },
+  {
+    "word": "explosive",
+    "definition": "A substance or device that can cause an explosion.",
+    "exampleSentence": "The bomb squad found an explosive hidden inside the package.",
+    "wordParts": {
+      "base": "explode",
+      "affix": "-ive",
+      "affixType": "suffix",
+      "result": "explosive"
+    },
+    "image": null,
+    "passageId": "bomb-dogs"
+  },
+  {
+    "word": "detect",
+    "definition": "To discover or notice something that is not easy to see, hear, or smell.",
+    "exampleSentence": "The dog was able to detect the scent of the hidden object.",
+    "wordParts": null,
+    "image": null,
+    "passageId": "bomb-dogs"
+  },
+  {
+    "word": "alert",
+    "definition": "A signal or warning that something has been found or that danger is near.",
+    "exampleSentence": "The dog gave an alert by sitting down next to the suspicious bag.",
+    "wordParts": null,
+    "image": null,
+    "passageId": "bomb-dogs"
+  },
+  {
+    "word": "canine",
+    "definition": "A dog, or relating to dogs.",
+    "exampleSentence": "The police canine sniffed every car in the parking lot.",
+    "wordParts": null,
+    "image": null,
+    "passageId": "bomb-dogs"
+  },
+  {
+    "word": "decibel",
+    "definition": "A unit used to measure how loud a sound is.",
+    "exampleSentence": "A normal conversation is about 60 decibels.",
+    "wordParts": {
+      "base": "deci-",
+      "affix": "bel",
+      "affixType": "suffix",
+      "result": "decibel"
+    },
+    "image": "/images/vocabulary/decibel.jpg",
+    "passageId": "turn-it-down"
+  },
+  {
+    "word": "exposure",
+    "definition": "The state of being exposed to something, especially something harmful.",
+    "exampleSentence": "Long exposure to loud music can hurt your ears.",
+    "wordParts": {
+      "base": "expose",
+      "affix": "-ure",
+      "affixType": "suffix",
+      "result": "exposure"
+    },
+    "image": null,
+    "passageId": "turn-it-down"
+  },
+  {
+    "word": "permanent",
+    "definition": "Lasting forever; not temporary.",
+    "exampleSentence": "The damage to his hearing was permanent and could not be fixed.",
+    "wordParts": null,
+    "image": null,
+    "passageId": "turn-it-down"
+  },
+  {
+    "word": "damage",
+    "definition": "Harm or injury that makes something less useful or valuable.",
+    "exampleSentence": "Loud sounds can cause damage to the tiny cells inside your ear.",
+    "wordParts": null,
+    "image": null,
+    "passageId": "turn-it-down"
+  },
+  {
+    "word": "frequency",
+    "definition": "How often something happens, or the rate of sound vibrations that determines pitch.",
+    "exampleSentence": "High-frequency sounds, like a whistle, have a higher pitch.",
+    "wordParts": {
+      "base": "frequent",
+      "affix": "-cy",
+      "affixType": "suffix",
+      "result": "frequency"
+    },
+    "image": "/images/vocabulary/frequency.jpg",
+    "passageId": "turn-it-down"
+  },
+  {
+    "word": "sponsor",
+    "definition": "A person or company that pays money to support an event, activity, or person, usually in exchange for advertising.",
+    "exampleSentence": "The energy drink company was the main sponsor of the skateboarding competition.",
+    "wordParts": null,
+    "image": "/images/vocabulary/sponsor.jpg",
+    "passageId": "hidden-ads"
+  },
+  {
+    "word": "influence",
+    "definition": "The power to change how someone thinks or acts.",
+    "exampleSentence": "Social media stars have a lot of influence over what their followers buy.",
+    "wordParts": null,
+    "image": null,
+    "passageId": "hidden-ads"
+  },
+  {
+    "word": "persuade",
+    "definition": "To convince someone to do or believe something.",
+    "exampleSentence": "The ad was designed to persuade teenagers to try the new snack.",
+    "wordParts": null,
+    "image": null,
+    "passageId": "hidden-ads"
+  },
+  {
+    "word": "consumer",
+    "definition": "A person who buys and uses goods or services.",
+    "exampleSentence": "As a smart consumer, Maria always compared prices before buying.",
+    "wordParts": {
+      "base": "consume",
+      "affix": "-er",
+      "affixType": "suffix",
+      "result": "consumer"
+    },
+    "image": null,
+    "passageId": "hidden-ads"
+  },
+  {
+    "word": "brand",
+    "definition": "A name or symbol that identifies a company's products.",
+    "exampleSentence": "She always wore the same brand of sneakers because she liked how they fit.",
+    "wordParts": null,
+    "image": "/images/vocabulary/brand.jpg",
+    "passageId": "hidden-ads"
+  }
+]

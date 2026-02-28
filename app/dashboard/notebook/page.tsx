@@ -23,6 +23,31 @@ const tabs = [
   { name: "Resources" as const, color: "#d42a2a" },
 ] as const;
 
+// Shared ruled-paper background styles
+const RULED_LINE_HEIGHT = 28;
+const ruledPaperStyle: React.CSSProperties = {
+  backgroundImage: `
+    repeating-linear-gradient(
+      transparent,
+      transparent ${RULED_LINE_HEIGHT - 1}px,
+      #c8d4df ${RULED_LINE_HEIGHT - 1}px,
+      #c8d4df ${RULED_LINE_HEIGHT}px
+    )
+  `,
+  backgroundSize: `100% ${RULED_LINE_HEIGHT}px`,
+  lineHeight: `${RULED_LINE_HEIGHT}px`,
+};
+
+// Paper texture applied to the content area — subtle warm parchment
+const paperTextureStyle: React.CSSProperties = {
+  backgroundColor: "#f8f5f0",
+  backgroundImage: `
+    radial-gradient(ellipse at 20% 50%, rgba(210,195,170,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(190,180,160,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(200,190,175,0.12) 0%, transparent 55%)
+  `,
+};
+
 type TabName = (typeof tabs)[number]["name"];
 
 // ── Spiral binding ──
@@ -196,7 +221,7 @@ export default function NotebookPage() {
           <div
             className="flex-1 flex flex-col rounded-md sm:rounded-r-md sm:rounded-l-none overflow-hidden"
             style={{
-              background: "#fff",
+              ...paperTextureStyle,
               boxShadow: "inset 2px 2px 6px rgba(0,0,0,0.12), inset -1px -1px 3px rgba(0,0,0,0.05)",
             }}
           >
@@ -320,8 +345,8 @@ function JournalTab({
   return (
     <div className="flex-1 flex overflow-hidden">
       {/* Left sidebar — entry list */}
-      <div className="w-36 sm:w-44 flex-shrink-0 bg-gray-100 border-r border-gray-200 flex flex-col overflow-hidden">
-        <div className="px-2 py-2 border-b border-gray-200 flex items-center justify-between">
+      <div className="w-36 sm:w-44 flex-shrink-0 bg-[#f0ebe4] border-r border-gray-300 flex flex-col overflow-hidden">
+        <div className="px-2 py-2 border-b border-gray-300 flex items-center justify-between">
           <span className="text-xs font-semibold text-gray-500">Notes</span>
           <button
             onClick={onNew}
@@ -342,8 +367,8 @@ function JournalTab({
               <button
                 key={entry.id}
                 onClick={() => onSelect(entry.id)}
-                className={`w-full text-left px-3 py-2 border-b border-gray-200 transition-colors ${
-                  isActive ? "bg-white" : "hover:bg-gray-50"
+                className={`w-full text-left px-3 py-2 border-b border-gray-300/60 transition-colors ${
+                  isActive ? "bg-white/70" : "hover:bg-white/40"
                 }`}
               >
                 <span className="text-[10px] text-gray-400 block">{dateStr}</span>
@@ -359,7 +384,7 @@ function JournalTab({
       {/* Right content — editor */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Toolbar */}
-        <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-200 bg-white">
+        <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-300 bg-white/80">
           <span className="text-sm font-semibold text-gray-500 flex-shrink-0">Title:</span>
           <input
             key={selectedEntry?.id ?? "none"}
@@ -393,19 +418,21 @@ function JournalTab({
           </button>
         </div>
 
-        {/* Text area */}
-        <div className="flex-1 relative overflow-auto">
-          <div className="px-6 pt-4 pb-6">
+        {/* Text area with ruled paper */}
+        <div className="flex-1 relative overflow-auto" style={paperTextureStyle}>
+          {/* Red margin line */}
+          <div
+            className="absolute top-0 bottom-0 pointer-events-none"
+            style={{ left: 48, width: 2, background: "rgba(220,80,80,0.35)" }}
+          />
+          <div className="pl-14 pr-6 pt-4 pb-6">
             <textarea
               key={selectedEntry?.id ?? "none"}
               defaultValue={selectedEntry?.body ?? ""}
               onChange={(e) => handleChange("body", e.target.value)}
               placeholder="Start writing..."
               className="w-full min-h-[350px] bg-transparent resize-none text-sm text-gray-700 focus:outline-none placeholder:text-gray-300"
-              style={{
-                backgroundImage: "repeating-linear-gradient(transparent, transparent 27px, #d6cfc4 28px)",
-                lineHeight: "28px",
-              }}
+              style={ruledPaperStyle}
             />
           </div>
         </div>
@@ -516,7 +543,7 @@ function WordBankTab({
 function ClassNotesTab() {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-200 bg-white">
+      <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-200 bg-white/80">
         <span className="text-sm font-semibold text-gray-500 flex-shrink-0">Title:</span>
         <input
           type="text"
@@ -524,15 +551,17 @@ function ClassNotesTab() {
           className="flex-1 text-sm font-medium border-b border-gray-300 bg-transparent py-1 focus:outline-none focus:border-gray-500 placeholder:text-gray-300"
         />
       </div>
-      <div className="flex-1 relative overflow-auto">
-        <div className="px-6 pt-4 pb-6">
+      <div className="flex-1 relative overflow-auto" style={paperTextureStyle}>
+        {/* Red margin line */}
+        <div
+          className="absolute top-0 bottom-0 pointer-events-none"
+          style={{ left: 48, width: 2, background: "rgba(220,80,80,0.35)" }}
+        />
+        <div className="pl-14 pr-6 pt-4 pb-6">
           <textarea
             placeholder="Take notes during class..."
             className="w-full min-h-[350px] bg-transparent resize-none text-sm text-gray-700 focus:outline-none placeholder:text-gray-300"
-            style={{
-              backgroundImage: "repeating-linear-gradient(transparent, transparent 27px, #d6cfc4 28px)",
-              lineHeight: "28px",
-            }}
+            style={ruledPaperStyle}
           />
         </div>
       </div>

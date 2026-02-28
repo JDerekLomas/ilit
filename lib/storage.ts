@@ -170,6 +170,17 @@ export function markPassageComplete(passageId: string): StudentData {
   return data;
 }
 
+/** Update Lexile level based on a completed passage's Lexile */
+export function updateLexileFromPassage(passageLexile: number): StudentData {
+  const data = loadStudentData();
+  // Weighted moving average: 70% current, 30% new passage
+  data.progress.currentLexile = Math.round(
+    data.progress.currentLexile * 0.7 + passageLexile * 0.3
+  );
+  saveStudentData(data);
+  return data;
+}
+
 export function getPassageProgress(passageId: string): PassageProgress {
   const data = loadStudentData();
   return (
@@ -239,6 +250,80 @@ export function markSlideComplete(
     pp.completedSlides.push(slideIndex);
   }
   saveStudentData(data);
+  return data;
+}
+
+// ── Book progress tracking ──
+
+export function updateBookPage(bookId: string, pageIndex: number): StudentData {
+  const data = loadStudentData();
+  const prev = data.progress.bookProgress[bookId] ?? 0;
+  data.progress.bookProgress[bookId] = Math.max(prev, pageIndex);
+  saveStudentData(data);
+  return data;
+}
+
+/** Record that a page was read, incrementing totalPages and totalWords */
+export function recordPageRead(
+  bookId: string,
+  pageNumber: number,
+  wordCount: number
+): StudentData {
+  const data = loadStudentData();
+  // Track which pages have been read per book to avoid double-counting
+  const readKey = `ilit-read-pages-${bookId}`;
+  let readPages: number[] = [];
+  try {
+    const saved = localStorage.getItem(readKey);
+    if (saved) readPages = JSON.parse(saved);
+  } catch { /* ignore */ }
+
+  if (!readPages.includes(pageNumber)) {
+    readPages.push(pageNumber);
+    try { localStorage.setItem(readKey, JSON.stringify(readPages)); } catch { /* ignore */ }
+    data.progress.totalPages += 1;
+    data.progress.totalWords += wordCount;
+    saveStudentData(data);
+  }
+  return data;
+}
+
+/** Mark a book as completed, incrementing totalBooks if not already counted */
+export function completeBook(bookId: string): StudentData {
+  const data = loadStudentData();
+  const completedKey = `ilit-completed-books`;
+  let completedBooks: string[] = [];
+  try {
+    const saved = localStorage.getItem(completedKey);
+    if (saved) completedBooks = JSON.parse(saved);
+  } catch { /* ignore */ }
+
+  if (!completedBooks.includes(bookId)) {
+    completedBooks.push(bookId);
+    try { localStorage.setItem(completedKey, JSON.stringify(completedBooks)); } catch { /* ignore */ }
+    data.progress.totalBooks += 1;
+    saveStudentData(data);
+  }
+  return data;
+}
+
+/** Record words read from an IR passage (called once per passage completion) */
+export function recordPassageWordsRead(passageId: string, wordCount: number): StudentData {
+  const data = loadStudentData();
+  // Avoid double-counting — check if passage already tracked
+  const trackedKey = `ilit-passage-words-tracked`;
+  let tracked: string[] = [];
+  try {
+    const saved = localStorage.getItem(trackedKey);
+    if (saved) tracked = JSON.parse(saved);
+  } catch { /* ignore */ }
+
+  if (!tracked.includes(passageId)) {
+    tracked.push(passageId);
+    try { localStorage.setItem(trackedKey, JSON.stringify(tracked)); } catch { /* ignore */ }
+    data.progress.totalWords += wordCount;
+    saveStudentData(data);
+  }
   return data;
 }
 

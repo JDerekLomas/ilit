@@ -6,7 +6,7 @@ import type { Passage, Slide, VocabularyWord } from "@/lib/types";
 import ReadingSlide from "./ReadingSlide";
 import CheckpointSlide from "./CheckpointSlide";
 import SummarySlide from "./SummarySlide";
-import { recordCheckpointScore, markSlideComplete, markPassageComplete } from "@/lib/storage";
+import { recordCheckpointScore, markSlideComplete, markPassageComplete, recordPassageWordsRead, updateLexileFromPassage } from "@/lib/storage";
 
 interface Props {
   passage: Passage;
@@ -85,6 +85,13 @@ export default function InteractiveShell({ passage, onExit }: Props) {
       const allDone = allCheckpointIndices.every((i) => newCompleted.has(i));
       if (allDone) {
         markPassageComplete(passage.id);
+        // Count total words across all slides in the passage
+        const totalWords = passage.slides.reduce((sum, s) => {
+          const text = s.text || s.sentences?.join(" ") || "";
+          return sum + text.split(/\s+/).filter(Boolean).length;
+        }, 0);
+        recordPassageWordsRead(passage.id, totalWords);
+        updateLexileFromPassage(passage.lexileLevel);
       }
     },
     [currentSlide, passage, completedCheckpoints]

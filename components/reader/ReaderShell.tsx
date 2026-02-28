@@ -10,6 +10,7 @@ import TableOfContents, { type BookNote } from "./TableOfContents";
 import PageSlider from "./PageSlider";
 import CollectedHighlights from "./CollectedHighlights";
 import AccessibilityPanel from "./AccessibilityPanel";
+import { updateBookPage, recordPageRead, completeBook, loadStudentData } from "@/lib/storage";
 
 interface Props {
   book: Book;
@@ -133,6 +134,15 @@ export default function ReaderShell({ book, onExit }: Props) {
   const totalPages = flatPages.length;
   const step = isWide ? 2 : 1;
 
+  // Restore saved reading position on mount
+  useEffect(() => {
+    const data = loadStudentData();
+    const savedPage = data.progress.bookProgress[book.id];
+    if (savedPage && savedPage > 0 && savedPage < totalPages) {
+      setCurrentPage(savedPage);
+    }
+  }, [book.id, totalPages]);
+
   // Track viewport width
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
@@ -164,6 +174,29 @@ export default function ReaderShell({ book, onExit }: Props) {
     },
     [currentPage, totalPages, isWide]
   );
+
+  // Track reading progress whenever currentPage changes
+  useEffect(() => {
+    if (flatPages.length === 0) return;
+    // Record current page position
+    updateBookPage(book.id, currentPage);
+    // Record pages as read (with word count for stats)
+    const pagesToRecord = isWide
+      ? [flatPages[currentPage], flatPages[currentPage + 1]].filter(Boolean)
+      : [flatPages[currentPage]].filter(Boolean);
+    for (const p of pagesToRecord) {
+      const wordCount = p.text.split(/\s+/).filter(Boolean).length;
+      recordPageRead(book.id, p.pageNumber, wordCount);
+    }
+    // Check if reader has reached the last page
+    const lastPageIndex = flatPages.length - 1;
+    const viewedLast = isWide
+      ? currentPage + 1 >= lastPageIndex
+      : currentPage >= lastPageIndex;
+    if (viewedLast) {
+      completeBook(book.id);
+    }
+  }, [currentPage, book.id, flatPages, isWide]);
 
   const goPrev = useCallback(() => goToPage(currentPage - step), [currentPage, step, goToPage]);
   const goNext = useCallback(() => goToPage(currentPage + step), [currentPage, step, goToPage]);

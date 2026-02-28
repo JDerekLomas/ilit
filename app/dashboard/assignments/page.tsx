@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { loadStudentData, toggleAssignmentComplete, type StudentData } from "@/lib/storage";
 
@@ -73,142 +73,6 @@ const categories: AssignmentCategory[] = [
   },
 ];
 
-// ── Particle network background ──
-
-interface Particle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  radius: number;
-}
-
-const PARTICLE_COUNT = 40;
-const CONNECTION_DISTANCE = 120;
-const PARTICLE_OPACITY = 0.2;
-
-function ParticleNetwork() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const particlesRef = useRef<Particle[]>([]);
-  const animFrameRef = useRef<number>(0);
-
-  const initParticles = useCallback((width: number, height: number) => {
-    const particles: Particle[] = [];
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        radius: Math.random() * 1.5 + 0.8,
-      });
-    }
-    particlesRef.current = particles;
-  }, []);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
-      const rect = canvas.parentElement?.getBoundingClientRect();
-      if (!rect) return;
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
-      ctx.scale(dpr, dpr);
-      if (particlesRef.current.length === 0) {
-        initParticles(rect.width, rect.height);
-      }
-    };
-
-    resize();
-    window.addEventListener("resize", resize);
-
-    let isVisible = true;
-    const handleVisibility = () => {
-      isVisible = document.visibilityState === "visible";
-      if (isVisible && !animFrameRef.current) {
-        animFrameRef.current = requestAnimationFrame(animate);
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibility);
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isVisible = entry.isIntersecting && document.visibilityState === "visible";
-        if (isVisible && !animFrameRef.current) {
-          animFrameRef.current = requestAnimationFrame(animate);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (canvas.parentElement) observer.observe(canvas.parentElement);
-
-    const animate = () => {
-      if (!isVisible) { animFrameRef.current = 0; return; }
-      const rect = canvas.parentElement?.getBoundingClientRect();
-      if (!rect) return;
-      const w = rect.width;
-      const h = rect.height;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const particles = particlesRef.current;
-      for (const p of particles) {
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0 || p.x > w) p.vx *= -1;
-        if (p.y < 0 || p.y > h) p.vy *= -1;
-        p.x = Math.max(0, Math.min(w, p.x));
-        p.y = Math.max(0, Math.min(h, p.y));
-      }
-      ctx.strokeStyle = `rgba(255, 255, 255, ${PARTICLE_OPACITY * 0.6})`;
-      ctx.lineWidth = 0.5;
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < CONNECTION_DISTANCE) {
-            const alpha = (1 - dist / CONNECTION_DISTANCE) * PARTICLE_OPACITY * 0.6;
-            ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
-          }
-        }
-      }
-      ctx.fillStyle = `rgba(255, 255, 255, ${PARTICLE_OPACITY})`;
-      for (const p of particles) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      animFrameRef.current = requestAnimationFrame(animate);
-    };
-
-    animFrameRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      window.removeEventListener("resize", resize);
-      document.removeEventListener("visibilitychange", handleVisibility);
-      observer.disconnect();
-      cancelAnimationFrame(animFrameRef.current);
-    };
-  }, [initParticles]);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ zIndex: 0 }}
-    />
-  );
-}
-
 // ── Main page ──
 
 export default function AssignmentsPage() {
@@ -252,9 +116,7 @@ export default function AssignmentsPage() {
 
   return (
     <div className="relative min-h-full">
-      <ParticleNetwork />
-
-      <div className="relative max-w-2xl mx-auto px-3 sm:px-4 pt-6 sm:pt-8 pb-4" style={{ zIndex: 1 }}>
+      <div className="relative max-w-2xl mx-auto px-3 sm:px-4 pt-6 sm:pt-8 pb-4">
         {/* Header */}
         <div
           className="rounded-xl px-4 sm:px-6 py-3 sm:py-4 mb-4 sm:mb-6 backdrop-blur-sm"

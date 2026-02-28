@@ -19,37 +19,13 @@ export default function DashboardLayout({
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen flex flex-col relative" style={{ background: "linear-gradient(135deg, #4a0e2e 0%, #3b1248 20%, #2a1555 40%, #1e3a6f 60%, #0d5f5f 80%, #0a6e5a 100%)" }}>
-      {/* Constellation/network pattern overlay */}
-      <svg className="absolute inset-0 w-full h-full opacity-[0.07] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="constellation" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
-            <circle cx="20" cy="30" r="1.5" fill="white" />
-            <circle cx="80" cy="10" r="1" fill="white" />
-            <circle cx="150" cy="40" r="1.5" fill="white" />
-            <circle cx="180" cy="90" r="1" fill="white" />
-            <circle cx="40" cy="100" r="1.5" fill="white" />
-            <circle cx="120" cy="80" r="1" fill="white" />
-            <circle cx="60" cy="160" r="1.5" fill="white" />
-            <circle cx="140" cy="150" r="1" fill="white" />
-            <circle cx="100" cy="180" r="1.5" fill="white" />
-            <circle cx="190" cy="170" r="1" fill="white" />
-            <line x1="20" y1="30" x2="80" y2="10" stroke="white" strokeWidth="0.5" />
-            <line x1="80" y1="10" x2="150" y2="40" stroke="white" strokeWidth="0.5" />
-            <line x1="150" y1="40" x2="180" y2="90" stroke="white" strokeWidth="0.5" />
-            <line x1="40" y1="100" x2="120" y2="80" stroke="white" strokeWidth="0.5" />
-            <line x1="120" y1="80" x2="150" y2="40" stroke="white" strokeWidth="0.5" />
-            <line x1="40" y1="100" x2="60" y2="160" stroke="white" strokeWidth="0.5" />
-            <line x1="60" y1="160" x2="140" y2="150" stroke="white" strokeWidth="0.5" />
-            <line x1="140" y1="150" x2="180" y2="90" stroke="white" strokeWidth="0.5" />
-            <line x1="100" y1="180" x2="60" y2="160" stroke="white" strokeWidth="0.5" />
-            <line x1="100" y1="180" x2="140" y2="150" stroke="white" strokeWidth="0.5" />
-            <line x1="20" y1="30" x2="40" y2="100" stroke="white" strokeWidth="0.3" />
-            <line x1="190" y1="170" x2="140" y2="150" stroke="white" strokeWidth="0.3" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#constellation)" />
-      </svg>
+    <div
+      className="min-h-screen flex flex-col relative"
+      style={{
+        background: "url(/images/backgrounds/bg3.jpg) no-repeat center bottom",
+        backgroundSize: "cover",
+      }}
+    >
 
       {/* Main content */}
       <main className="flex-1 relative z-10 pb-20 overflow-y-auto flex flex-col">

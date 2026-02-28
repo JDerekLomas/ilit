@@ -11,13 +11,13 @@ The original uses full-screen gradient backgrounds with constellation/network pa
 
 | File | Description | Status | Use In |
 |------|-------------|--------|--------|
-| `bg1.jpg` | Cyan-to-magenta constellation network | Available | Dashboard layout background |
-| `bg2.jpg` | Pink-to-purple smooth gradient | Available | Alternative dashboard bg |
-| `bg3.jpg` | Dark magenta-to-teal constellation network | Available | Assignments / dark theme |
-| `bg4.jpg` | Yellow-teal halftone aircraft scene | Available | Assignment detail |
-| `bg5.jpg` | Purple-pink-cyan constellation | Available | Alternative dashboard bg |
-| `bg6.jpg` | Variant gradient | Available | Alternative dashboard bg |
-| `bg7.jpg` | Solid deep blue | Available | Fallback |
+| `bg1.jpg` | Cyan-to-magenta constellation network | Copied | Alternative dashboard bg |
+| `bg2.jpg` | Pink-to-purple smooth gradient | Copied | Alternative dashboard bg |
+| `bg3.jpg` | Dark magenta-to-teal constellation network | Copied | Dashboard layout background (active) |
+| `bg4.jpg` | Yellow-teal halftone aircraft scene | Copied | Assignment detail |
+| `bg5.jpg` | Purple-pink-cyan constellation | Copied | Alternative dashboard bg |
+| `bg6.jpg` | Variant gradient | Copied | Alternative dashboard bg |
+| `bg7.jpg` | Solid deep blue | Copied | Fallback |
 | `bgnn.png` | Dark carbon-fiber texture pattern | Copied | Already in textures/ |
 
 **Source**: `docs/classview/Webclient/App/media/bg*.jpg`
@@ -39,7 +39,7 @@ The original uses full-screen gradient backgrounds with constellation/network pa
 | `top_bg.png` | Header bar gradient (repeating-x) | Copied | Notebook frame top |
 | `lf_bg.png` | Left frame edge (repeating-y) | Copied | Notebook frame left |
 | `rtf_bg.png` | Right frame edge (repeating-y) | Copied | Notebook frame right |
-| `lading_page_bg.jpg` | Dark textured landing page background | Available | Behind notebook cover |
+| `lading_page_bg.jpg` | Dark textured landing page background | Copied | Behind notebook cover |
 | `date_event.jpg` | Timeline/calendar styling bg | Available | Timeline organizer |
 | `organize-bg-images.jpg` | Scratched metal texture | Available | Graphic organizer bg |
 
@@ -55,9 +55,9 @@ The original uses full-screen gradient backgrounds with constellation/network pa
 | `book_bg.jpg` | Warm wood texture for reader frame | Copied | Reader outer frame |
 | `left_border.png` | Left wooden border strip (repeating-y) | Copied | Reader left edge |
 | `right_border.png` | Right wooden border strip (repeating-y) | Copied | Reader right edge |
-| `pageBottom.png` | Page bottom edge (repeating-x) | Available | Reader page bottom |
-| `pageBottomLeft.png` | Bottom-left corner piece | Available | Reader corner |
-| `pageBottomRight.png` | Bottom-right corner piece | Available | Reader corner |
+| `pageBottom.png` | Page bottom edge (repeating-x) | Copied | Reader page bottom |
+| `pageBottomLeft.png` | Bottom-left corner piece | Copied | Reader corner |
+| `pageBottomRight.png` | Bottom-right corner piece | Copied | Reader corner |
 | `midlle_bg_ebook.png` | Middle content area bg | Available | Reader center split |
 | `marker-pen.png` | Annotation pen icon | Available | Annotation toolbar |
 | `screen-mask.png` | Screen mask graphic | Available | Accessibility feature |
@@ -75,10 +75,10 @@ The original uses full-screen gradient backgrounds with constellation/network pa
 
 | File | Description | Status | Use In |
 |------|-------------|--------|--------|
-| `background-Library.jpg` | Sky blue gradient library background | Available | Library tab background |
+| `background-Library.jpg` | Sky blue gradient library background | Copied | Library tab background |
 | `background-Library.png` | PNG version | Available | Library tab background |
-| `carasual-bg.png` | Dark carousel container bg | Available | Book carousel area |
-| `nobook.jpg` | "No cover" placeholder | Available | Missing book covers |
+| `carasual-bg.png` | Dark carousel container bg | Copied | Book carousel area |
+| `nobook.jpg` | "No cover" placeholder | Copied | Missing book covers |
 | `default_book_loader.gif` | Animated book loading spinner | Available | Book loading state |
 | `main_page_book.png` | Decorative book graphic | Available | Library decoration |
 
@@ -156,30 +156,12 @@ The original packs all toolbar/UI icons into sprite sheets. These contain checkm
 
 ## Recommended Copy Priority
 
-### Do Now
-```bash
-# Dashboard constellation backgrounds (signature visual)
-mkdir -p public/images/backgrounds
-cp docs/classview/Webclient/App/media/bg1.jpg public/images/backgrounds/
-cp docs/classview/Webclient/App/media/bg2.jpg public/images/backgrounds/
-cp docs/classview/Webclient/App/media/bg3.jpg public/images/backgrounds/
-cp docs/classview/Webclient/App/media/bg5.jpg public/images/backgrounds/
-
-# Reader page frame corners
-mkdir -p public/images/reader
-cp docs/classview/Webclient/App/media/pageBottom.png public/images/reader/
-cp docs/classview/Webclient/App/media/pageBottomLeft.png public/images/reader/
-cp docs/classview/Webclient/App/media/pageBottomRight.png public/images/reader/
-
-# Library background
-mkdir -p public/images/library
-cp docs/reference-source/media/background-Library.jpg public/images/library/
-cp docs/classview/Webclient/App/media/carasual-bg.png public/images/library/
-cp docs/reference-source/media/nobook.jpg public/images/library/
-
-# Notebook landing page bg
-cp docs/classview/Webclient/App/media/lading_page_bg.jpg public/images/notebook/
-```
+### Done (copied 2026-03-01)
+- All 7 constellation backgrounds (bg1-bg7.jpg) → `public/images/backgrounds/`
+- Reader page frame corners (pageBottom*.png) → `public/images/reader/`
+- Library background + carousel bg + nobook placeholder → `public/images/library/`
+- Notebook landing page bg → `public/images/notebook/`
+- Dashboard layout.tsx and assignments page.tsx updated to use bg3.jpg instead of Canvas/SVG
 
 ### Do When Implementing Feature
 - Audio controls: when adding text-to-speech

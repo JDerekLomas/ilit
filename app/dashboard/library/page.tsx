@@ -213,7 +213,7 @@ export default function LibraryPage() {
         <>
           <div
             className="relative"
-            style={{ height: "clamp(200px, 32vh, 300px)" }}
+            style={{ height: "clamp(260px, 38vh, 340px)" }}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
@@ -224,19 +224,33 @@ export default function LibraryPage() {
             <div className="absolute left-0 top-0 bottom-0 w-3 z-10 pointer-events-none" style={{ background: "url(/images/textures/left_border.png) repeat-y 0 0" }} />
             <div className="absolute right-0 top-0 bottom-0 w-3 z-10 pointer-events-none" style={{ background: "url(/images/textures/right_border.png) repeat-y right 0" }} />
 
-            {/* Horizontal bookshelf strip */}
+            {/* 3D Carousel — matches original ILITBookShelfRounder */}
             <div
               ref={carouselRef}
-              className="relative h-full flex items-end justify-center overflow-hidden px-4"
-              style={{ paddingBottom: 12 }}
+              className="relative h-full flex items-end justify-center overflow-hidden"
+              style={{
+                perspective: 1500,
+                paddingBottom: 50,
+                transform: "scale(0.9)",
+                transformOrigin: "center bottom",
+              }}
             >
               {filteredBooks.map((book, i) => {
                 const offset = i - selectedIndex;
+                const absOffset = Math.abs(offset);
+                if (absOffset > 10) return null;
+
                 const isSelected = offset === 0;
-                // Book width and gap — tightly packed
-                const bookW = 100; // px base width
-                const gap = 6;
-                const xPx = offset * (bookW + gap);
+                const sign = offset >= 0 ? 1 : -1;
+
+                // Progressive gap compression (approximates easeInOutSine curve)
+                // Center books spread wide, edge books compress together
+                const baseGap = 125;
+                const compression = 0.06;
+                const xPx = sign * (absOffset * baseGap - absOffset * (absOffset - 1) / 2 * baseGap * compression);
+
+                // Scale shrinks with distance (original: autoScale 65 + distance factor)
+                const scale = Math.max(0.75, 1 - absOffset * 0.03);
 
                 return (
                   <button
@@ -244,20 +258,19 @@ export default function LibraryPage() {
                     onClick={() => setSelectedIndex(i)}
                     className="absolute transition-all duration-300 ease-out origin-bottom"
                     style={{
-                      width: bookW,
-                      height: isSelected ? "85%" : "75%",
-                      transform: `translateX(${xPx}px)`,
-                      zIndex: isSelected ? 20 : 10 - Math.abs(offset),
-                      filter: isSelected ? "none" : "brightness(0.85)",
+                      width: 130,
+                      height: "82%",
+                      transform: `translateX(${xPx}px) translateZ(${-5 * absOffset}px) scale(${scale})`,
+                      zIndex: isSelected ? 500 : Math.floor(500 - 10 * absOffset),
+                      filter: isSelected ? "none" : `brightness(${Math.max(0.65, 1 - absOffset * 0.05)})`,
                     }}
                   >
                     <div
-                      className="w-full h-full rounded-[3px] overflow-hidden relative"
+                      className="w-full h-full overflow-hidden relative"
                       style={{
-                        border: isSelected ? "3px solid #fff" : "2px solid rgba(255,255,255,0.5)",
-                        boxShadow: isSelected
-                          ? "0 4px 20px rgba(0,0,0,0.7)"
-                          : "0 2px 8px rgba(0,0,0,0.5)",
+                        border: "4px solid #fff",
+                        borderRadius: 5,
+                        boxShadow: "0px 2px 13px rgba(50,50,50,0.86)",
                       }}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -266,7 +279,7 @@ export default function LibraryPage() {
                         alt={book.title}
                         className="absolute inset-0 w-full h-full object-cover"
                         draggable={false}
-                        loading={Math.abs(offset) > 6 ? "lazy" : undefined}
+                        loading={absOffset > 6 ? "lazy" : undefined}
                       />
                     </div>
                   </button>
@@ -274,11 +287,15 @@ export default function LibraryPage() {
               })}
             </div>
 
-            {/* Shelf ledge — thick dark bar like the original */}
-            <div className="absolute bottom-0 left-0 right-0 z-10 pointer-events-none">
-              <div style={{ height: 8, background: "linear-gradient(to bottom, transparent, rgba(0,0,0,0.6))" }} />
-              <div style={{ height: 20, background: "linear-gradient(to bottom, #2a2a2c, #1a1a1c)", borderTop: "2px solid #3a3a3c", borderBottom: "3px solid #111" }} />
-            </div>
+            {/* Shelf — 50px solid border matching original #222224 */}
+            <div
+              className="absolute bottom-0 left-0 right-0 z-10 pointer-events-none"
+              style={{
+                height: 50,
+                background: "#222224",
+                borderTop: "2px solid #3a3a3c",
+              }}
+            />
           </div>
 
           {/* Selected book title */}

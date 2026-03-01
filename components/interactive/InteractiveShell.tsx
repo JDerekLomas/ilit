@@ -86,6 +86,10 @@ export default function InteractiveShell({ passage, onExit }: Props) {
   // Students can navigate TO the first incomplete checkpoint but not past it.
   // Backward navigation is always allowed. Forward is blocked past freeze point.
   const freezePoint = useMemo(() => {
+    // Dev bypass: ?nofreeze=1 disables checkpoint freezing
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).has("nofreeze")) {
+      return passage.slides.length - 1;
+    }
     for (let i = 0; i < passage.slides.length; i++) {
       const s = passage.slides[i];
       const hasCheckpoint = s.type === "checkpoint" || s.checkpoint;

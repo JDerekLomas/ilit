@@ -270,6 +270,7 @@ export default function NotebookPage() {
   const [data, setData] = useState<StudentData | null>(null);
   const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null);
   const [vocabulary, setVocabulary] = useState<VocabularyWord[]>([]);
+  const [saveFlash, setSaveFlash] = useState(false);
 
   // Check if user has previously unlocked
   useEffect(() => {
@@ -334,6 +335,8 @@ export default function NotebookPage() {
     if (!selectedEntryId) return;
     const updated = updateJournalEntry(selectedEntryId, { [field]: value });
     setData(updated);
+    setSaveFlash(true);
+    setTimeout(() => setSaveFlash(false), 1200);
   };
 
   // Word Bank handlers
@@ -406,6 +409,12 @@ export default function NotebookPage() {
                   minHeight: 42,
                 }}
               >
+                {/* Save indicator */}
+                {saveFlash && (
+                  <span className="text-green-400 text-xs font-medium animate-pulse mr-auto ml-2">
+                    Saved
+                  </span>
+                )}
                 {activeTab === "Journal" && (
                   <>
                     <ToolbarButton icon="menu" onClick={() => {}} />

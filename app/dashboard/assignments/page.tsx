@@ -175,13 +175,13 @@ export default function AssignmentsPage() {
                     </span>
                   </div>
                   <span
-                    className={`min-w-[26px] h-[26px] flex items-center justify-center rounded-full text-xs font-bold border-2 ${
+                    className={`min-w-[30px] h-[30px] flex items-center justify-center rounded-full text-xs font-bold text-white ${
                       badgeColor === "green"
-                        ? "border-green-500 text-green-600 bg-green-50"
-                        : "border-red-500 text-red-600 bg-red-50"
+                        ? "bg-green-500"
+                        : "bg-red-500"
                     }`}
                   >
-                    {allDone ? total : `${completed}/${total}`}
+                    {total}
                   </span>
                 </button>
 

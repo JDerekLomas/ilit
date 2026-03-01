@@ -38,23 +38,24 @@ function SpiralBinding() {
   return (
     <div
       className="flex-shrink-0 relative z-10"
-      style={{ width: 44, minHeight: totalHeight }}
+      style={{ width: 48, minHeight: totalHeight }}
     >
       {Array.from({ length: ringCount }, (_, i) => {
-        const top = i * ringSpacing + ringSpacing / 2 - 10;
+        const top = i * ringSpacing + ringSpacing / 2 - 12;
         return (
           <div
             key={i}
             className="absolute"
             style={{
-              left: 8,
+              left: 6,
               top,
-              width: 28,
-              height: 20,
-              borderRadius: 3,
-              border: "2.5px solid #3a3a3a",
-              background: "linear-gradient(135deg, #555 0%, #2a2a2a 50%, #444 100%)",
-              boxShadow: "inset 0 1px 1px rgba(255,255,255,0.1), 0 1px 2px rgba(0,0,0,0.4)",
+              width: 36,
+              height: 24,
+              borderRadius: 2,
+              border: "3px solid #1a1a1a",
+              background: "linear-gradient(180deg, #4a4a4a 0%, #1e1e1e 40%, #2a2a2a 60%, #3a3a3a 100%)",
+              boxShadow:
+                "inset 0 2px 1px rgba(255,255,255,0.12), inset 0 -1px 1px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,0,0,0.2)",
             }}
           />
         );
@@ -365,7 +366,7 @@ export default function NotebookPage() {
     <div className="max-w-4xl mx-auto px-2 sm:px-4 pt-4 sm:pt-6 pb-8">
       <div className="relative flex overflow-visible">
         {/* Spiral binding — hidden on small screens */}
-        <div className="hidden sm:block" style={{ background: "#2a2a2a" }}>
+        <div className="hidden sm:block" style={{ background: "#1a1a1a", width: 48 }}>
           <SpiralBinding />
         </div>
 

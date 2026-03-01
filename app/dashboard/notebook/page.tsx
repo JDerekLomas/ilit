@@ -363,17 +363,17 @@ export default function NotebookPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-2 sm:px-4 pt-4 sm:pt-6 pb-8">
-      <div className="relative flex overflow-visible">
+    <div className="flex-1 flex flex-col min-h-0 overflow-hidden pr-[50px]">
+      <div className="relative flex overflow-visible flex-1 min-h-0">
         {/* Spiral binding — hidden on small screens */}
-        <div className="hidden sm:block" style={{ background: "#1a1a1a", width: 48 }}>
+        <div className="hidden sm:block flex-shrink-0" style={{ background: "#1a1a1a", width: 48 }}>
           <SpiralBinding />
         </div>
 
         {/* Main notebook body */}
-        <div className="flex-1 flex flex-col min-h-[500px] sm:min-h-[600px] relative">
+        <div className="flex-1 flex flex-col min-h-0 relative">
           <div
-            className="flex-1 flex flex-col rounded-md sm:rounded-r-md sm:rounded-l-none overflow-hidden"
+            className="flex-1 flex flex-col overflow-hidden"
             style={{
               boxShadow: "0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
             }}
@@ -398,7 +398,7 @@ export default function NotebookPage() {
                   </svg>
                 </button>
                 <span className="text-white font-bold text-sm tracking-wide">
-                  {activeTab === "Journal" ? "Notes" : activeTab}
+                  {activeTab === "Journal" ? "Notes" : activeTab === "Class Notes" ? "Saved Notes" : activeTab}
                 </span>
               </div>
               {/* Toolbar icons */}
@@ -409,6 +409,15 @@ export default function NotebookPage() {
                     <ToolbarButton icon="trash" onClick={handleDeleteEntry} />
                     <ToolbarButton icon="plus" onClick={handleNewEntry} />
                   </>
+                )}
+                {activeTab === "Class Notes" && (
+                  <>
+                    <ToolbarButton icon="menu" onClick={() => {}} />
+                    <ToolbarButton icon="plus" onClick={() => {}} />
+                  </>
+                )}
+                {activeTab === "Word Bank" && (
+                  <ToolbarButton icon="plus" onClick={() => {}} />
                 )}
               </div>
             </div>

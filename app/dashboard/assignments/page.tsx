@@ -98,9 +98,14 @@ export default function AssignmentsPage() {
     });
   };
 
+  const [toast, setToast] = useState<string | null>(null);
+
   const handleItemClick = (item: AssignmentItem) => {
     if (item.type === "interactive-reading") {
       router.push(`/interactive/${item.id}`);
+    } else {
+      setToast(item.title);
+      setTimeout(() => setToast(null), 2000);
     }
   };
 
@@ -194,14 +199,13 @@ export default function AssignmentsPage() {
                       {cat.items.length > 0 ? (
                         cat.items.map((item, itemIndex) => {
                           const isDone = completedSet.has(item.id);
-                          const isClickable = item.type === "interactive-reading";
                           return (
                             <button
                               key={item.id}
                               onClick={() => handleItemClick(item)}
-                              className={`w-full text-left px-5 py-3 text-sm transition-colors flex items-center gap-3 ${
-                                isClickable ? "text-gray-800 hover:bg-gray-100 cursor-pointer" : "text-gray-500 cursor-default"
-                              } ${itemIndex < cat.items.length - 1 ? "border-b border-gray-100" : ""}`}
+                              className={`w-full text-left px-5 py-3 text-sm transition-colors flex items-center gap-3 text-gray-800 hover:bg-gray-100 cursor-pointer ${
+                                itemIndex < cat.items.length - 1 ? "border-b border-gray-100" : ""
+                              }`}
                             >
                               {/* Completion checkbox */}
                               <button
@@ -222,7 +226,7 @@ export default function AssignmentsPage() {
                               <span className={isDone ? "line-through text-gray-400" : ""}>
                                 {item.title}
                               </span>
-                              {isClickable && !isDone && (
+                              {!isDone && (
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="ml-auto flex-shrink-0 text-gray-300">
                                   <polyline points="9 18 15 12 9 6" />
                                 </svg>
@@ -243,6 +247,20 @@ export default function AssignmentsPage() {
           })}
         </div>
       </div>
+
+      {/* Toast for non-IR items */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-xl bg-black/80 text-white text-sm font-medium shadow-lg backdrop-blur-sm"
+          >
+            Coming soon
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

@@ -368,31 +368,44 @@ export default function NotebookPage() {
               boxShadow: "0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
             }}
           >
-            {/* Colored header strip matching active tab */}
-            <div
-              className="flex items-center justify-between px-4"
-              style={{
-                background: activeColor,
-                boxShadow: `inset 0 2px 1px 0 rgba(207,213,217,0.3), inset 0 0 1px 2px rgba(0,0,0,0.2)`,
-                minHeight: 42,
-              }}
-            >
-              <div className="flex items-center gap-2">
+            {/* Two-part header: sidebar header (teal) + content toolbar (dark) */}
+            <div className="flex">
+              {/* Sidebar header — teal, matches active tab color */}
+              <div
+                className="w-36 sm:w-56 flex-shrink-0 flex items-center gap-2 px-2"
+                style={{
+                  background: activeColor,
+                  boxShadow: "inset 0 2px 1px 0 rgba(207,213,217,0.3), inset 0 0 1px 2px rgba(0,0,0,0.2)",
+                  minHeight: 42,
+                }}
+              >
                 <button
                   onClick={() => { setIsLocked(true); sessionStorage.removeItem("notebook-unlocked"); }}
-                  className="w-7 h-7 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors"
+                  className="w-7 h-7 rounded-full bg-black/40 flex items-center justify-center hover:bg-black/60 transition-colors flex-shrink-0"
                   title="Close notebook"
                 >
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round">
                     <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                   </svg>
                 </button>
-                <span className="text-white font-bold text-sm tracking-wide">
+                <span className="text-white font-bold text-sm tracking-wide flex-1 truncate">
                   {activeTab === "Journal" ? "Notes" : activeTab === "Class Notes" ? "Saved Notes" : activeTab}
                 </span>
+                {/* Dropdown arrow */}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="white" className="flex-shrink-0 opacity-70">
+                  <path d="M7 10l5 5 5-5z" />
+                </svg>
               </div>
-              {/* Toolbar icons */}
-              <div className="flex items-center gap-1">
+
+              {/* Content toolbar — dark strip with action buttons */}
+              <div
+                className="flex-1 flex items-center justify-end px-2 gap-2.5"
+                style={{
+                  background: "#555350",
+                  boxShadow: "0 0 0 0 #000, 0 2px 1px 0 #CFD5D9 inset, 0 0 1px 2px #000 inset",
+                  minHeight: 42,
+                }}
+              >
                 {activeTab === "Journal" && (
                   <>
                     <ToolbarButton icon="menu" onClick={() => {}} />
@@ -730,7 +743,7 @@ function ClassNotesTab() {
     <div className="flex-1 flex overflow-hidden">
       {/* Left sidebar — saved notes list matching reference */}
       <div
-        className="w-36 sm:w-48 flex-shrink-0 flex flex-col overflow-hidden"
+        className="w-36 sm:w-56 flex-shrink-0 flex flex-col overflow-hidden"
         style={{
           background: "#cdd9e2",
           backgroundImage: "url(/images/notebook/notes_rgt_bg.png)",
@@ -783,7 +796,7 @@ function MyWorkTab() {
     <div className="flex-1 flex overflow-hidden">
       {/* Left sidebar — unit tree with sub-sections matching reference */}
       <div
-        className="w-36 sm:w-48 flex-shrink-0 flex flex-col overflow-hidden"
+        className="w-36 sm:w-56 flex-shrink-0 flex flex-col overflow-hidden"
         style={{
           background: "#cdd9e2",
           backgroundImage: "url(/images/notebook/notes_rgt_bg.png)",
@@ -882,7 +895,7 @@ function ResourcesTab() {
     <div className="flex-1 flex overflow-hidden">
       {/* Left sidebar — resource tree */}
       <div
-        className="w-44 sm:w-52 flex-shrink-0 flex flex-col overflow-hidden"
+        className="w-36 sm:w-56 flex-shrink-0 flex flex-col overflow-hidden"
         style={{
           background: "#cdd9e2",
           backgroundImage: "url(/images/notebook/notes_rgt_bg.png)",

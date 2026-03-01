@@ -18,24 +18,15 @@ interface AssignmentCategory {
   items: AssignmentItem[];
 }
 
-// Deduplicate categories from JSON (removes duplicate EXTRA PRACTICE entries)
-const uniqueCategories = assignmentCategoriesRaw.filter(
-  (cat, idx, arr) => arr.findIndex((c) => c.name === cat.name) === idx
-);
-
 // Map category names to types
 const TYPE_MAP: Record<string, AssignmentItem["type"]> = {
   "INTERACTIVE READING": "interactive-reading",
   "STUDY PLAN": "vocabulary",
-  "VOCABULARY, WORD STUDY, AND ACADEMIC TEXTS": "vocabulary",
+  "VOCABULARY, WORD STUDY, AND READING COMPREHENSION": "vocabulary",
   "iPRACTICE": "ipractice",
   "WRITING": "writing",
+  "MONITOR PROGRESS": "monitor",
   "INFORMATION": "info",
-  "EXTRA PRACTICE": "vocabulary",
-  "SORT": "vocabulary",
-  "UNIT BENCHMARK ASSESSMENT": "monitor",
-  "WEEKLY READING CHECK": "monitor",
-  "GRADE": "monitor",
 };
 
 // Existing items mapped to category popupNames
@@ -52,28 +43,34 @@ const EXISTING_ITEMS: Record<string, AssignmentItem[]> = {
   "Study Plan": [
     { id: "study-plan-1", title: "Study Plan Week 1", type: "vocabulary" },
   ],
-  "Vocabulary, Word Study, And Academic Texts": [
+  "Vocabulary, Word Study, and Reading Comprehension": [
     { id: "long-vowels", title: "Long Vowels CVCe", type: "vocabulary" },
     { id: "word-slam", title: "Word Slam", type: "vocabulary" },
+    { id: "word-study-practice", title: "Word Study Practice", type: "vocabulary" },
+    { id: "word-study-readers-1", title: "Word Study Readers: Unit 1", type: "vocabulary" },
+    { id: "reading-comp-1", title: "Reading Comprehension: Main Idea", type: "vocabulary" },
   ],
   "iPractice": [
     { id: "multimedia", title: "Plan a Multimedia Presentation", type: "ipractice" },
     { id: "poem", title: "Write a Poem", type: "ipractice" },
     { id: "drama", title: "Elements of Drama", type: "ipractice" },
+    { id: "figurative-lang", title: "Figurative Language", type: "ipractice" },
+    { id: "text-structure", title: "Text Structure", type: "ipractice" },
+    { id: "point-of-view", title: "Point of View", type: "ipractice" },
+    { id: "summarize-practice", title: "Summarize", type: "ipractice" },
+    { id: "make-inferences", title: "Make Inferences", type: "ipractice" },
+  ],
+  "Monitor Progress": [
+    { id: "reading-check-7", title: "Reading Check 7", type: "monitor" },
+    { id: "grade-a-mid", title: "GRADE Level A — Middle of the Year", type: "monitor" },
   ],
   "Information": [
     { id: "lo-u3w1", title: "Learning Objectives, Unit 3, Week 1", type: "info" },
     { id: "lo-u5w1", title: "Learning Objectives, Unit 5, Week 1", type: "info" },
   ],
-  "Weekly Reading Check": [
-    { id: "reading-check-7", title: "Reading Check 7", type: "monitor" },
-  ],
-  "Grade": [
-    { id: "grade-a-mid", title: "GRADE Level A — Middle of the Year", type: "monitor" },
-  ],
 };
 
-const categories: AssignmentCategory[] = uniqueCategories.map((cat) => ({
+const categories: AssignmentCategory[] = assignmentCategoriesRaw.map((cat) => ({
   label: cat.popupName,
   type: TYPE_MAP[cat.name] ?? "info",
   items: EXISTING_ITEMS[cat.popupName] ?? [],

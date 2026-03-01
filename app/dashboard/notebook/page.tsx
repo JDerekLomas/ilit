@@ -16,14 +16,14 @@ import {
   type JournalEntry,
   type SavedWord,
 } from "@/lib/storage";
-import skillsTaxonomy from "@/content/skills-taxonomy.json";
+
 
 const tabs = [
   { name: "Journal" as const, color: "#0b89b7" },
   { name: "Word Bank" as const, color: "#1a5479" },
   { name: "Class Notes" as const, color: "#fc4333" },
   { name: "My Work" as const, color: "#ff8c00" },
-  { name: "Resources" as const, color: "#d42a2a" },
+  { name: "Resources" as const, color: "#daa520" },
 ] as const;
 
 type TabName = (typeof tabs)[number]["name"];
@@ -206,16 +206,6 @@ const RESOURCE_CATEGORIES: {
         ],
       },
     ],
-  },
-  {
-    label: "Skills Practice",
-    children: skillsTaxonomy.groups.map((group) => ({
-      label: group.title,
-      items: group.skills.slice(0, 6).map((skill) => ({
-        label: skill,
-        links: [`${group.title}: ${skill} Practice`, `${group.title}: ${skill} Review`],
-      })),
-    })),
   },
   {
     label: "Whole Group Instruction",
@@ -678,19 +668,6 @@ function WordBankTab({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-white">
-      {/* Toolbar */}
-      <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-200">
-        <span className="text-base font-semibold text-gray-500">My Words</span>
-        <button
-          onClick={() => setShowPicker(!showPicker)}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#1a5479] text-white text-xs font-medium hover:bg-[#0f3a54] transition-colors"
-        >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
-            <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-          Add Word
-        </button>
-      </div>
 
       <div className="flex-1 overflow-y-auto">
         {showPicker && (
@@ -716,14 +693,7 @@ function WordBankTab({
         )}
 
         {savedWords.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="mb-3 opacity-40">
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-            </svg>
-            <p className="text-sm italic">No words saved yet</p>
-            <p className="text-xs mt-1">Tap &quot;Add Word&quot; to start building your word bank</p>
-          </div>
+          <div className="flex-1" />
         ) : (
           <div className="divide-y divide-gray-100">
             {savedWords.map((sw) => (
@@ -921,13 +891,13 @@ function ResourcesTab() {
           paddingRight: 8,
         }}
       >
-        <div className="px-3 py-2.5 bg-[#d42a2a]">
+        <div className="px-3 py-2.5 bg-[#daa520]">
           <span className="text-xs font-bold text-white">Resources</span>
         </div>
         <div className="flex-1 overflow-y-auto text-xs">
           {RESOURCE_CATEGORIES.map((cat) => (
             <div key={cat.label}>
-              <div className="px-3 py-2 font-semibold text-[#d42a2a] border-b border-[#b8c5cf] bg-white/30">
+              <div className="px-3 py-2 font-semibold text-[#daa520] border-b border-[#b8c5cf] bg-white/30">
                 {cat.label}
               </div>
               {cat.children?.map((child) => (

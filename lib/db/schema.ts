@@ -57,6 +57,8 @@ export const students = pgTable(
     bookProgress: jsonb("book_progress")
       .$type<Record<string, number>>()
       .default({}),
+    /** Full student data blob (synced from client localStorage) */
+    data: jsonb("data").$type<Record<string, unknown>>(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },

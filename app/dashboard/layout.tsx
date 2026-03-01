@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { hydrateFromServer } from "@/lib/storage";
 
 const tabs = [
   { label: "Review", href: "/dashboard/review", icon: ReviewIcon },
@@ -18,6 +20,11 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+
+  // Hydrate localStorage from server on LTI launch (runs once per session)
+  useEffect(() => {
+    hydrateFromServer();
+  }, []);
 
   return (
     <div

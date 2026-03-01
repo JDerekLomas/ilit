@@ -6,7 +6,7 @@ import type { Passage, Slide, VocabularyWord } from "@/lib/types";
 import ReadingSlide from "./ReadingSlide";
 import CheckpointSlide from "./CheckpointSlide";
 import SummarySlide from "./SummarySlide";
-import { recordCheckpointScore, markSlideComplete, markPassageComplete, recordPassageWordsRead, updateIrLevel } from "@/lib/storage";
+import { recordCheckpointScore, markSlideComplete, markPassageComplete, recordPassageWordsRead, updateIrLevel, getPassageProgress } from "@/lib/storage";
 
 interface Props {
   passage: Passage;
@@ -164,6 +164,19 @@ export default function InteractiveShell({ passage, onExit }: Props) {
         }, 0);
         recordPassageWordsRead(passage.id, totalWords);
         updateIrLevel(passage.id);
+
+        // Report grade to LMS if in LTI mode
+        if (typeof document !== "undefined" && document.cookie.includes("ilit_lti_mode=1")) {
+          const pp = getPassageProgress(passage.id);
+          fetch("/api/lti/grades", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              score: pp.totalScore,
+              maxScore: pp.maxPossibleScore,
+            }),
+          }).catch(() => {});
+        }
       }
     },
     [currentSlide, passage, completedCheckpoints, allCheckpointIndices]

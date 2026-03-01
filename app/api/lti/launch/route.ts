@@ -176,5 +176,16 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  return NextResponse.redirect(new URL(redirectPath, request.url));
+  const response = NextResponse.redirect(new URL(redirectPath, request.url));
+
+  // Set a non-httpOnly cookie so client JS can detect LTI mode
+  response.cookies.set("ilit_lti_mode", "1", {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+    path: "/",
+    maxAge: 8 * 60 * 60, // match session TTL
+  });
+
+  return response;
 }

@@ -24,7 +24,8 @@ export async function verifyLtiToken(
   // Validate required LTI 1.3 claims
   const messageType =
     payload["https://purl.imsglobal.org/spec/lti/claim/message_type"];
-  if (messageType !== "LtiResourceLinkRequest") {
+  const validTypes = ["LtiResourceLinkRequest", "LtiDeepLinkingRequest"];
+  if (!validTypes.includes(messageType as string)) {
     throw new Error(`Unsupported LTI message type: ${messageType}`);
   }
 

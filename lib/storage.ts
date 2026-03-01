@@ -8,6 +8,71 @@ import type { StudentProgress, BookReview, Highlight, CheckpointScore, PassagePr
 
 const STORAGE_KEY = "ilit-student-data";
 
+// ── LTI Mode Detection & Server Sync ──
+
+/** Check if we're in an LTI session (non-httpOnly cookie set during launch) */
+function isLtiMode(): boolean {
+  if (typeof document === "undefined") return false;
+  return document.cookie.includes("ilit_lti_mode=1");
+}
+
+/** Background sync to server — fire and forget, never blocks the UI */
+function syncToServer(data: StudentData): void {
+  if (!isLtiMode()) return;
+  fetch("/api/student/data", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  }).catch(() => {
+    // Silently fail — localStorage is the source of truth client-side
+  });
+}
+
+/**
+ * Hydrate localStorage from the server on first load in LTI mode.
+ * Call this once from the root layout or dashboard layout.
+ */
+export async function hydrateFromServer(): Promise<StudentData | null> {
+  if (!isLtiMode()) return null;
+
+  // Only hydrate once per session
+  const hydrated = sessionStorage.getItem("ilit-lti-hydrated");
+  if (hydrated) return null;
+
+  try {
+    const res = await fetch("/api/student/data");
+    if (!res.ok) return null;
+    const json = await res.json();
+
+    if (json.data) {
+      // Server has data — merge with defaults and write to localStorage
+      const serverData = json.data as Partial<StudentData>;
+      const merged: StudentData = {
+        ...DEFAULT_DATA,
+        ...serverData,
+        progress: {
+          ...DEFAULT_DATA.progress,
+          ...serverData.progress,
+          studentName: json.studentName || serverData.progress?.studentName || "Student",
+        },
+      };
+      saveStudentData(merged);
+      sessionStorage.setItem("ilit-lti-hydrated", "1");
+      return merged;
+    } else {
+      // No server data yet — push current localStorage to server
+      const local = loadStudentData();
+      local.progress.studentName = json.studentName || local.progress.studentName;
+      saveStudentData(local);
+      syncToServer(local);
+      sessionStorage.setItem("ilit-lti-hydrated", "1");
+      return local;
+    }
+  } catch {
+    return null;
+  }
+}
+
 // ── IR Leveling (matches original Savvas server_tasks.py) ──
 // Three discrete levels: L1 (hardest) → L2 (default) → L3 (easiest)
 // Transitions capped: L1 can't promote, L3 can't demote
@@ -127,6 +192,8 @@ export function saveStudentData(data: StudentData): void {
   } catch {
     // quota exceeded — fail silently
   }
+  // Background sync to Postgres if in LTI mode
+  syncToServer(data);
 }
 
 // Convenience helpers
